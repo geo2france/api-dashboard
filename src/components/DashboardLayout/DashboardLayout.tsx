@@ -60,7 +60,7 @@ const DashboardLayout:React.FC<IDashboardLayoutProps> = ({children, control, row
                 </Flex>
             </Control>
             <Row gutter={row_gutter} style={{ margin: 16 }}>
-                {children.filter((child) => (getSection(child) ?? 'Autres' ) == activeTab).map((child,idx) => 
+                {children.map((child, idx) => ({ child, idx })).filter(({child}) => (getSection(child) ?? 'Autres' ) == activeTab).map(({ child, idx }) => 
                     <Col xl={12} xs={24} key={idx} >
                         {child}
                     </Col>

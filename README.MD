@@ -1,4 +1,4 @@
-# G2F-Dashboard
+# API-Dashboard
 
 Collection de composants React pour faciliter la création de **tableaux de bords territoriaux**.
 
@@ -37,10 +37,10 @@ Les composants sont actuellement utilisés pour le [tableau de bord de l'Odema](
 ## Installation
 
 Version de développment :
-`npm install https://github.com/geo2france/g2f-dashboard/tarball/dev`
+`npm install https://github.com/geo2france/api-dashboard/tarball/dev`
 
 Version stable :
-`npm install https://github.com/geo2france/g2f-dashboard/tarball/main`
+`npm install https://github.com/geo2france/api-dashboard/tarball/main`
 
 ## Documentation 
 
