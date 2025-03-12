@@ -1,4 +1,4 @@
-import { Col, Flex, Radio, Row, RowProps } from "antd";
+import { Button, Col, Dropdown, Flex, Row, RowProps } from "antd";
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
 import React from "react";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
@@ -46,17 +46,22 @@ const DashboardLayout:React.FC<IDashboardLayoutProps> = ({children, control, row
     return(
         <>
             <Control>
-                <Flex>
+                <Flex gap="small">
+                    <div>
+                        {sections_std.length > 1 &&
+                            <Dropdown.Button menu={
+                                {   selectedKeys:[activeTab],
+                                    items:sections_std.map((section) => ({
+                                        label: section.libel || section.key ,
+                                        key:section.key,
+                                        onClick:  () => setActiveTab(section.key)
+                                }) ) }}
+                                trigger={['click']}
+                                buttonsRender={([_lb, rb]) => [<Button type='primary'>{activeTab}</Button>,rb]}
+                            />
+                        }
+                    </div>
                     {control}
-                    {sections_std.length > 1 &&
-                        <Radio.Group defaultValue="a" onChange={(e) => setActiveTab(e.target.value)}
-                            value={activeTab} buttonStyle="solid"
-                            >
-                            {sections_std.map((section, idx) => 
-                                <Radio.Button key={idx} value={section.key}>{section.libel || section.key}</Radio.Button>
-                            )}
-                        </Radio.Group>
-                    }
                 </Flex>
             </Control>
             <Row gutter={row_gutter} style={{ margin: 16 }}>
