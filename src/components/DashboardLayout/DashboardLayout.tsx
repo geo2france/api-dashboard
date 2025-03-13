@@ -13,7 +13,7 @@ type Section =  {
 }
 
 interface IDashboardLayoutProps {
-    control? : React.ReactElement
+    control? : React.ReactElement | React.ReactElement[]
     children : React.ReactElement<typeof DashboardElement>[];
     row_gutter? : RowProps['gutter']
     sections?: string[] | Section[]
@@ -46,7 +46,7 @@ const DashboardLayout:React.FC<IDashboardLayoutProps> = ({children, control, row
     return(
         <>
             <Control>
-                <Flex gap="small">
+                <Flex wrap justify="flex-start" align="flex-start" gap="small">
                     <div>
                         {sections_std.length > 1 &&
                             <Dropdown.Button menu={

@@ -1,10 +1,10 @@
 import { Layout } from "antd"
-import { CSSProperties, ReactNode } from "react"
+import { CSSProperties, ReactElement } from "react"
 
 const {Header} = Layout
 
 interface IControlProps {
-    children: ReactNode;
+    children: ReactElement | ReactElement[];
     style?:CSSProperties
 }
 
@@ -14,7 +14,7 @@ interface IControlProps {
 const Control: React.FC<IControlProps> = ({ children, style = {} }) => {
   return (
     <Header
-      style={{padding: 12, position: "sticky", top: 0, zIndex: 1, backgroundColor: "#fff", ...style}} 
+      style={{padding: 12, position: "sticky", top: 0, zIndex: 1, backgroundColor: "#fff", height:"auto", width:'100%', ...style}} 
     >
         {children}
     </Header>
