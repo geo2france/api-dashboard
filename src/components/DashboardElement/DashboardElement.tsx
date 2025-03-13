@@ -183,18 +183,12 @@ const DashboardElement: React.FC<IDashboardElementProps> = ({
         }}
         bordered={!virtual}
         title={ header && !virtual &&
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <span>{title}</span>
+          <Flex justify="space-between" align="center">
+            <span style={{overflow:"hidden",  paddingRight:15}}>{title}</span>
             <div style={{ marginRight: 5, fontSize: 16 }}>
               {toolbox && dropdown_toolbox}
             </div>
-          </div>
+          </Flex>
         }
       >
         <Flex vertical justify="space-between" style={{height:"100%"}}>
