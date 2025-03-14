@@ -14,7 +14,7 @@ interface IControlProps {
 const Control: React.FC<IControlProps> = ({ children, style = {} }) => {
   return (
     <Header
-      style={{padding: 12, position: "sticky", top: 0, zIndex: 1, backgroundColor: "#fff", height:"auto", width:'100%', ...style}} 
+      style={{padding: 12, position: "sticky", top: 0, zIndex: 100, backgroundColor: "#fff", height:"auto", width:'100%', ...style}} 
     >
         {children}
     </Header>
