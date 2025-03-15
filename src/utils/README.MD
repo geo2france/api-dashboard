@@ -10,6 +10,7 @@ Paramètres :
 - _pagination_
 - _meta_
 - _staleTime_ 
+- _enabled_ 
 
 Retourne les données et différentes informations sur la requête, voir [useQuery](https://tanstack.com/query/v4/docs/framework/react/reference/useQuery). TODO : Détailler les variables les plus utiles plutôt que de renvoyer vers useQuery.
 

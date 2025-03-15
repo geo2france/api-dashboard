@@ -8,9 +8,10 @@ interface useApiProps {
     pagination?:Pagination
     sorters?:CrudSorting
     meta?:any
+    enabled?:boolean
 }
 
-export const useApi = ({dataProvider, resource, filters, pagination, sorters, meta }:useApiProps) => (
+export const useApi = ({dataProvider, resource, filters, pagination, sorters, meta, enabled = true }:useApiProps) => (
     useQuery({
         queryKey:[dataProvider.getApiUrl, resource, filters, pagination, sorters, meta],
         queryFn: () => dataProvider.getList(
@@ -22,7 +23,7 @@ export const useApi = ({dataProvider, resource, filters, pagination, sorters, me
                 meta:meta
             }
         ),
-        enabled: true,
+        enabled: enabled,
         staleTime: 5*60*1e3, //Default staletime 5min
     })
 )
