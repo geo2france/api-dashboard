@@ -1,5 +1,5 @@
 
-import React, { CSSProperties, useState } from "react";
+import React, { CSSProperties, useContext, useState } from "react";
 import { Layout, Menu, theme, Row, Col, Button, Divider } from "antd";
 
 import { NavLink, useLocation } from "react-router-dom";
@@ -7,6 +7,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 import { generateMenuItems } from "../../utils/route_utils";
 import { RouteConfig } from "../../types";
+import { AppContext } from "./DashboardApp";
 
 
 const style_img: CSSProperties = {
@@ -14,14 +15,15 @@ const style_img: CSSProperties = {
 };
 
 interface DbSiderProps {
-  logo?: string;
+  logo?: string; //Override app logo
   route_config?:RouteConfig[];
   //menu?: React.ReactElement; // Pour passer directement un menu (remplace celui du Sider)
   style?: CSSProperties;
 }
 
 const DashboardSider: React.FC<DbSiderProps> = ({style, logo, route_config}) => {
- 
+  const {logo: appLogo, title} = useContext(AppContext)
+
   const { token } = theme.useToken();
   const { pathname:selectedKey } = useLocation();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -71,7 +73,7 @@ const DashboardSider: React.FC<DbSiderProps> = ({style, logo, route_config}) => 
                 display:collapsed ? 'none' : undefined,
                 marginTop:8, marginLeft:8
                 }}>
-              <img style={style_img} src={logo} alt="Logo" /> {/* TODO : utiliser une version mini du logo en affichage mobile */}
+              <img style={style_img} src={logo || appLogo } alt={title} /> {/* TODO : utiliser une version mini du logo en affichage mobile */}
             </NavLink>
             <Divider style={{display:collapsed ? 'none' : undefined}} type="vertical" />
             <Button 

@@ -7,6 +7,7 @@ import DashboardSider from "./Sider";
 import { Content } from "antd/es/layout/layout";
 import { ErrorComponent } from "./Error";
 import { DasbhoardFooter } from "./Footer";
+import { createContext } from "react";
 
 const queryClient = new QueryClient()
 
@@ -29,30 +30,44 @@ const default_theme:ThemeConfig = { //Odema theme, changer par theme default G2F
     }
   }
 
+
+interface AppContextProps {
+    title?: string;
+    subtitle?: string;
+    logo?: string;
+}
+  
+export const AppContext = createContext<AppContextProps>({});  
+
 interface DashboardApprProps {
+  title?: string;
+  subtitle?: string;
   route_config: RouteConfig[];
   theme?: ThemeConfig;
   logo: string;
-  brands?: Partner[]
+  brands?: Partner[];
 }
 
-const DashboardApp: React.FC<DashboardApprProps> = ({route_config, theme, logo, brands}) => {
- 
+const DashboardApp: React.FC<DashboardApprProps> = ({route_config, theme, logo, brands, title, subtitle}) => {
+
+    const context_values = { title, subtitle, logo };
+
     return (
         <QueryClientProvider client={queryClient}>
           <ConfigProvider theme={theme || default_theme /* Merger plutôt ?*/}>
+          <AppContext.Provider value={ context_values }>
             <HashRouter>
                 <Routes>
                   <Route
                         element={
                             <Layout>
                                 <Layout>
-                                    <DashboardSider route_config={route_config} logo={logo}/>
+                                    <DashboardSider route_config={route_config}/>
                                     <Content style={{width:"85%"}}>
                                         <Outlet />
                                     </Content>
                                 </Layout>
-                                <DasbhoardFooter brands={brands} db_logo={logo} />
+                                <DasbhoardFooter brands={brands} />
                             </Layout>
                         }
                     >
@@ -61,6 +76,7 @@ const DashboardApp: React.FC<DashboardApprProps> = ({route_config, theme, logo, 
                   </Route>
                 </Routes>
             </HashRouter>
+            </AppContext.Provider>
           </ConfigProvider>
         </QueryClientProvider>
     )

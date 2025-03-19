@@ -1,24 +1,24 @@
-import { Layout, Divider, Typography } from "antd";
-import { CSSProperties, useState } from "react";
-import { grey } from "@ant-design/colors";
+import { Layout, Typography } from "antd";
+import { CSSProperties, useContext, useState } from "react";
 
 import { UpOutlined, DownOutlined } from "@ant-design/icons";
 import { Partner } from "../../types";
+import { AppContext } from "./DashboardApp";
 
 const { Text, Link } = Typography;
 
 interface DbFooterProps {
     brands?: Partner[];
-    db_logo: string;
 }
 
-export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands, db_logo}) => {
+export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
   const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 768 ? true : false);
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
 
+  const app_context = useContext(AppContext)
 
   const style_img: CSSProperties = {
     height: "60px",
@@ -49,21 +49,14 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands, db_logo}) => {
           fontSize: "14px",
           marginTop:-15,
         }}>
-          <Link href="https://odema-hautsdefrance.org" target="_blank">
-            <Text>Observatoire déchets et matières des Hauts-de-France</Text>
+          <Link href="/" target="_blank">
+            <Text>{app_context?.title} - {app_context?.subtitle}</Text>
           </Link>
         </div>
       )}
 
       {/* Logos et contenu du footer affichés lorsque déplié */}
       <div style={{ display: isCollapsed ? "none" : "block", padding: "10px 0"}}>
-        <a href="/">
-          <img style={style_img} src={db_logo} alt="Odema" />
-        </a>
-        <Divider
-          type="vertical"
-          style={{ height: "30px", backgroundColor: grey[2] }}
-        />
         {brands?.map((p:Partner) => (
           <a href={p.url} key={p.name}>
             <img style={style_img} src={p.logo} alt={p.name} />
