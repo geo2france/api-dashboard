@@ -11,7 +11,9 @@ import { AppContext } from "./DashboardApp";
 
 
 const style_img: CSSProperties = {
-  width: "100%",
+  height:52,
+  maxWidth:"100%",
+  objectFit:"contain"
 };
 
 interface DbSiderProps {
@@ -73,7 +75,7 @@ const DashboardSider: React.FC<DbSiderProps> = ({style, logo, route_config}) => 
                 display:collapsed ? 'none' : undefined,
                 marginTop:8, marginLeft:8
                 }}>
-              <img style={style_img} src={logo || appLogo } alt={title} /> {/* TODO : utiliser une version mini du logo en affichage mobile */}
+              <img style={style_img} src={appLogo} alt={title} />{/* TODO : utiliser une version mini du logo en affichage mobile */}
             </NavLink>
             <Divider style={{display:collapsed ? 'none' : undefined}} type="vertical" />
             <Button 
