@@ -1,13 +1,13 @@
 
 import React, { CSSProperties, useState } from "react";
 import { Layout, Menu, theme, Row, Col, Button, Divider } from "antd";
-import type { MenuProps } from 'antd';
 
 import { NavLink, useLocation } from "react-router-dom";
 
 import { MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
+import { generateMenuItems } from "../../utils/route_utils";
+import { RouteConfig } from "../../types";
 
-type MenuItem = Required<MenuProps>['items'][number];
 
 const style_img: CSSProperties = {
   width: "100%",
@@ -15,11 +15,12 @@ const style_img: CSSProperties = {
 
 interface DbSiderProps {
   logo?: string;
-  menu_items?:MenuItem[],
+  route_config?:RouteConfig[];
+  //menu?: React.ReactElement; // Pour passer directement un menu (remplace celui du Sider)
   style?: CSSProperties;
 }
 
-const DashboardSider: React.FC<DbSiderProps> = ({style, logo, menu_items}) => {
+const DashboardSider: React.FC<DbSiderProps> = ({style, logo, route_config}) => {
  
   const { token } = theme.useToken();
   const { pathname:selectedKey } = useLocation();
@@ -91,7 +92,7 @@ const DashboardSider: React.FC<DbSiderProps> = ({style, logo, menu_items}) => {
         </Col>
         <Col span={24}>
           <Menu
-            items={menu_items}
+            items={ route_config && generateMenuItems(route_config)}
             selectedKeys={[selectedKey]}
             mode="inline"
             style={{ marginTop: "20px", width: "100%" }}
