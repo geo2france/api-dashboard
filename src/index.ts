@@ -23,6 +23,7 @@ import DashboardLayout from "./components/DashboardLayout/DashboardLayout";
 import MapLegend from "./components/MapLegend/MapLegend";
 
 // Layout
+import DashboardApp from "./components/Layout/DashboardApp";
 import DashboardSider from "./components/Layout/Sider";
 
 export { 
@@ -36,7 +37,8 @@ export {
     DashboardChart, 
     DashboardLayout,
     MapLegend,
-    DashboardSider
+    DashboardSider,
+    DashboardApp,
  } 
 
 

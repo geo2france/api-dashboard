@@ -10,3 +10,9 @@ export type RouteConfig = {
     children?: RouteConfig[];
     hidden?: boolean;
   }
+
+export type Partner = {
+    logo: string;
+    name: string;
+    url?: string;
+}
