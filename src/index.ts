@@ -22,6 +22,8 @@ import DashboardChart from "./components/DashboardChart/DashboardChart";
 import DashboardLayout from "./components/DashboardLayout/DashboardLayout";
 import MapLegend from "./components/MapLegend/MapLegend";
 
+// Layout
+import DashboardSider from "./components/Layout/Sider";
 
 export { 
     KeyFigure, 
@@ -34,6 +36,7 @@ export {
     DashboardChart, 
     DashboardLayout,
     MapLegend,
+    DashboardSider
  } 
 
 
