@@ -11,14 +11,14 @@ import { createContext } from "react";
 
 const queryClient = new QueryClient()
 
-const default_theme:ThemeConfig = { //Odema theme, changer par theme default G2F
+const default_theme:ThemeConfig = { 
     token: {
       colorPrimary: "#95c11f",
       linkHoverDecoration:'underline',
-      colorLink:'#FF6A48',
-      colorLinkHover:'#9D7156',
+      colorLink:'#0f4496',
+      colorLinkHover:'#0D2449',
       borderRadius:4,
-     fontFamily:'Inter'
+      fontFamily:'Inter'
       },
     components:{
       Timeline:{
