@@ -1,6 +1,6 @@
 import {render, screen} from '@testing-library/react'
 import '@testing-library/jest-dom';
-import DashboardLayout from './DashboardLayout';
+import DashboardPage from './Page';
 import DashboardElement from '../DashboardElement/DashboardElement';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -8,7 +8,7 @@ import { MemoryRouter } from 'react-router-dom';
 // TOFIX : DashboardElement sans rien a l'intérieur n'affiche rien
 
 
-describe("DashboardLayout Component", () => {
+describe("DashboardPage Component", () => {
     beforeAll(() => { // https://stackoverflow.com/questions/39830580/jest-test-fails-typeerror-window-matchmedia-is-not-a-function
         Object.defineProperty(window, 'matchMedia', {
           writable: true,
@@ -29,14 +29,14 @@ describe("DashboardLayout Component", () => {
         // Génération DOM virtuel et sélection des noeuds
         render(
             <MemoryRouter>
-                <DashboardLayout>
+                <DashboardPage>
                     <DashboardElement title = "Graphique 1" section='Section 1'>
                         <></>
                     </DashboardElement>
                     <DashboardElement title = "Graphique 2" section='Section 2'>
                         <></>
                     </DashboardElement>
-                </DashboardLayout>
+                </DashboardPage>
             </MemoryRouter>
 
         );
@@ -55,7 +55,7 @@ describe("DashboardLayout Component", () => {
 
         render(
             <MemoryRouter>
-                <DashboardLayout>
+                <DashboardPage>
                     <DashboardElement title = "Graphique 1" section='Section 1'>
                         <></>
                     </DashboardElement>
@@ -65,7 +65,7 @@ describe("DashboardLayout Component", () => {
                     <DashboardElement title = "Graphique 3">
                         <></>
                     </DashboardElement>
-                </DashboardLayout>
+                </DashboardPage>
             </MemoryRouter>
 
         )

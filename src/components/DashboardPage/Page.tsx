@@ -24,7 +24,7 @@ const getSection = (child: React.ReactElement): string | undefined =>
     React.isValidElement<IDashboardElementProps>(child) ? child.props.section : undefined ;
   
 
-const DashboardLayout:React.FC<IDashboardLayoutProps> = ({children, control, row_gutter=[8,8], sections}) => {
+const DashboardPage:React.FC<IDashboardLayoutProps> = ({children, control, row_gutter=[8,8], sections}) => {
     let sections_std:Section[] = []
     
     if (sections && typeof(sections[0]) === 'string'){
@@ -75,4 +75,4 @@ const DashboardLayout:React.FC<IDashboardLayoutProps> = ({children, control, row
     )
 }
 
-export default DashboardLayout;
+export default DashboardPage;

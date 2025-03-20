@@ -12,19 +12,19 @@ export {cardStyles} from "./utils/cardStyles"
 
 // Components
 import KeyFigure from "./components/KeyFigure/KeyFigure"
-import DashboardElement from "./components/DashboardElement/DashboardElement"
 import LoadingContainer  from "./components/LoadingContainer/LoadingContainer"
 import FlipCard from "./components/FlipCard/FlipCard"
 import Attribution from "./components/Attributions/Attributions"
 import NextPrevSelect from "./components/NextPrevSelect/NextPrevSelect"
 import Control from "./components/Control/Control";
 import DashboardChart from "./components/DashboardChart/DashboardChart";
-import DashboardLayout from "./components/DashboardLayout/DashboardLayout";
 import MapLegend from "./components/MapLegend/MapLegend";
 
 // Layout
 import DashboardApp from "./components/Layout/DashboardApp";
 import DashboardSider from "./components/Layout/Sider";
+import DashboardPage from "./components/DashboardPage/Page";
+import DashboardElement from "./components/DashboardElement/DashboardElement"
 
 export { 
     KeyFigure, 
@@ -35,7 +35,7 @@ export {
     NextPrevSelect, 
     Control, 
     DashboardChart, 
-    DashboardLayout,
+    DashboardPage,
     MapLegend,
     DashboardSider,
     DashboardApp,

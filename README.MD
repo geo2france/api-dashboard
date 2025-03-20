@@ -44,10 +44,18 @@ Version stable :
 
 ## Documentation 
 
+⭐ Essentiel  
+👨‍💻 Utilisateur avancé 
+
+### Mise en page et structure
+
+- [DashboardApp](/src/components/Layout/) ⭐
+- [DashboardPage](/src/components/DashboardPage/) ⭐
+- [DashboardElement](/src/components/DashboardElement/) ⭐
+
+
 ### Composants 
 
-- [DashboardLayout](/src/components/DashboardLayout/) ⭐
-- [DashboardElement](/src/components/DashboardElement/) ⭐
 - [KeyFigure](/src/components/KeyFigure/) ⭐
 - [NextPrevSelect](/src/components/NextPrevSelect/) ⭐
 - [MapLegend](/src/components/MapLegend/) ⭐
@@ -57,10 +65,10 @@ Version stable :
 ### Hooks et fonctions
 
 - [useApi](/src/utils/README.MD) ⭐
-- [useChartEvents](/src/utils/README.MD) ⭐
-- [useChartActionHightlight](/src/utils/README.MD) ⭐
 - [useSearchParamsState](/src/utils/README.MD) ⭐
-- [useMapControl](/src/utils/README.MD) ⭐
+- [useChartEvents](/src/utils/README.MD) 👨‍💻
+- [useChartActionHightlight](/src/utils/README.MD) 👨‍💻
+- [useMapControl](/src/utils/README.MD) 👨‍💻
 - [useChartExport](/src/utils/README.MD)
 
 ### Fournisseur de données
