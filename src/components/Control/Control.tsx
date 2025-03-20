@@ -18,7 +18,7 @@ const Control: React.FC<IControlProps> = ({ children, style = {} }) => {
         padding: 12,
         position: "sticky",
         top: 0,
-        zIndex: 999999, // maplibre top zIndex if 99999
+        zIndex: 600, // maplibre top zIndex if 500
         backgroundColor: "#fff",
         height: "auto",
         width: "100%",

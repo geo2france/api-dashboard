@@ -1,0 +1,5 @@
+.maplibregl-cooperative-gesture-screen {
+    /* Par défaut, le zindex trop important (999999) couvre les topbar et footer. 
+    Il doit rester < 1000 pour ne pas poser de problèmes avec les modal et drawer antdesign */
+    z-index: 500 !important; 
+}

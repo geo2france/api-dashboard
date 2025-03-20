@@ -9,6 +9,8 @@ import { ErrorComponent } from "./Error";
 import { DasbhoardFooter } from "./Footer";
 import { createContext } from "react";
 
+import '../../index.css'
+
 const queryClient = new QueryClient()
 
 const default_theme:ThemeConfig = { 

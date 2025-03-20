@@ -39,7 +39,7 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
         transition: "height 0.5s ease-in-out",
         overflow: "hidden",
         borderTop: "1px solid #ccc", 
-        zIndex: 999999, // maplibre top zIndex if 99999
+        zIndex: 600, // maplibre top zIndex if 500
       }}
     >
       {/* Texte affiché uniquement lorsque le footer est rétracté */}
