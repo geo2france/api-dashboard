@@ -12,7 +12,7 @@ type Section =  {
     disable?:boolean;
 }
 
-interface IDashboardLayoutProps {
+interface IDashboardPageProps {
     control? : React.ReactElement | React.ReactElement[]
     children : React.ReactElement<typeof DashboardElement>[];
     row_gutter? : RowProps['gutter']
@@ -24,7 +24,7 @@ const getSection = (child: React.ReactElement): string | undefined =>
     React.isValidElement<IDashboardElementProps>(child) ? child.props.section : undefined ;
   
 
-const DashboardPage:React.FC<IDashboardLayoutProps> = ({children, control, row_gutter=[8,8], sections}) => {
+const DashboardPage:React.FC<IDashboardPageProps> = ({children, control, row_gutter=[8,8], sections}) => {
     let sections_std:Section[] = []
     
     if (sections && typeof(sections[0]) === 'string'){
