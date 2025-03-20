@@ -7,7 +7,7 @@ import {
 import { HiQuestionMarkCircle } from "react-icons/hi2";
 import { Card, theme, Modal, Dropdown, MenuProps, Flex, Button, Popover, Typography } from "antd";
 import React, { ReactElement, ReactNode, createContext, useEffect, useState } from "react";
-import Attribution, { SourceProps } from "../Attributions/Attributions";
+import Attribution, { SourceMakerProps, SourceProps } from "../Attributions/Attributions";
 import { useChartExport } from "../../utils/usechartexports";
 import LoadingContainer from "../LoadingContainer/LoadingContainer";
 import { cardStyles } from "../../utils/cardStyles";
@@ -30,7 +30,7 @@ export interface IDashboardElementProps {
   children: ReactNode;
   isFetching?: boolean;
   header?: boolean;
-  attributions?: SourceProps[];
+  attributions?: SourceProps[] | SourceMakerProps;
   toolbox?: boolean;
   fullscreen?: boolean;
   exportPNG?: boolean;
