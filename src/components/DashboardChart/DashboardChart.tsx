@@ -23,7 +23,7 @@ const DashboardChart: React.FC<IDashboardChartProps> = ({data, chart_type='line'
     const chartRef = useRef<any>();
     useDashboardElement({chartRef})
 
-    const data_xy = sql ? alasql(sql, [data]) : data;
+    const data_xy:any = sql ? alasql(sql, [data]) : data;
 
     useChartData({data:data_xy})
 
