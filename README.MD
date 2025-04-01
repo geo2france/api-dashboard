@@ -75,3 +75,40 @@ Version stable :
 
 - [WFS](/src/data_providers/wfs/) ⭐
 - [Datafair](/src/data_providers/datafair/) ⭐
+
+
+```mermaid
+graph TD; 
+
+subgraph "&lt;DashboardApp&gt;"
+  subgraph "&lt;DashboardPage&gt;" 
+    subgraph "&lt;DashboardElement&gt;" 
+        subgraph "Chart(Echart)" 
+        end
+    end
+    subgraph "&lt;DashboardElement&gt;" 
+        subgraph "Chart(Echart)" 
+        end
+    end
+        subgraph "&lt;DashboardElement&gt;" 
+        subgraph "Chart(Echart)" 
+        end
+    end
+  end
+
+  subgraph "&lt;DashboardPage&gt;" 
+    subgraph "&lt;DashboardElement&gt;" 
+        subgraph "Chart(Echart)" 
+        end
+    end
+    subgraph "&lt;DashboardElement&gt;" 
+        subgraph "Chart(Echart)" 
+        end
+    end
+        subgraph "&lt;DashboardElement&gt;" 
+        subgraph "Chart(Echart)" 
+        end
+    end
+  end
+end  
+```
