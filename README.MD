@@ -77,6 +77,9 @@ Version stable :
 - [Datafair](/src/data_providers/datafair/) ⭐
 
 
+![block-graph](block-graph.png)
+
+<!---
 ```mermaid
 graph TD; 
 
@@ -112,3 +115,4 @@ subgraph "&lt;DashboardApp&gt;"
   end
 end  
 ```
+--->
