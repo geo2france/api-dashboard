@@ -15,15 +15,24 @@ export interface SourceProps {
     url?:string,
 }
 
+export interface SourceMakerProps {
+    maker?:SourceProps,
+    sources?:SourceProps[],
+}
+
 interface AttributionProps {
-    data:SourceProps[]
+    data:SourceMakerProps | SourceProps[]
     style?:CSSProperties
     licenses?:License[]
 }
 
 const Attribution: React.FC<AttributionProps> = ({ data, style, licenses }) => {
     const licence_logo_style:React.CSSProperties = {height:'12px', width:'12px'}
-    const plural = data.length > 1 ? 's' : ''
+
+    const sources = Array.isArray(data) ? data : data.sources ;
+    const maker = Array.isArray(data) ? undefined : data.maker ;
+
+    const plural = (sources?.length ?? 0) > 1 ? 's' : ''
 
     const logoMapping: { [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>> } = {
         CC,
@@ -36,20 +45,23 @@ const Attribution: React.FC<AttributionProps> = ({ data, style, licenses }) => {
 
     return (
         <div style={{paddingLeft:4, paddingBottom:4, ...style}}>
-            <Text type="secondary">{`Source${plural} des données: `}
-                {data.map((e: SourceProps, i:number) => (
+            <Text type="secondary">{`Source${plural} des données : `}
+                {sources?.map((e: SourceProps, i:number) => (
                     <span key={i}>
                         <Link href={e.url}>{e.name}</Link>
-                        {i < data.length - 1 ? ", " : ""}
+                        {i < sources.length - 1 ? ", " : ""}
                     </span>
                 ))}
-                <span> | Réalisation : <a href='https://www.hautsdefrance.fr/communique-de-presse-lancement-de-lobservatoire-dechets-matieres-odema-des-hauts-de-france/' >Odema</a> </span>
-                <Tooltip title={licenses?.join(' ')} placement="bottom">
+                { maker && <span> 
+                    {' '}| Réalisation : <Link href={maker.url} >{maker.name}</Link></span> }
+                <span style={{marginLeft:5}}>
+                <Tooltip title={licenses?.join(' ')} placement="bottom" >
                     { licenses?.map((license, index) => {
                         const LogoComponent = logoMapping[license];
-                        return (<LogoComponent key={index} style={licence_logo_style} aria-label={license} />)
+                        return (<span style={{marginLeft:2}}><LogoComponent key={index} style={licence_logo_style} aria-label={license} /></span>)
                     })}
                 </Tooltip>
+                </span>
             </Text>
 
         </div>

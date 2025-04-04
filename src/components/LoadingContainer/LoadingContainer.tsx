@@ -45,7 +45,7 @@ const LoadingContainer:React.FC<LoadingContainerProps> = ({isFetching, children,
                 {  children } 
             </div>
             {noData && <Empty 
-                        style={{position:"absolute", top:"50%", right:"50%", transform: "translate(50%, -50%)"}} 
+                        style={{position:"relative", top:"50%", right:"50%", marginBottom:50, transform: "translate(50%, -50%)"}} 
                         description="Pas de données disponibles"
                         image={<PiEmptyFill size={80} color={token.colorPrimary}/>} />
             }

@@ -1,4 +1,4 @@
-# G2F-Dashboard
+# API-Dashboard
 
 Collection de composants React pour faciliter la création de **tableaux de bords territoriaux**.
 
@@ -37,17 +37,25 @@ Les composants sont actuellement utilisés pour le [tableau de bord de l'Odema](
 ## Installation
 
 Version de développment :
-`npm install https://github.com/geo2france/g2f-dashboard/tarball/dev`
+`npm install https://github.com/geo2france/api-dashboard/tarball/dev`
 
 Version stable :
-`npm install https://github.com/geo2france/g2f-dashboard/tarball/main`
+`npm install https://github.com/geo2france/api-dashboard/tarball/main`
 
 ## Documentation 
 
+⭐ Essentiel  
+👨‍💻 Utilisateur avancé 
+
+### Mise en page et structure
+
+- [DashboardApp](/src/components/Layout/) ⭐
+- [DashboardPage](/src/components/DashboardPage/) ⭐
+- [DashboardElement](/src/components/DashboardElement/) ⭐
+
+
 ### Composants 
 
-- [DashboardLayout](/src/components/DashboardLayout/) ⭐
-- [DashboardElement](/src/components/DashboardElement/) ⭐
 - [KeyFigure](/src/components/KeyFigure/) ⭐
 - [NextPrevSelect](/src/components/NextPrevSelect/) ⭐
 - [MapLegend](/src/components/MapLegend/) ⭐
@@ -57,13 +65,54 @@ Version stable :
 ### Hooks et fonctions
 
 - [useApi](/src/utils/README.MD) ⭐
-- [useChartEvents](/src/utils/README.MD) ⭐
-- [useChartActionHightlight](/src/utils/README.MD) ⭐
 - [useSearchParamsState](/src/utils/README.MD) ⭐
-- [useMapControl](/src/utils/README.MD) ⭐
+- [useChartEvents](/src/utils/README.MD) 👨‍💻
+- [useChartActionHightlight](/src/utils/README.MD) 👨‍💻
+- [useMapControl](/src/utils/README.MD) 👨‍💻
 - [useChartExport](/src/utils/README.MD)
 
 ### Fournisseur de données
 
 - [WFS](/src/data_providers/wfs/) ⭐
 - [Datafair](/src/data_providers/datafair/) ⭐
+- [Filte](/src/data_providers/file/) ⭐
+
+![block-graph](block-graph.png)
+
+<!---
+```mermaid
+graph TD; 
+
+subgraph "&lt;DashboardApp&gt;"
+  subgraph "&lt;DashboardPage&gt;" 
+    subgraph "&lt;DashboardElement&gt;" 
+        subgraph "Chart(Echart)" 
+        end
+    end
+    subgraph "&lt;DashboardElement&gt;" 
+        subgraph "Chart(Echart)" 
+        end
+    end
+        subgraph "&lt;DashboardElement&gt;" 
+        subgraph "Chart(Echart)" 
+        end
+    end
+  end
+
+  subgraph "&lt;DashboardPage&gt;" 
+    subgraph "&lt;DashboardElement&gt;" 
+        subgraph "Chart(Echart)" 
+        end
+    end
+    subgraph "&lt;DashboardElement&gt;" 
+        subgraph "Chart(Echart)" 
+        end
+    end
+        subgraph "&lt;DashboardElement&gt;" 
+        subgraph "Chart(Echart)" 
+        end
+    end
+  end
+end  
+```
+--->

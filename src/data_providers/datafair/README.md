@@ -2,11 +2,11 @@
 
 [Data Fair API](https://data-fair.github.io/3/en/user-guide-frontoffice/datasetpage/) data-provider.
 
-## Fournisseurs de données (non exhaustif)
+## Exemples de fournisseurs de données
 
 - [Ademe](https://data.ademe.fr/)
-- [Enedis](https://data.enedis.fr/explore/)
-- [SNCF](https://ressources.data.sncf.com/explore/)
+- [La poste](https://datanova.laposte.fr/)
+- [Observatoire de l'Environnement de Bretagne](https://data.bretagne-environnement.fr/)
 
 ## Limitation
 

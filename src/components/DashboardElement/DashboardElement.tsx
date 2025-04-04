@@ -7,7 +7,7 @@ import {
 import { HiQuestionMarkCircle } from "react-icons/hi2";
 import { Card, theme, Modal, Dropdown, MenuProps, Flex, Button, Popover, Typography } from "antd";
 import React, { ReactElement, ReactNode, createContext, useEffect, useState } from "react";
-import Attribution, { SourceProps } from "../Attributions/Attributions";
+import Attribution, { SourceMakerProps, SourceProps } from "../Attributions/Attributions";
 import { useChartExport } from "../../utils/usechartexports";
 import LoadingContainer from "../LoadingContainer/LoadingContainer";
 import { cardStyles } from "../../utils/cardStyles";
@@ -30,7 +30,7 @@ export interface IDashboardElementProps {
   children: ReactNode;
   isFetching?: boolean;
   header?: boolean;
-  attributions?: SourceProps[];
+  attributions?: SourceProps[] | SourceMakerProps;
   toolbox?: boolean;
   fullscreen?: boolean;
   exportPNG?: boolean;
@@ -183,18 +183,12 @@ const DashboardElement: React.FC<IDashboardElementProps> = ({
         }}
         bordered={!virtual}
         title={ header && !virtual &&
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <span>{title}</span>
+          <Flex justify="space-between" align="center">
+            <span style={{overflow:"hidden",  paddingRight:15}}>{title}</span>
             <div style={{ marginRight: 5, fontSize: 16 }}>
               {toolbox && dropdown_toolbox}
             </div>
-          </div>
+          </Flex>
         }
       >
         <Flex vertical justify="space-between" style={{height:"100%"}}>
