@@ -1,9 +1,9 @@
-# DashboardLayout
+# DashboardPage
 
 Ce composant permet de rendre une mise en page de tableau de bord.
 Il prend pour enfant des composants [DashboardElement](../DashboardElement/) et les dipose dans une grille 
 (2 colonne sur ordinateur, 1 seule sur mobile).
-Si au moins un des [DashboardElement](../DashboardElement/) a une pripriété `section`, le composant `DashboardLayout` propose à l'utilisateur
+Si au moins un des [DashboardElement](../DashboardElement/) a une pripriété `section`, le composant `DashboardPage` propose à l'utilisateur
 des boutons permettants de naviguer entre les sections, en ajoutant une éventuelle section _Autres_.
 
 Il est possible de lui passer une propriété `controle` contenant des **éléments de formulaire** (choix de l'année ou autres paramètres).
@@ -18,7 +18,7 @@ La propriété `sections` est optionnelle :
 ## Exemple 
 
 ```tsx
- <DashboardLayout
+ <DashboardPage
     control={<MonFormulaireDeControle />} >
 
     <DashboardElement
@@ -35,27 +35,27 @@ La propriété `sections` est optionnelle :
         <MonGraphique2 />
     </DashboardElement>
 
-</DashboardLayout>
+</DashboardPage>
 ```
 
 ```tsx
- <DashboardLayout
+ <DashboardPage
     control={<MonFormulaireDeControle />} 
     sections={['Panorama', 'Prévention', 'Valorisation', 'Stockage']} //Ici on force un certain ordre
     >
 
     {/* Composants enfants*/}
 
-</DashboardLayout>
+</DashboardPage>
 ```
 
 ```tsx
- <DashboardLayout
+ <DashboardPage
     control={<MonFormulaireDeControle />} 
     sections={[{key: 'Prévention', order:5}, {key:'Panorama', libel:'Résumé', order:1}]} //Ici, les enfants ayant comme section "Panorama" seront affichés sous l'onglet "Résumé". Ce dernier sera en premier.
     >
 
     {/* Composants enfants*/}
 
-</DashboardLayout>
+</DashboardPage>
 ```
