@@ -1,4 +1,4 @@
-import { Button, Col, Dropdown, Flex, Row, RowProps } from "antd";
+import { Button, Col, Dropdown, Flex, Grid, Menu, Radio, Row, RowProps } from "antd";
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
 import React from "react";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
@@ -26,6 +26,7 @@ const getSection = (child: React.ReactElement): string | undefined =>
 
 const DashboardPage:React.FC<IDashboardPageProps> = ({children, control, row_gutter=[8,8], sections}) => {
     let sections_std:Section[] = []
+    const screens = Grid.useBreakpoint();
     
     if (sections && typeof(sections[0]) === 'string'){
         sections_std = (sections as string[]).map((s) => ({key:s}) ) 
@@ -46,9 +47,10 @@ const DashboardPage:React.FC<IDashboardPageProps> = ({children, control, row_gut
     return(
         <>
             <Control>
+
                 <Flex wrap justify="flex-start" align="flex-start" gap="small">
                     <div>
-                        {sections_std.length > 1 &&
+                        {sections_std.length > 1 && !screens.md &&
                             <Dropdown.Button menu={
                                 {   selectedKeys:[activeTab],
                                     items:sections_std.map((section) => ({
@@ -61,8 +63,20 @@ const DashboardPage:React.FC<IDashboardPageProps> = ({children, control, row_gut
                             />
                         }
                     </div>
+                    { sections_std.length > 1 && screens.md &&
+                    <Radio.Group
+                                optionType="button"
+                                buttonStyle="solid"
+                                options={sections_std.map((section) => ({
+                                    label: section.libel || section.key ,
+                                    value:section.key} ) ) }
+                                value = {activeTab}
+                                onChange={(e) => setActiveTab(e.target.value)}
+                            />
+                     }
                     {control}
                 </Flex>
+
             </Control>
             <Row gutter={row_gutter} style={{ margin: 16 }}>
                 {children.map((child, idx) => ({ child, idx })).filter(({child}) => (getSection(child) ?? 'Autres' ) == activeTab).map(({ child, idx }) => 
