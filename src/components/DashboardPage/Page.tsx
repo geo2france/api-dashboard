@@ -1,4 +1,4 @@
-import { Button, Col, Dropdown, Flex, Grid, Menu, Radio, Row, RowProps } from "antd";
+import { Button, Col, Dropdown, Flex, Grid, Radio, Row, RowProps } from "antd";
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
 import React from "react";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
