@@ -6,9 +6,9 @@ import FlipCard from "../FlipCard/FlipCard";
 const { Text } = Typography;
 
 export interface KeyFigureProps {
-    name:string,
+    name?:string,
     description?:string,
-    value:number|string,
+    value?:number|string,
     unit?:string,
     sub_value?:number|string,
     icon?:ReactElement,
@@ -26,7 +26,7 @@ const KeyFigure: React.FC<KeyFigureProps> = ({ name, description, value, unit, s
         <FlipCard title={name} information={description}>
           <div style={{ textAlign: "center", marginTop: 10 }}>
             <span style={{ fontSize: 24 }}>
-              {icon} {value.toLocaleString(undefined,{maximumFractionDigits:digits})} {unit}
+              {icon} {value ? value.toLocaleString(undefined,{maximumFractionDigits:digits}) : '-' } {unit}
             </span>{" "}
             <span style={{ fontSize: 18 }}>
               <br />
