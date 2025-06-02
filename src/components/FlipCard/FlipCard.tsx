@@ -30,27 +30,26 @@ const FlipCard: React.FC<FlipCardProps> = ({ title, information, children }) => 
         width: "100%",
       };
 
-      const titleElement: ReactElement = (
-        <span style={{ marginLeft: 5 }}>
-          {title}{" "}
-          {information && ( //Affichage du bouton "i" s'il y a une description
-            <Button
-              type="text"
-              onClick={toggleFlipped}
-              shape="circle"
-              style={{ position: "relative", right: 0, top: 0 }}
-              aria-label="info"
-            >
-              {flipped ? <BsInfoCircleFill /> : <BsInfoCircle />}
-            </Button>
-          )}
-        </span>
-      );
+    interface InfoButtonProps {
+      filled?:boolean
+    }
+    const InfoButton: React.FC<InfoButtonProps> = ({filled=false})=> {
+      return (
+        <Button 
+            type="text" 
+            shape="circle"
+            aria-label="info"
+            onClick={toggleFlipped}> 
+              {filled ? <BsInfoCircleFill /> : <BsInfoCircle  /> }
+        </Button>
+      )
+    }
 
     return (
       <div style={{ position: "relative", height: height }}>
         <Card
-          title={titleElement}
+          title={title}
+          extra={<>{information && <InfoButton filled={flipped}/>} </>}
           style={{
             transform: flipped ? "rotateY(180deg)" : "",
             position: "static",
@@ -62,7 +61,8 @@ const FlipCard: React.FC<FlipCardProps> = ({ title, information, children }) => 
           {children}
         </Card>
         <Card
-          title={titleElement}
+          title={title}
+          extra={<InfoButton filled={flipped} />}
           style={{
             transform: !flipped ? "rotateY(180deg)" : "",
             height: height,
