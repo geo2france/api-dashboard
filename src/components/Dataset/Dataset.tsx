@@ -2,6 +2,7 @@ import { useContext, useEffect, createContext, useState, ReactElement } from "re
 import { SimpleRecord, useApi } from "../.."
 import { CrudFilters } from "../../data_providers/types"
 import { DatasetRegistryContext } from "../DashboardPage/Page"
+import alasql from "alasql"
 
 interface IDatasetProps {
     id:string
@@ -54,12 +55,10 @@ export const DSL_Transform:React.FC<ITransformProps> = ({children}) => {
     const isFunction = (value: any): value is Function => typeof value === 'function';
     
     useEffect( () => {
-        if (typeof children === 'string') {
+        if (typeof children === 'string') { // Transformation via une requête SQL
             //console.log('Children is a string:', children);
-            throw new Error(
-                `SQL Transform not implemented yet`
-            );
-            // ALASQL
+            const new_data = data && alasql(children, [data]) as SimpleRecord[]
+            data && dataContext?.setData(new_data)
         } else if (isFunction(children)) { //Transformation des données via une fonction JS
             //console.log('Use JS transformer');
             data && dataContext?.setData(children(data))

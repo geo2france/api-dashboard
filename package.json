@@ -24,7 +24,7 @@
     "test": "jest --watchAll"
   },
   "dependencies": {
-    "alasql": "^4.6.5",
+    "alasql": "^4.6.6",
     "axios": "^1.7.4",
     "echarts": "^5.5.1",
     "echarts-for-react": "^3.0.2",
