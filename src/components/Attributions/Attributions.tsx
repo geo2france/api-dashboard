@@ -58,7 +58,7 @@ const Attribution: React.FC<AttributionProps> = ({ data, style, licenses }) => {
                 <Tooltip title={licenses?.join(' ')} placement="bottom" >
                     { licenses?.map((license, index) => {
                         const LogoComponent = logoMapping[license];
-                        return (<span style={{marginLeft:2}}><LogoComponent key={index} style={licence_logo_style} aria-label={license} /></span>)
+                        return (<span key={index} style={{marginLeft:2}}><LogoComponent style={licence_logo_style} aria-label={license} /></span>)
                     })}
                 </Tooltip>
                 </span>

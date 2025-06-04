@@ -25,46 +25,52 @@ const FlipCard: React.FC<FlipCardProps> = ({ title, information, children }) => 
     const height = cardARef.current ? cardARef.current.clientHeight : undefined; // Forcer la hauteur à celle de la card "Recto"
 
     const FlipCardStyle: CSSProperties = {
-        position: "absolute",
         transition: "transform 0.8s",
         backfaceVisibility: "hidden",
         width: "100%",
       };
 
-      const titleElement: ReactElement = (
-        <span style={{ marginLeft: 5 }}>
-          {title}{" "}
-          {information && ( //Affichage du bouton "i" s'il y a une description
-            <Button
-              type="text"
-              onClick={toggleFlipped}
-              shape="circle"
-              style={{ position: "absolute", right: 0, top: 0 }}
-              aria-label="info"
-            >
-              {flipped ? <BsInfoCircleFill /> : <BsInfoCircle />}
-            </Button>
-          )}
-        </span>
-      );
+    interface InfoButtonProps {
+      filled?:boolean
+    }
+    const InfoButton: React.FC<InfoButtonProps> = ({filled=false})=> {
+      return (
+        <Button 
+            type="text" 
+            shape="circle"
+            aria-label="info"
+            onClick={toggleFlipped}> 
+              {filled ? <BsInfoCircleFill /> : <BsInfoCircle  /> }
+        </Button>
+      )
+    }
 
     return (
-      <div style={{ position: "relative", height: height }}> 
+      <div style={{ position: "relative", height: height }}>
         <Card
-          title={titleElement}
-          style={{ transform: flipped ? "rotateY(180deg)" : "", ...FlipCardStyle }}
+          title={title}
+          extra={<>{information && <InfoButton filled={flipped}/>} </>}
+          style={{
+            transform: flipped ? "rotateY(180deg)" : "",
+            position: "static",
+            ...FlipCardStyle,
+          }}
           styles={cardStyles} //Default g2f-dashboard style (header & body)
           ref={cardARef}
         >
           {children}
         </Card>
         <Card
-          title={titleElement}
-          style={{ 
-            transform: !flipped ? "rotateY(180deg)" : "", 
-            height: height ,
-            overflow:"auto",
-            ...FlipCardStyle}} 
+          title={title}
+          extra={<InfoButton filled={flipped} />}
+          style={{
+            transform: !flipped ? "rotateY(180deg)" : "",
+            height: height,
+            top: 0,
+            position: "absolute",
+            overflow: "auto",
+            ...FlipCardStyle,
+          }}
           styles={cardStyles} //Default g2f-dashboard style (header & body)
         >
           {typeof information === "string" ? (

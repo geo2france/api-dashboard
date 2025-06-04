@@ -181,7 +181,7 @@ const DashboardElement: React.FC<IDashboardElementProps> = ({
           display: "flex",
           flexDirection: "column",
         }}
-        bordered={!virtual}
+        variant={virtual ? 'borderless' : 'outlined'}
         title={ header && !virtual &&
           <Flex justify="space-between" align="center">
             <span style={{overflow:"hidden",  paddingRight:15}}>{title}</span>
