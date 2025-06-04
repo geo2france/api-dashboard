@@ -1,6 +1,6 @@
 import { Button, Col, Dropdown, Flex, Grid, Radio, Row, RowProps } from "antd";
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
 import Control from "../Control/Control";
 
@@ -114,12 +114,9 @@ interface IDSLDashboardPageProps {
 export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) => {
     const [datasets, setdatasets] = useState<Record<string, dataset>>({});
 
-    const allDatasetLoaded = Object.values(datasets).every(d => !d.isFetching);
-    const isDatasetError = Object.values(datasets).some(d => d.isError);
+    //const allDatasetLoaded = Object.values(datasets).every(d => !d.isFetching);
+    //const isDatasetError = Object.values(datasets).some(d => d.isError);
 
-
-    console.log('all loaded', allDatasetLoaded)
-    console.log('is error', isDatasetError)
 
     // Ajouter ou mettre à jour un dataset
     const pushDataset = (d: dataset) => {
@@ -128,8 +125,6 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
           [d.id]: d
         }));
     };
-
-    console.log(datasets)
 
     //const childrenArray = React.Children.toArray(children);
 
