@@ -1,6 +1,6 @@
 import { Button, Col, Dropdown, Flex, Grid, Radio, Row, RowProps } from "antd";
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
-import React from "react";
+import React, { useRef, useState } from "react";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
 import Control from "../Control/Control";
 
@@ -90,3 +90,54 @@ const DashboardPage:React.FC<IDashboardPageProps> = ({children, control, row_gut
 }
 
 export default DashboardPage;
+
+import { createContext } from 'react';
+import { SimpleRecord } from "../../types";
+
+type dataset = {
+    id: string;
+    resource: string;
+    data?: SimpleRecord[];
+    isFetching: boolean;
+    isError: boolean;
+
+}
+
+
+export const DatasetContext = createContext<Record<string, dataset>>({});
+export const DatasetRegistryContext = createContext<(dataset: dataset) => void>(()=>{});
+
+
+interface IDSLDashboardPageProps {
+    children : React.ReactNode // TODO, lister les type possible ?React.ReactElement<typeof DashboardElement>[];
+}
+export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) => {
+    const [datasets, setdatasets] = useState<Record<string, dataset>>({});
+
+    const allDatasetLoaded = Object.values(datasets).every(d => !d.isFetching);
+    const isDatasetError = Object.values(datasets).some(d => d.isError);
+
+
+    console.log('all loaded', allDatasetLoaded)
+    console.log('is error', isDatasetError)
+
+    // Ajouter ou mettre à jour un dataset
+    const pushDataset = (d: dataset) => {
+        setdatasets(prev => ({
+          ...prev, 
+          [d.id]: d
+        }));
+    };
+
+    console.log(datasets)
+
+    //const childrenArray = React.Children.toArray(children);
+
+    return (
+        <DatasetRegistryContext.Provider value={ pushDataset }>
+            <DatasetContext.Provider value={ datasets }>
+            {children}
+            </ DatasetContext.Provider>
+        </DatasetRegistryContext.Provider>
+        )
+}
