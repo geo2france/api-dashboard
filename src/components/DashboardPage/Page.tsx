@@ -1,6 +1,6 @@
-import { Button, Col, Dropdown, Flex, Grid, Radio, Row, RowProps } from "antd";
+import { Button, Card, Col, Dropdown, Flex, Grid, Radio, Row, RowProps } from "antd";
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
-import React, { useState } from "react";
+import React, { isValidElement, JSXElementConstructor, ReactElement, useState } from "react";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
 import Control from "../Control/Control";
 
@@ -93,6 +93,7 @@ export default DashboardPage;
 
 import { createContext } from 'react';
 import { SimpleRecord } from "../../types";
+import { Dataset } from "../../dsl";
 
 type dataset = {
     id: string;
@@ -126,12 +127,28 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
         }));
     };
 
-    //const childrenArray = React.Children.toArray(children);
+    const childrenArray = React.Children.toArray(children).filter(isValidElement);
+
+    const logicalComponents:JSXElementConstructor<any>[] = [Dataset]; //Composant logiques, a ne pas mettre dans la grid
+    const isLogical = (c:ReactElement) => 
+        typeof(c.type) != 'string' && 
+        logicalComponents.includes(c.type);
+    const visible_components = childrenArray.filter((c) => !isLogical(c));
+    const logic_components = childrenArray.filter((c) => isLogical(c));
 
     return (
         <DatasetRegistryContext.Provider value={ pushDataset }>
             <DatasetContext.Provider value={ datasets }>
-            {children}
+                <Row gutter={[8,8]} style={{ margin: 16 }}>
+            {    visible_components.map(
+                (component, idx) => 
+                        <Col  xl={12} xs={24} key={idx}>
+                            <Card style={{height:'100%'}}>{component}</Card>
+                        </Col>
+                )
+                }
+                </Row>
+                {logic_components}
             </ DatasetContext.Provider>
         </DatasetRegistryContext.Provider>
         )

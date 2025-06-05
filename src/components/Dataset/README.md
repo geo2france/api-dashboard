@@ -4,6 +4,17 @@
 Le composant `Dataset` permet de définir des jeux de données qui seront utilisés par
 les graphiques.
 
+```jsx
+<Dashboard>
+    <Dataset
+    id="monIdentifiantUnique"
+    provider={ademe_opendataProvider}
+    resource="sinoe-(r)-destination-des-dma-collectes-par-type-de-traitement/lines"
+    />
+  {/* [...] */}
+</Dashboard>
+```
+
 
 ## Transform
 
@@ -13,9 +24,6 @@ Il doit contenir soit :
 - Une chaîne de caractères qui sera interprétée comme une requête SQL. Voir la [documentation Alasql](https://github.com/AlaSQL/alasql/wiki/Select).
 
 Pour l'instant, un seul `Transform` peut être appliqué. TODO : supporter plusieurs `Transform` successifs.
-
-
-## Exemple
 
 ```jsx
 <Dashboard>
@@ -39,6 +47,27 @@ Pour l'instant, un seul `Transform` peut être appliqué. TODO : supporter plusi
     >
       <Transform>SELECT [ANNEE] as [annee] FROM ? ORDER BY [ANNEE] DESC LIMIT 1</Transform>
     </Dataset>
+  {/* [...] */}
+</Dashboard>
+```
+
+## DataPreview
+
+Un tableau simple pour visualiser les données du dataset.
+La clé `rowKey` du tableau est optionnelle, mais peux améliorer les performances sur des gros datasets.
+Il s'agit du nom de la colonne qui contient un identifiant unique pour chaque ligne. Sans clé, l'ensemble des colonnes est utilisée.
+
+
+```jsx
+<Dashboard>
+    <Dataset
+    id="monIdentifiantUnique"
+    provider={ademe_opendataProvider}
+    resource="sinoe-(r)-destination-des-dma-collectes-par-type-de-traitement/lines"
+    />
+
+    <DataPreview dataset_id='myuniquedatasetid' pageSize={5} rowKey='_i'/>
+
   {/* [...] */}
 </Dashboard>
 ```

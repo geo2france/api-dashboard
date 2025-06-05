@@ -1,8 +1,10 @@
 import { useContext, useEffect, createContext, useState, ReactElement } from "react"
 import { SimpleRecord, useApi } from "../.."
 import { CrudFilters } from "../../data_providers/types"
-import { DatasetRegistryContext } from "../DashboardPage/Page"
+import { DatasetContext, DatasetRegistryContext } from "../DashboardPage/Page"
 import alasql from "alasql"
+import { Table } from "antd"
+import { ColumnsType } from "antd/es/table"
 
 interface IDatasetProps {
     id:string
@@ -35,12 +37,9 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({children, id, provider, res
 
 
     return (
-        <>
-            <span>Dataset : {resource} </span>
-            <DataContext.Provider value={{data: data?.data, setData:setDataState}}>
-                { children }
-            </DataContext.Provider>
-        </>
+        <DataContext.Provider value={{data: data?.data, setData:setDataState}}>
+            { children }
+        </DataContext.Provider>
     )
 }
 
@@ -69,9 +68,35 @@ export const DSL_Transform:React.FC<ITransformProps> = ({children}) => {
         } }, [data, children]
     )
 
-    return (
-        <>
-        </>
-    )
+    return <></>
 
+}
+
+interface DSL_DataPreviewProps {
+    dataset_id: string;
+    pageSize?: number; //Default : Antdesign default pagesize (10)
+    rowKey?: string
+}
+export const DSL_DataPreview:React.FC<DSL_DataPreviewProps> = ({dataset_id, pageSize, rowKey}) => {
+    const datasetContext = useContext(DatasetContext)
+
+    const dataset = datasetContext[dataset_id];
+    const data = dataset?.data
+
+    if (data === undefined) { // TODO : Afficher Empty si les données ont fini de fetcher et data est null ou lenght==0
+        return <></>
+    }
+
+
+    const columns: ColumnsType<any> = Object.keys(data[0] || {}).map((key) => ({
+        title: key,
+        dataIndex: key,
+        key,
+        ellipsis: true,
+      }));
+      
+    return (
+        <Table pagination={{pageSize:pageSize}} dataSource={data} columns={columns} rowKey={(row) => rowKey ? row[rowKey]:JSON.stringify(row)} />
+    )
+    
 }
