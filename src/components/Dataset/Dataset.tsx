@@ -3,7 +3,7 @@ import { SimpleRecord, useApi } from "../.."
 import { CrudFilters } from "../../data_providers/types"
 import { DatasetContext, DatasetRegistryContext } from "../DashboardPage/Page"
 import alasql from "alasql"
-import { Table } from "antd"
+import { Badge, Table } from "antd"
 import { ColumnsType } from "antd/es/table"
 
 interface IDatasetProps {
@@ -96,7 +96,11 @@ export const DSL_DataPreview:React.FC<DSL_DataPreviewProps> = ({dataset_id, page
       }));
       
     return (
-        <Table pagination={{pageSize:pageSize}} dataSource={data} columns={columns} rowKey={(row) => rowKey ? row[rowKey]:JSON.stringify(row)} />
+        <>
+            <h3><Badge status={dataset.isError ? "error" : dataset.isFetching ? 'processing' : 'success' } /> {dataset?.resource}</h3>
+            <p>Enregistrements : {data?.length}</p>
+            <Table pagination={{pageSize:pageSize}} dataSource={data} columns={columns} rowKey={(row) => rowKey ? row[rowKey]:JSON.stringify(row)} />
+        </>
     )
     
 }
