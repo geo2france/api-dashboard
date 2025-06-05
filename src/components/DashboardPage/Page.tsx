@@ -1,6 +1,6 @@
 import { Button, Card, Col, Dropdown, Flex, Grid, Radio, Row, RowProps } from "antd";
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
-import React, { isValidElement, JSXElementConstructor, ReactElement, useState } from "react";
+import React, { isValidElement, ReactElement, useState } from "react";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
 import Control from "../Control/Control";
 
@@ -129,11 +129,11 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
 
     const childrenArray = React.Children.toArray(children).filter(isValidElement);
 
-    const logicalComponents:JSXElementConstructor<any>[] = [Dataset]; //Composant logiques, a ne pas mettre dans la grid
+    const logicalComponents:string[] = [Dataset.name]; //Composant logiques, a ne pas mettre dans la grid
     const isLogical = (c:ReactElement) => 
         typeof(c.type) != 'string' && 
-        logicalComponents.includes(c.type);
-    const visible_components = childrenArray.filter((c) => !isLogical(c));
+        logicalComponents.includes(c.type.name);
+    const visible_components = childrenArray.filter((c) => c && !isLogical(c));
     const logic_components = childrenArray.filter((c) => isLogical(c));
 
     return (
