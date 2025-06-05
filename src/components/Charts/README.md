@@ -15,7 +15,7 @@ Graphique "camembert".
     </Dataset>
 
     <ChartPie 
-        // Identifiant du dataset
+        // Identifiant du dataset (obligatoire si plusieurs dataset)
         dataset="destination-dma" 
 
         // Colonne qui contient les valeurs numériques
@@ -25,8 +25,11 @@ Graphique "camembert".
         nameKey='L_TYP_REG_DECHET'
 
         // Optionnel : Personnaliser le texte du label
-        labelText={({value, percent, name}) => `${name} - ${Number(value).toLocaleString()} soit ${percent?.toLocaleString()}%`} 
-        
+          labelText={({value, percent, name}) => (
+            <>
+              {name} - <tspan fontWeight="bold">{Number(value).toLocaleString()}</tspan> soit {percent?.toLocaleString()}%
+            </>
+          )}        
         // Optionnel Cacher la légende
         legend={false} 
     />

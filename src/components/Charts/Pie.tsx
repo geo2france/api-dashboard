@@ -1,10 +1,10 @@
-import { ReactElement, useContext } from "react";
-import { DatasetContext } from "../DashboardPage/Page";
+import { ReactElement } from "react";
 import { Cell, Legend, Pie, PieChart, PieLabelRenderProps, ResponsiveContainer, Tooltip } from "recharts";
+import { useDataset } from "../Dataset/hooks";
 
 
 interface IChartPieProps {
-    dataset:string, //dataset ID
+    dataset?:string, //dataset ID
     children?:ReactElement,
     dataKey:string,
     nameKey:string,
@@ -14,9 +14,8 @@ interface IChartPieProps {
 }
 
 export const ChartPie:React.FC<IChartPieProps> = ({dataset:dataset_id, nameKey, dataKey, unit, children, labelText, legend=true}) => {
-    const datasetContext = useContext(DatasetContext)
+    const dataset = useDataset(dataset_id)
 
-    const dataset = datasetContext[dataset_id];
     const data = dataset?.data
     const COLORS = [
         '#00448e', // bleu foncé
