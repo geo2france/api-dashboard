@@ -4,6 +4,7 @@ import { DSL_DataPreview as DataPreview } from "../components/Dataset/DataPrevie
 import { DSL_Transform as Transform} from "../components/Dataset/Transform";
 import { useDataset } from "../components/Dataset/hooks";
 import { ChartPie } from "../components/Charts/Pie";
+import { Producer } from "../components/Dataset/Producer";
 
 export {
     Dashboard,
@@ -12,5 +13,6 @@ export {
     DataPreview,
     ChartPie,
     useDataset,
+    Producer,
 }
 

@@ -94,6 +94,7 @@ export default DashboardPage;
 import { createContext } from 'react';
 import { SimpleRecord } from "../../types";
 import { Dataset } from "../../dsl";
+import { ProducersFooter } from "../Dataset/Producer";
 
 type dataset = {
     id: string;
@@ -101,7 +102,7 @@ type dataset = {
     data?: SimpleRecord[];
     isFetching: boolean;
     isError: boolean;
-
+    producers?:any[]
 }
 
 
@@ -127,6 +128,9 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
         }));
     };
 
+
+      
+
     const childrenArray = React.Children.toArray(children).filter(isValidElement);
 
     const logicalComponents:string[] = [Dataset.name]; //Composant logiques, a ne pas mettre dans la grid
@@ -143,7 +147,9 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
             {    visible_components.map(
                 (component, idx) => 
                         <Col  xl={12} xs={24} key={idx}>
-                            <Card style={{height:'100%'}}>{component}</Card>
+                            <Card style={{height:'100%'}}>{component} <br /> 
+                            <ProducersFooter component={component} />
+                            </Card>
                         </Col>
                 )
                 }
@@ -153,3 +159,5 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
         </DatasetRegistryContext.Provider>
         )
 }
+
+

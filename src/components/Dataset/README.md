@@ -3,6 +3,7 @@
 ## Dataset
 Le composant `Dataset` permet de définir des jeux de données qui seront utilisés par
 les graphiques.
+On peut également ajouter des métadonnées (producteurs), qui s'afficheront sous les graphiques utilisant ce dataset.
 
 ```jsx
 <Dashboard>
@@ -10,7 +11,10 @@ les graphiques.
     id="monIdentifiantUnique"
     provider={ademe_opendataProvider}
     resource="sinoe-(r)-destination-des-dma-collectes-par-type-de-traitement/lines"
-    />
+    >
+      <Producer url="https://www.sinoe.org">Ademe</Producer>
+      <Producer url="https://odema-hautsdefrance.org/">Odema</Producer>
+    </Dataset>
   {/* [...] */}
 </Dashboard>
 ```
