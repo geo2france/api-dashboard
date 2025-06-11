@@ -5,6 +5,7 @@ import { DSL_Transform as Transform} from "../components/Dataset/Transform";
 import { useDataset } from "../components/Dataset/hooks";
 import { ChartPie } from "../components/Charts/Pie";
 import { Producer } from "../components/Dataset/Producer";
+import { DSL_Control as Control } from "../components/Control/Control";
 
 export {
     Dashboard,
@@ -14,5 +15,6 @@ export {
     ChartPie,
     useDataset,
     Producer,
+    Control,
 }
 

@@ -106,15 +106,22 @@ type dataset = {
 }
 
 
-export const DatasetContext = createContext<Record<string, dataset>>({});
-export const DatasetRegistryContext = createContext<(dataset: dataset) => void>(()=>{});
+type ControlContextType = {
+    values : Record<string, any>;
+    pushValue: (control: { name: string; value: any }) => void;
+}
 
+export const DatasetContext = createContext<Record<string, dataset>>({});
+export const DatasetRegistryContext = createContext<(dataset: dataset) => void>(()=>{}); // A modifier, utiliser un seul context
+export const ControlContext = createContext<ControlContextType | undefined>(undefined);
 
 interface IDSLDashboardPageProps {
     children : React.ReactNode // TODO, lister les type possible ?React.ReactElement<typeof DashboardElement>[];
 }
 export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) => {
     const [datasets, setdatasets] = useState<Record<string, dataset>>({});
+
+    const [controls, setControles] = useState<Record<string, any>>({});
 
     //const allDatasetLoaded = Object.values(datasets).every(d => !d.isFetching);
     //const isDatasetError = Object.values(datasets).some(d => d.isError);
@@ -127,6 +134,15 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
           [d.id]: d
         }));
     };
+
+    // Ajouter ou mettre a jour un control
+    const pushControl = (c: Record<string, any>) => {
+        setControles(prev => ({
+            ...prev, 
+            ...c
+          }));
+    }
+
 
 
       
@@ -143,6 +159,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
     return (
         <DatasetRegistryContext.Provider value={ pushDataset }>
             <DatasetContext.Provider value={ datasets }>
+                <ControlContext.Provider value={{ values:controls, pushValue:pushControl  }}>
                 <Row gutter={[8,8]} style={{ margin: 16 }}>
             {    visible_components.map(
                 (component, idx) => 
@@ -155,6 +172,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
                 }
                 </Row>
                 {logic_components}
+                </ControlContext.Provider>
             </ DatasetContext.Provider>
         </DatasetRegistryContext.Provider>
         )
