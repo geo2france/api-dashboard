@@ -37,11 +37,11 @@ export const ProducersFooter:React.FC<IProducersFooterProps> = ({component}) => 
                     {" "}
                     Source des données :{" "}
                     {dataset.producers?.map((p, idx) => (
-                      <>
-                        <a href={p.url} key={idx}>
+                      <div key={idx}>
+                        <a href={p.url}>
                           {p.nom}
                         </a>{" "}
-                      </>
+                      </div>
                     ))}
                   </>
                 ) : null;
