@@ -12,6 +12,7 @@ interface NextPrevSelectProps  {
     value?:string | number
     onChange?: (value: string | number) => void;
     reverse?:boolean // False : next = goDown
+    name?:string
   }
 
 const NextPrevSelect: React.FC<NextPrevSelectProps> = ({

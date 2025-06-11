@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "alasql": "^4.6.6",
+    "arquero": "^8.0.3",
     "axios": "^1.7.4",
     "echarts": "^5.5.1",
     "echarts-for-react": "^3.0.2",
