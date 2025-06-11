@@ -67,7 +67,7 @@ export const DSL_Control: React.FC<IControlProps> = ({ children }) => {
   };
 
   return (
-    <Form onValuesChange={handleChange}>
+    <Form onValuesChange={handleChange} layout="inline">
       {childrenArray.map((child, idx) => (
         <Form.Item key={idx} name={child.props.name} label={child.props.name}>
           {child}

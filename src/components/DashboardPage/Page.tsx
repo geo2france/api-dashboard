@@ -1,8 +1,15 @@
-import { Button, Card, Col, Dropdown, Flex, Grid, Radio, Row, RowProps } from "antd";
+import { Button, Card, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps } from "antd";
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
-import React, { isValidElement, ReactElement, useState } from "react";
+import React, { isValidElement, ReactElement, useState, createContext } from "react";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
-import Control from "../Control/Control";
+import Control, { DSL_Control } from "../Control/Control";
+
+import { SimpleRecord } from "../../types";
+import { Dataset } from "../../dsl";
+import { ProducersFooter } from "../Dataset/Producer";
+
+const { Header } = Layout;
+
 
 type Section =  {
     key: string;
@@ -91,10 +98,7 @@ const DashboardPage:React.FC<IDashboardPageProps> = ({children, control, row_gut
 
 export default DashboardPage;
 
-import { createContext } from 'react';
-import { SimpleRecord } from "../../types";
-import { Dataset } from "../../dsl";
-import { ProducersFooter } from "../Dataset/Producer";
+
 
 type dataset = {
     id: string;
@@ -150,27 +154,52 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
     const childrenArray = React.Children.toArray(children).filter(isValidElement);
 
     const logicalComponents:string[] = [Dataset.name]; //Composant logiques, a ne pas mettre dans la grid
-    const isLogical = (c:ReactElement) => 
-        typeof(c.type) != 'string' && 
-        logicalComponents.includes(c.type.name);
-    const visible_components = childrenArray.filter((c) => c && !isLogical(c));
-    const logic_components = childrenArray.filter((c) => isLogical(c));
+
+    const getComponentKind = (c:ReactElement) : "logical" | "control" | "other" => {
+        if  (typeof(c.type) != 'string' &&  logicalComponents.includes(c.type.name)) {
+            return "logical"
+        }
+        else if (typeof(c.type) != 'string' &&  c.type.name == DSL_Control.name){
+            return "control"
+        }
+        else {
+            return "other"
+        }
+    }
+
+    const visible_components = childrenArray.filter((c) => c && getComponentKind(c)=='other');
+    const logic_components = childrenArray.filter((c) => getComponentKind(c) == 'logical');
+    const control_components = childrenArray.filter((c) => getComponentKind(c) == 'control');
 
     return (
         <DatasetRegistryContext.Provider value={ pushDataset }>
             <DatasetContext.Provider value={ datasets }>
                 <ControlContext.Provider value={{ values:controls, pushValue:pushControl  }}>
-                <Row gutter={[8,8]} style={{ margin: 16 }}>
-            {    visible_components.map(
-                (component, idx) => 
-                        <Col  xl={12} xs={24} key={idx}>
-                            <Card style={{height:'100%'}}>{component} <br /> 
-                            <ProducersFooter component={component} />
-                            </Card>
-                        </Col>
-                )
-                }
-                </Row>
+
+                    { control_components.length > 0 && <Header
+                    style={{
+                        padding: 12,
+                        position: "sticky",
+                        top: 0,
+                        zIndex: 600, // maplibre top zIndex if 500
+                        backgroundColor: "#fff",
+                        height: "auto",
+                        width: "100%",
+                    }}>
+                        {control_components}
+                    </Header>}
+
+                    <Row gutter={[8,8]} style={{ margin: 16 }}>
+                       {  visible_components.map(
+                        (component, idx) => 
+                                <Col  xl={12} xs={24} key={idx}>
+                                    <Card style={{height:'100%'}}>{component} <br /> 
+                                    <ProducersFooter component={component} />
+                                    </Card>
+                                </Col>
+                        )
+                       }
+                    </Row>
                 {logic_components}
                 </ControlContext.Provider>
             </ DatasetContext.Provider>
