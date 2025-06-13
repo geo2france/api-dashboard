@@ -25,9 +25,9 @@ On peut également ajouter des métadonnées (producteurs), qui s'afficheront so
 Le composant enfant `Transform` est optionnel. Il permet de modifier localement les données du `Dataset` parent. 
 Il doit contenir soit :
 - Une fonction javascript qui traite les données.
-- Une chaîne de caractères qui sera interprétée comme une requête SQL. Voir la [documentation Alasql](https://github.com/AlaSQL/alasql/wiki/Select).
+- Une chaîne de caractères qui sera interprétée comme une requête SQL (voir la [documentation Alasql](https://github.com/AlaSQL/alasql/wiki/Select)).
 
-Pour l'instant, un seul `Transform` peut être appliqué. TODO : supporter plusieurs `Transform` successifs.
+Si plusieurs `Transform` sont ajoutés, ils sont appliqués successivement sur les données.
 
 ```jsx
 <Dashboard>
@@ -37,6 +37,7 @@ Pour l'instant, un seul `Transform` peut être appliqué. TODO : supporter plusi
     resource="sinoe-(r)-destination-des-dma-collectes-par-type-de-traitement/lines"
     >
       <Transform>{(data) => data.filter((e) => e.TONNAGE_DMA > 3000)}</Transform>
+      <Transform>SELECT * FROM ? ORDER BY [TONNAGE_DMA] DESC LIMIT 5</Transform>
     </Dataset>
   {/* [...] */}
 </Dashboard>
