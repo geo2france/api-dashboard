@@ -1,8 +1,10 @@
 import { useContext, useEffect, createContext, useState, ReactNode, useCallback } from "react"
 import { SimpleRecord, useApi } from "../.."
 import { CrudFilters } from "../../data_providers/types"
-import { DatasetRegistryContext } from "../DashboardPage/Page"
+import { ControlContext, DatasetRegistryContext } from "../DashboardPage/Page"
 import { ProducerType } from "./Producer"
+import React from "react"
+import { Filter } from "../../dsl"
 
 
 interface IDatasetProps {
@@ -12,8 +14,6 @@ interface IDatasetProps {
     filters?:CrudFilters
     children?: ReactNode
 }
-
-
 
  
 type transformerFnType = (data: SimpleRecord[]) => SimpleRecord[]
@@ -28,11 +28,14 @@ export const TransformContext = createContext<TransformContextType>({
     addTransformer: () => {},
   })
 
-export const DSL_Dataset:React.FC<IDatasetProps> = ({children, id, provider, resource, filters}) => {
-    const {data, isFetching, isError} = useApi({dataProvider:provider, resource:resource, filters:filters})
-    const datasetRegistryContext = useContext(DatasetRegistryContext)
 
+export const DSL_Dataset:React.FC<IDatasetProps> = ({children, id, provider, resource}) => {
+    const datasetRegistryContext = useContext(DatasetRegistryContext)
     const [transformers, setTransformers] = useState<{ id: string, fn: transformerFnType }[]>([])
+
+    const controlContext = useContext(ControlContext)
+    const controls = controlContext?.values ;
+
 
     const addTransformer = useCallback((id: string, fn: (data: SimpleRecord[]) => SimpleRecord[]) => {
         setTransformers(prev => {
@@ -45,6 +48,23 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({children, id, provider, res
       }, []);
 
     const [producers, setProducers] = useState<any[] >([]);
+
+    
+    /* Récupérer les props des filtres depuis les composants enfant Filter */
+    const filters:CrudFilters = []
+    React.Children.toArray(children)
+      .filter((c): c is React.ReactElement => React.isValidElement(c))
+      .filter((c) => c.type == Filter).forEach(
+      (c) => {
+          const value = c.props.children?.trim() || controls?.[c.props.control]
+          filters.push({
+            operator:c.props.operator || 'eq',
+            value: value,
+            field: c.props.field
+        })
+      }) 
+
+    const {data, isFetching, isError} = useApi({dataProvider:provider, resource:resource, filters: filters})
 
     const pushProducer = (p:ProducerType) => {
         setProducers(prev => { 

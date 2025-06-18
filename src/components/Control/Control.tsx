@@ -36,7 +36,8 @@ export default Control;
 /*
  * Hook personnalisé pour accéder et mettre à jour un contrôle spécifique de la page
  */
-export const useControl = (name: string): [any, (control: any) => void] => {
+//TODO ajouter useControls qui s'utilise sans parametre et retourne tous les controles
+export const useControl = (name: string): [any, (control: any) => void] => { 
   const context_controls = useContext(ControlContext);
 
   if (!context_controls) {
