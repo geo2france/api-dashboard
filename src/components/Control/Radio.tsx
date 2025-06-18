@@ -42,7 +42,7 @@ export const Radio: React.FC<ExtendedRadioGroupProps> = ({
     // Ici tu pourrais fetcher les données depuis un contexte/dataset si datasetSource est présent
   
     const data = useDataset(datasetSource)?.data
-    const data_options = data && buildOptionsFromData(data,labelField, valueField )
+    const data_options = options || data && buildOptionsFromData(data,labelField, valueField )
     const initial_value = data_options && data_options?.length > 0 && data_options[0].value
 
     if (data === undefined){
