@@ -8,6 +8,9 @@ interface IFilterProps {
 
 }
 
-export const DSL_Filter:React.FC<IFilterProps> = ({children, field, control: control_in, operator = "eq"}) => {
+/*
+* Les props sont utilisées dans le composant parent <Dataset> pour appliquer un filtre distant
+*/
+export const DSL_Filter:React.FC<IFilterProps> = () => {
     return <></>
 }
