@@ -1,5 +1,5 @@
 import { Form, Layout } from "antd";
-import React, { CSSProperties, ReactElement, useContext } from "react";
+import React, { CSSProperties, ReactElement, useContext, useEffect } from "react";
 import { ControlContext } from "../DashboardPage/Page";
 
 const { Header } = Layout;
@@ -67,8 +67,16 @@ export const DSL_Control: React.FC<IControlProps> = ({ children }) => {
     pushControl(changed_value);
   };
 
+  const initialValues = Object.fromEntries(childrenArray.filter((child) => child.props.options && child.props.options.length > 0).map(
+    (child) => [child.props.name, child.props.options[0].value]
+  )); // Initialisé avec la première valeur de chaque option
+
+  useEffect(() => {
+    handleChange(initialValues); // Appliquer les valeurs par défaut au contexte lors de l'initialisation du composant
+  }, []); 
+
   return (
-    <Form onValuesChange={handleChange} layout="inline">
+    <Form onValuesChange={handleChange} layout="inline" initialValues={initialValues}>
       {childrenArray.map((child, idx) => (
         <Form.Item key={idx} name={child.props.name} label={child.props.name}>
           {child}
