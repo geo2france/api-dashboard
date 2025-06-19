@@ -1,6 +1,7 @@
-import { ReactElement } from "react";
+import { ReactElement, useContext, useEffect } from "react";
 import { Cell, Legend, Pie, PieChart, PieLabelRenderProps, ResponsiveContainer, Tooltip } from "recharts";
 import { useDataset } from "../Dataset/hooks";
+import { ChartBlockConfig, ChartBlockContext } from "../DashboardPage/Block";
 
 
 interface IChartPieProps {
@@ -11,12 +12,23 @@ interface IChartPieProps {
     unit?:string,
     labelText?: (props: PieLabelRenderProps) => React.ReactNode; // retourne le contenu à mettre dans <text>
     legend?:boolean //show legend
+    title?:string
 }
 
-export const ChartPie:React.FC<IChartPieProps> = ({dataset:dataset_id, nameKey, dataKey, unit, children, labelText, legend=true}) => {
+export const ChartPie:React.FC<IChartPieProps> = ({dataset:dataset_id, nameKey, dataKey, unit, children, labelText, title, legend=true}) => {
     const dataset = useDataset(dataset_id)
+    const blockConfig = useContext(ChartBlockContext)
 
     const data = dataset?.data
+
+    const block_config:ChartBlockConfig = {
+      title: title,
+      dataExport: data
+    }
+    useEffect(() => 
+      blockConfig?.setConfig(block_config)
+      , [data] )
+
     const COLORS = [
         '#00448e', // bleu foncé
         '#ffa630', // orange

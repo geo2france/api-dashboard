@@ -1,12 +1,11 @@
-import { Button, Card, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps } from "antd";
+import { Button, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps } from "antd";
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
-import React, { isValidElement, ReactElement, useState, createContext } from "react";
+import React, { isValidElement, ReactElement, useState, createContext, } from "react";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
 import Control, { DSL_Control } from "../Control/Control";
-
 import { SimpleRecord } from "../../types";
 import { Dataset } from "../../dsl";
-import { ProducersFooter } from "../Dataset/Producer";
+import { DSL_ChartBlock } from "./Block";
 
 const { Header } = Layout;
 
@@ -193,9 +192,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
                        {  visible_components.map(
                         (component, idx) => 
                                 <Col  xl={12} xs={24} key={idx}>
-                                    <Card style={{height:'100%'}}>{component} <br /> 
-                                    <ProducersFooter component={component} />
-                                    </Card>
+                                   <DSL_ChartBlock>{component}</DSL_ChartBlock>
                                 </Col>
                         )
                        }
