@@ -1,7 +1,8 @@
-import { ReactElement, useContext, useEffect } from "react"
-import { SetProducersContext } from "./Dataset"
+import { ReactElement } from "react"
 import { useDataset } from "./hooks"
+import { Typography } from "antd"
 
+const {Link} = Typography
 export type ProducerType = {
     nom: string,
     url?: string
@@ -11,11 +12,10 @@ interface IProducerProps {
     url?:string
     children:string
 }
-export const Producer:React.FC<IProducerProps> = ({children, url}) => {
-    const setProducerContext = useContext(SetProducersContext)
-    useEffect(() => {
-      setProducerContext && setProducerContext({ nom: children, url: url });
-    }, [children, url]);
+/**
+ * Les props sont récupérées par le parent (Dataset) et enregistrés avec le dataset 
+ */
+export const Producer:React.FC<IProducerProps> = () => {
     return <></>
 }
 
@@ -36,16 +36,15 @@ export const ProducersFooter:React.FC<IProducersFooterProps> = ({component}) => 
                   <>
                     {" "}
                     Source des données :{" "}
-                    {dataset.producers?.map((p, idx) => (
-                      <div key={idx}>
-                        <a href={p.url}>
+                    {dataset.producers?.map((p, idx, arr) => (
+                      <span key={idx}>
+                        <Link href={p.url}>
                           {p.nom}
-                        </a>{" "}
-                      </div>
+                        </Link>{idx < arr.length - 1 ? ', ' : ''}
+                      </span>
                     ))}
                   </>
                 ) : null;
         }
-        
         return <></>
 }
