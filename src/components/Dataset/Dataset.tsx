@@ -18,6 +18,7 @@ interface IDatasetProps {
     filters?:CrudFilters
     children?: ReactNode
     pageSize?:number
+    meta?:any
 }
 
  
@@ -33,7 +34,15 @@ const getTransformerFn = (children: string | transformerFnType):transformerFnTyp
   }
 };
 
-export const DSL_Dataset:React.FC<IDatasetProps> = ({children, id, provider : provider_input, type: providerType='file', url:providerUrl,  resource, pageSize}) => {
+export const DSL_Dataset:React.FC<IDatasetProps> = ({
+  children, 
+  id, 
+  provider : provider_input, 
+  type: providerType='file', 
+  url:providerUrl, 
+  resource, 
+  pageSize, 
+  meta}) => {
     const datasetRegistryContext = useContext(DatasetRegistryContext)
 
     const controlContext = useContext(ControlContext)
@@ -61,7 +70,7 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({children, id, provider : pr
         })
       }) 
 
-    const {data, isFetching, isError} = useApi({dataProvider:provider, resource:resource, filters: filters, pagination:{pageSize:pageSize}})
+    const {data, isFetching, isError} = useApi({dataProvider:provider, resource:resource, filters: filters, pagination:{pageSize:pageSize}, meta:meta})
 
     const transformers:Function[] = []
     /* Récuperer les fonctions transformers */
