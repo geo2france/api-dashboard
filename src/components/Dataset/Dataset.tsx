@@ -1,16 +1,19 @@
 import { useContext, useEffect, ReactNode } from "react"
 import { SimpleRecord, useApi } from "../.."
-import { CrudFilters } from "../../data_providers/types"
+import { CrudFilters,DataProvider } from "../../data_providers/types"
 import { ControlContext, DatasetRegistryContext } from "../DashboardPage/Page"
 import { Producer, ProducerType } from "./Producer"
 import React from "react"
 import { Filter, Transform } from "../../dsl"
 import alasql from "alasql"
+import { DataProviderContext, getProviderFromType, ProviderType } from "./Provider"
 
 
 interface IDatasetProps {
     id:string
-    provider:any
+    provider?:DataProvider // Remplacer/ajouter providerUrl et providerType dans les props Dataset ?
+    url?:`http${'s' | ''}://${string}`;
+    type?:ProviderType
     resource:string
     filters?:CrudFilters
     children?: ReactNode
@@ -30,13 +33,20 @@ const getTransformerFn = (children: string | transformerFnType):transformerFnTyp
   }
 };
 
-export const DSL_Dataset:React.FC<IDatasetProps> = ({children, id, provider, resource, pageSize}) => {
+export const DSL_Dataset:React.FC<IDatasetProps> = ({children, id, provider : provider_input, type: providerType='file', url:providerUrl,  resource, pageSize}) => {
     const datasetRegistryContext = useContext(DatasetRegistryContext)
 
     const controlContext = useContext(ControlContext)
     const controls = controlContext?.values ;
 
-    
+    const providerContext = useContext(DataProviderContext)
+
+    const provider = (providerUrl && getProviderFromType(providerType)(providerUrl)) || providerContext || provider_input;
+    if (provider === undefined){
+      throw new Error("Error : No dataProvider, please use one of : <Provider> parent, providerUrl/providerType properties or provider property")
+    }
+
+
     /* Récupérer les props des filtres depuis les composants enfant Filter */
     const filters:CrudFilters = []
     React.Children.toArray(children)
