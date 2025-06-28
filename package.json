@@ -20,6 +20,21 @@
     "territories",
     "dataviz"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./dsl": {
+      "import": "./dist/dsl/index.js",
+      "types": "./dist/dsl/index.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "dsl": ["dist/dsl/index.d.ts"]
+    }
+  },
   "scripts": {
     "tsc": "tsc",
     "test": "jest --watchAll"
