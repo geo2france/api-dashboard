@@ -2,7 +2,7 @@ import React from 'react'
 import { CaretLeftOutlined, CaretRightOutlined } from "@ant-design/icons"
 import { Button, Flex, Select, SelectProps} from "antd"
 import { CSSProperties, useEffect, useState } from "react"
-import './NextPrevSelect.css'
+//import './NextPrevSelect.css' //A interger en jsx
 
 
 interface NextPrevSelectProps  {

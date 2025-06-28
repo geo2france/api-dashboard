@@ -9,7 +9,7 @@ import { ErrorComponent } from "./Error";
 import { DasbhoardFooter } from "./Footer";
 import { createContext } from "react";
 
-import '../../index.css'
+//import '../../index.css' //TODO a intégrer en jsx
 
 const queryClient = new QueryClient()
 
