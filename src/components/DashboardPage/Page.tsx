@@ -1,8 +1,14 @@
-import { Button, Col, Dropdown, Flex, Grid, Radio, Row, RowProps } from "antd";
+import { Button, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps } from "antd";
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
-import React from "react";
+import React, { isValidElement, ReactElement, useState, createContext, } from "react";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
-import Control from "../Control/Control";
+import Control, { DSL_Control } from "../Control/Control";
+import { SimpleRecord } from "../../types";
+import { Dataset, Provider } from "../../dsl";
+import { DSL_ChartBlock } from "./Block";
+
+const { Header } = Layout;
+
 
 type Section =  {
     key: string;
@@ -90,3 +96,102 @@ const DashboardPage:React.FC<IDashboardPageProps> = ({children, control, row_gut
 }
 
 export default DashboardPage;
+
+
+
+type dataset = {
+    id: string;
+    resource: string;
+    data?: SimpleRecord[];
+    isFetching: boolean;
+    isError: boolean;
+    producers?:any[]
+}
+
+
+type ControlContextType = {
+    values : Record<string, any>;
+    pushValue: (control: { name: string; value: any }) => void;
+}
+
+export const DatasetContext = createContext<Record<string, dataset>>({});
+export const DatasetRegistryContext = createContext<(dataset: dataset) => void>(()=>{}); // A modifier, utiliser un seul context
+export const ControlContext = createContext<ControlContextType | undefined>(undefined);
+
+interface IDSLDashboardPageProps {
+    children : React.ReactNode // TODO, lister les type possible ?React.ReactElement<typeof DashboardElement>[];
+}
+export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) => {
+    const [datasets, setdatasets] = useState<Record<string, dataset>>({});
+
+    //const allDatasetLoaded = Object.values(datasets).every(d => !d.isFetching);
+    //const isDatasetError = Object.values(datasets).some(d => d.isError);
+
+
+    // Ajouter ou mettre à jour un dataset
+    const pushDataset = (d: dataset) => {
+        setdatasets(prev => ({
+          ...prev, 
+          [d.id]: d
+        }));
+    };
+
+
+
+
+
+      
+
+    const childrenArray = React.Children.toArray(children).filter(isValidElement);
+
+    const logicalComponents:string[] = [Dataset.name, Provider.name]; //Composant logiques, a ne pas mettre dans la grid
+
+    const getComponentKind = (c:ReactElement) : "logical" | "control" | "other" => {
+        if  (typeof(c.type) != 'string' &&  logicalComponents.includes(c.type.name)) {
+            return "logical"
+        }
+        else if (typeof(c.type) != 'string' &&  c.type.name == DSL_Control.name){
+            return "control"
+        }
+        else {
+            return "other"
+        }
+    }
+
+    const visible_components = childrenArray.filter((c) => c && getComponentKind(c)=='other');
+    const logic_components = childrenArray.filter((c) => getComponentKind(c) == 'logical');
+    const control_components = childrenArray.filter((c) => getComponentKind(c) == 'control');
+
+    return (
+        <DatasetRegistryContext.Provider value={ pushDataset }>
+            <DatasetContext.Provider value={ datasets }>
+
+                    { control_components.length > 0 && <Header
+                    style={{
+                        padding: 12,
+                        position: "sticky",
+                        top: 0,
+                        zIndex: 600, // maplibre top zIndex if 500
+                        backgroundColor: "#fff",
+                        height: "auto",
+                        width: "100%",
+                    }}>
+                        {control_components}
+                    </Header>}
+
+                    <Row gutter={[8,8]} style={{ margin: 16 }}>
+                       {  visible_components.map(
+                        (component, idx) => 
+                                <Col  xl={12} xs={24} key={idx}>
+                                   <DSL_ChartBlock>{component}</DSL_ChartBlock>
+                                </Col>
+                        )
+                       }
+                    </Row>
+                {logic_components}
+            </ DatasetContext.Provider>
+        </DatasetRegistryContext.Provider>
+        )
+}
+
+

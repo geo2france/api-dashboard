@@ -13,10 +13,12 @@
       "moduleResolution": "Node",
       "resolveJsonModule": true,
       "isolatedModules": true,
-      "noEmit": true,
+      "noEmit": false,
       "jsx": "react-jsx",
       "types": ["vite-plugin-svgr/client", "jest", "@testing-library/jest-dom", "node"],
-      "noUnusedLocals": true
+      "noUnusedLocals": true,
+      "declaration": true,
+      "outDir": "dist",
     },
     "include": ["src","src/custom.d.ts"],
     /*"references": [
