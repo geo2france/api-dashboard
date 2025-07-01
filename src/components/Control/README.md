@@ -27,7 +27,29 @@
 
 Chaque élément de control (`Input`, `Radio`, etc..) **doit** avoir une propriété `name` unique.
 
-## Radio et Select
+## Utilisation des valeurs utilisateur
+
+Le _hook_ `useControl` permet d'utiliser, de manière dynamique, les valeurs sélectionnées par l'utilisateur.
+Les valeurs peuvent être injectés n'importe où dans le JSX : notamment dans des valeurs de filtres, des titres, du texte, etc.
+
+```jsx
+    <Dashboard>
+        <Control >
+          <Input name="annee"/>
+        </Control>
+        <Dataset {/* [...] */}>
+          <Filter field="year">{useControl('annee')}</Filter>
+        </Dataset>
+        <div>{`Année sélectionnée : ${useControl('annee')}`}</div>
+
+        <ChartPie title={`Répartition des observation en ${useControl('annee')}`}>
+       {/* [...] */}
+    </Dashboard>
+```
+
+## Composants 
+
+### Radio et Select
 
 Les propriétés `dataset`, `valueField` et `labelField` permettent de peupler les options 
 avec les données d'un dataset. Ces données sont automatiquement dédoublonnées.
@@ -39,20 +61,20 @@ Les propriétés initiales des composants [Radio.Group](https://ant.design/compo
     <Radio name="radio" dataset='myuniquedatasetid' valueField='L_TYP_REG_DECHET' labelField='L_TYP_REG_DECHET'/>
     <Select name="radio2" options={[{label:'A', value:'a'}, {label:'B', value:'b'}]}/>
 ```
-## Input
+### Input
 
-## Slider
-
-A venir
-
-## NextPrevSelect
+### Slider
 
 A venir
 
-## SelectYear
+### NextPrevSelect
 
 A venir
 
-## Swith / Checkbox
+### SelectYear
+
+A venir
+
+### Swith / Checkbox
 
 A venir
