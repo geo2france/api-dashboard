@@ -1,8 +1,7 @@
 import React from 'react'
 import { CaretLeftOutlined, CaretRightOutlined } from "@ant-design/icons"
-import { Button, Flex, Select, SelectProps} from "antd"
+import { Button, ConfigProvider, Flex, Select, SelectProps} from "antd"
 import { CSSProperties, useEffect, useState } from "react"
-//import './NextPrevSelect.css' //A interger en jsx
 
 
 interface NextPrevSelectProps  {
@@ -14,6 +13,20 @@ interface NextPrevSelectProps  {
     reverse?:boolean // False : next = goDown
     name?:string
   }
+
+const style_button_left:CSSProperties = {
+  borderRadius: 0,
+  borderTopLeftRadius: 4,
+  borderBottomLeftRadius: 4,
+  borderRight:0,
+}
+
+const style_button_right:CSSProperties = {
+  borderRadius: 0,
+  borderTopRightRadius: 4,
+  borderBottomRightRadius: 4,
+  borderLeft:0,
+}
 
 const NextPrevSelect: React.FC<NextPrevSelectProps> = ({
   options = [],
@@ -54,19 +67,23 @@ const NextPrevSelect: React.FC<NextPrevSelectProps> = ({
 
   return (
     <Flex style={style}>
-      <Button className="nextPrevSelect-left-button" onClick={() => handleChange(previous())} disabled={isFirst()}>
-      <CaretLeftOutlined />
+      <Button style={style_button_left} onClick={() => handleChange(previous())} disabled={isFirst()}>
+        <CaretLeftOutlined />
       </Button>
-      <Select
-        className="nextPrevSelect"
-        options={options}
-        style={style}
-        value={current_value}
-        defaultValue={defaultValue}
-        onChange={handleChange}
-      />
-      <Button className="nextPrevSelect-right-button" onClick={() => handleChange(next())} disabled={isLast()}>
-      <CaretRightOutlined />
+
+      <ConfigProvider theme={{ components: { Select: { borderRadius: 0, }, }, }} > {/* Radius zero uniquement pour ce select*/}
+        <Select
+          className="nextPrevSelect"
+          options={options}
+          style={{...style}}
+          value={current_value}
+          defaultValue={defaultValue}
+          onChange={handleChange}
+        />
+      </ConfigProvider>
+
+      <Button style={style_button_right} onClick={() => handleChange(next())} disabled={isLast()}>
+        <CaretRightOutlined />
       </Button>
     </Flex>
   );
