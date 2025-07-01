@@ -23,7 +23,7 @@ export const YearSerieChart:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
 
     const dataset = useDataset(dataset_id)
     const data = dataset?.data
-    const [current_year] = useControl(yearControl) 
+    const current_year = useControl(yearControl) 
 
     const COLORS = [
         '#00448e', // bleu foncé
