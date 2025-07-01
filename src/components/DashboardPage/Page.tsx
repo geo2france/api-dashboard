@@ -124,8 +124,6 @@ interface IDSLDashboardPageProps {
 export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) => {
     const [datasets, setdatasets] = useState<Record<string, dataset>>({});
 
-    const [controls, setControles] = useState<Record<string, any>>({});
-
     //const allDatasetLoaded = Object.values(datasets).every(d => !d.isFetching);
     //const isDatasetError = Object.values(datasets).some(d => d.isError);
 
@@ -138,13 +136,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
         }));
     };
 
-    // Ajouter ou mettre a jour un control
-    const pushControl = (c: Record<string, any>) => {
-        setControles(prev => ({
-            ...prev, 
-            ...c
-          }));
-    }
+
 
 
 
@@ -173,7 +165,6 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
     return (
         <DatasetRegistryContext.Provider value={ pushDataset }>
             <DatasetContext.Provider value={ datasets }>
-                <ControlContext.Provider value={{ values:controls, pushValue:pushControl  }}>
 
                     { control_components.length > 0 && <Header
                     style={{
@@ -198,7 +189,6 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
                        }
                     </Row>
                 {logic_components}
-                </ControlContext.Provider>
             </ DatasetContext.Provider>
         </DatasetRegistryContext.Provider>
         )

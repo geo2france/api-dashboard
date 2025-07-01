@@ -7,7 +7,8 @@ import DashboardSider from "./Sider";
 import { Content } from "antd/es/layout/layout";
 import { ErrorComponent } from "./Error";
 import { DasbhoardFooter } from "./Footer";
-import { createContext } from "react";
+import { createContext, useState } from "react";
+import { ControlContext } from "../DashboardPage/Page";
 
 //import '../../index.css' //TODO a intégrer en jsx
 
@@ -53,32 +54,43 @@ interface DashboardApprProps {
 const DashboardApp: React.FC<DashboardApprProps> = ({route_config, theme, logo, brands, title, subtitle}) => {
 
     const context_values = { title, subtitle, logo };
+    
+    /* CONTROLS */
+    const [controls, setControles] = useState<Record<string, any>>({});
+    const pushControl = (c: Record<string, any>) => {
+      setControles(prev => ({
+          ...prev, 
+          ...c
+        }));
+    }
 
     return (
         <QueryClientProvider client={queryClient}>
           <ConfigProvider theme={theme || default_theme /* Merger plutôt ?*/}>
           <AppContext.Provider value={ context_values }>
-            <HashRouter>
-                <Routes>
-                  <Route
-                        element={
-                            <Layout>
-                                <Layout>
-                                    <DashboardSider route_config={route_config}/>
-                                    <Content style={{width:"85%"}}>
-                                        <Outlet />
-                                    </Content>
-                                </Layout>
-                                <DasbhoardFooter brands={brands} />
-                            </Layout>
-                        }
-                    >
-                    {generateRoutes(route_config)}
-                    <Route path="*" element={<ErrorComponent />} />
-                  </Route>
-                </Routes>
-            </HashRouter>
-            </AppContext.Provider>
+            <ControlContext.Provider value={{ values:controls, pushValue:pushControl  }}>
+              <HashRouter>
+                  <Routes>
+                    <Route
+                          element={
+                              <Layout>
+                                  <Layout>
+                                      <DashboardSider route_config={route_config}/>
+                                      <Content style={{width:"85%"}}>
+                                          <Outlet />
+                                      </Content>
+                                  </Layout>
+                                  <DasbhoardFooter brands={brands} />
+                              </Layout>
+                          }
+                      >
+                      {generateRoutes(route_config)}
+                      <Route path="*" element={<ErrorComponent />} />
+                    </Route>
+                  </Routes>
+              </HashRouter>
+            </ControlContext.Provider>
+          </AppContext.Provider>
           </ConfigProvider>
         </QueryClientProvider>
     )

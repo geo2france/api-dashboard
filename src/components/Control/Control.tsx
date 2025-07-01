@@ -34,21 +34,19 @@ const Control: React.FC<IControlProps> = ({ children, style = {} }) => {
 export default Control;
 
 /*
- * Hook personnalisé pour accéder et mettre à jour un contrôle spécifique de la page
+ * Hook  pour accéder à un control spécifique de la page
  */
-//TODO ajouter useControls qui s'utilise sans parametre et retourne tous les controles
 export const useControl = (name: string): [any, (control: any) => void] => { 
   const context_controls = useContext(ControlContext);
-
   if (!context_controls) {
     throw new Error("useControl must be used within a ControlProvider");
   }
 
-  const { values, pushValue } = context_controls;
+  const { values } = context_controls;
 
   const value = values[name];
 
-  return [value, pushValue];
+  return value;
 };
 
 interface IControlProps {
@@ -56,7 +54,13 @@ interface IControlProps {
 }
 
 export const DSL_Control: React.FC<IControlProps> = ({ children }) => {
-  const [_control, pushControl] = useControl("");
+  const context_controls = useContext(ControlContext);
+
+  if (!context_controls) { //Le contexte peut être nul ?
+    throw new Error("useControl must be used within a ControlProvider");
+  }
+  const { values:_control, pushValue:pushControl } = context_controls;
+
 
   const childrenArray = React.Children.toArray(children).filter((child) =>
     React.isValidElement(child)

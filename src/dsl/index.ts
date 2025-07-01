@@ -8,7 +8,7 @@ import { useDataset } from "../components/Dataset/hooks";
 import { ChartPie } from "../components/Charts/Pie";
 import { YearSerieChart } from "../components/Charts/YearSerie";
 import { Producer } from "../components/Dataset/Producer";
-import { DSL_Control as Control } from "../components/Control/Control";
+import { DSL_Control as Control, useControl } from "../components/Control/Control";
 import { Radio } from "../components/Control/Radio"
 import { Select } from "../components/Control/Select"
 import { Input } from "antd";
@@ -25,6 +25,7 @@ export {
     useDataset,
     Producer,
     Control,
+    useControl,
     Radio,
     Select,
     Input,
