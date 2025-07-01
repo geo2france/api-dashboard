@@ -62,7 +62,7 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
       .filter((c): c is React.ReactElement => React.isValidElement(c))
       .filter((c) => typeof c.type!='string' && c.type.name == Filter.name).forEach(
       (c) => {
-          const value = c.props.children?.trim() || controls?.[c.props.control]
+          const value = String(c.props.children).trim() || controls?.[c.props.control]
           filters.push({
             operator:c.props.operator || 'eq',
             value: value,
