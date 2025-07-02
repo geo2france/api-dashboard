@@ -46,13 +46,14 @@ const FlipCard: React.FC<FlipCardProps> = ({ title, information, children }) => 
     }
 
     return (
-      <div style={{ position: "relative", height: height }}>
+      <div style={{ position: "relative", height: "100%" }}>
         <Card
           title={title}
           extra={<>{information && <InfoButton filled={flipped}/>} </>}
           style={{
             transform: flipped ? "rotateY(180deg)" : "",
             position: "static",
+            height: "100%",
             ...FlipCardStyle,
           }}
           styles={cardStyles} //Default g2f-dashboard style (header & body)
