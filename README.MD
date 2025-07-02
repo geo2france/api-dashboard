@@ -87,7 +87,14 @@ Des fonctions sont proposés afin d'aider le développeur dans cette tâche : ac
 Le développeur est libre d'utiliser bibliothèque dataviz ou carto de son choix, à partir du moment où le composant retourne un élément visuelle.
 Nous préconisons [Echarts](https://echarts.apache.org) ou [Recharts](https://recharts.org/), mais il en existe une multitude.
 
-`TODO : guide développement compsoant`
+`TODO : guide développement composant`
+
+### Développement de control
+
+Il est également possible de développer des contrôle utilisateurs (éléments de formulaires) personalisés.
+
+`TODO : guide développement control. Le composant doit retourner un <Form.Item />`
+
 
 ## Installation
 

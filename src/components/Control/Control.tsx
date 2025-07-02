@@ -81,11 +81,7 @@ export const DSL_Control: React.FC<IControlProps> = ({ children }) => {
 
   return (
     <Form onValuesChange={handleChange} layout="inline" initialValues={initialValues}>
-      {childrenArray.map((child, idx) => (
-        <Form.Item key={idx} name={child.props.name} label={child.props.name}>
-          {child}
-        </Form.Item>
-      ))}
+      {children}
     </Form>
   );
 };
