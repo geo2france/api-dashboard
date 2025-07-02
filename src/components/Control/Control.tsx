@@ -67,6 +67,12 @@ interface IControlProps {
 
 export const DSL_Control: React.FC<IControlProps> = ({ children }) => {
   const context_controls = useContext(ControlContext);
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    handleChange(form?.getFieldsValue(true)); // Appliquer les valeurs par défaut au contexte lors de l'initialisation du composant
+  }, []); 
+
 
   if (!context_controls) { //Le contexte peut être nul ?
     throw new Error("useControl must be used within a ControlProvider");
@@ -87,12 +93,9 @@ export const DSL_Control: React.FC<IControlProps> = ({ children }) => {
     (child) => [child.props.name, child.props.options[0].value]
   )); // Initialisé avec la première valeur de chaque option
 
-  useEffect(() => {
-    handleChange(initialValues); // Appliquer les valeurs par défaut au contexte lors de l'initialisation du composant
-  }, []); 
 
   return (
-    <Form onValuesChange={handleChange} layout="inline" initialValues={initialValues}>
+    <Form onValuesChange={handleChange} layout="inline" initialValues={initialValues} form={form}>
       {children}
     </Form>
   );

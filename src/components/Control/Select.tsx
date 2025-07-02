@@ -7,7 +7,7 @@ import { list_to_options } from './Control';
 
 
 
-type ExtendedSelectProps = {
+type ExtendedSelectProps = Omit<SelectProps<any>, 'options'> & {
     dataset?: string;
     options?: { label: string ; value: string | number }[] | string[] | number[];
     initial_value? : string | number,
@@ -27,7 +27,8 @@ export const Select: React.FC<ExtendedSelectProps> = ({
     labelField = 'label',
     valueField = 'value',
     arrows = false,
-    initial_value:initial_value_in
+    initial_value:initial_value_in,
+    ...rest
   }) => {
     
     const options = list_to_options(input_options);
@@ -49,6 +50,6 @@ export const Select: React.FC<ExtendedSelectProps> = ({
     }
 
     return (     
-       <NextPrevSelect name={name} options={data_options} defaultValue={initial_value == null || initial_value == false ? undefined : initial_value} arrows={arrows} />
+       <NextPrevSelect name={name} options={data_options} defaultValue={initial_value == null || initial_value == false ? undefined : initial_value} arrows={arrows} {...rest} />
     );
   };

@@ -31,7 +31,8 @@ type ExtendedRadioGroupProps = RadioGroupProps & {
     dataset?: string;
     options?: { label: string ; value: string | number }[] | string[] | number[];
     labelField?:string,
-    valueField?:string
+    valueField?:string,
+    initalValue?:string | number
   };
 
 export const Radio: React.FC<ExtendedRadioGroupProps> = ({
@@ -40,6 +41,7 @@ export const Radio: React.FC<ExtendedRadioGroupProps> = ({
     labelField = 'label',
     valueField = 'value',
     name,
+    initalValue:initalValue_input,
     ...rest
   }) => {
     // Ici tu pourrais fetcher les données depuis un contexte/dataset si datasetSource est présent
@@ -48,14 +50,14 @@ export const Radio: React.FC<ExtendedRadioGroupProps> = ({
     const options = list_to_options(input_options);
 
     const data_options = options || data && buildOptionsFromData(data,labelField, valueField )
-    const initial_value = data_options && data_options?.length > 0 && data_options[0].value
+    const initial_value = initalValue_input ? initalValue_input : data_options && data_options?.length > 0 && data_options[0].value
 
     if (data === undefined && options===undefined ){
         return <></>
       }
 
     return (
-      <Form.Item name={name} label={name}>
+      <Form.Item name={name} label={name} initialValue={initial_value}>
         <AntRadio.Group options={data_options} value={initial_value} {...rest} />
       </Form.Item>
     );

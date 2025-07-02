@@ -1,6 +1,6 @@
 import React from 'react'
 import { CaretLeftOutlined, CaretRightOutlined } from "@ant-design/icons"
-import { Button, ConfigProvider, Flex, Form, FormInstance, Select } from "antd"
+import { Button, ConfigProvider, Flex, Form, FormInstance, Select, SelectProps } from "antd"
 import { CSSProperties, useEffect, useState } from "react"
 import { list_to_options } from '../Control/Control'
 
@@ -14,7 +14,7 @@ import { list_to_options } from '../Control/Control'
     })
   }
 
-interface NextPrevSelectProps  {
+type NextPrevSelectProps = SelectProps & {
     options:{ label: string ; value: string | number }[] | string[] | number[]
     style?:CSSProperties
     defaultValue?:string | number
@@ -47,7 +47,8 @@ const NextPrevSelect: React.FC<NextPrevSelectProps> = ({
   defaultValue,
   onChange,
   reverse = false,
-  arrows = true
+  arrows = true,
+  ...rest
 }) => {
   const [current_value, setCurrent_value] = useState<string | number | undefined>(value);
   const form = Form.useFormInstance();
@@ -90,7 +91,7 @@ const NextPrevSelect: React.FC<NextPrevSelectProps> = ({
         </Button> }
 
         <ConfigProvider theme={ arrows ? { components: { Select: { borderRadius: 0, }, }, } : undefined} > {/* Radius zero uniquement pour ce select*/}
-          <Form.Item name={name} label={name} noStyle={arrows} shouldUpdate >
+          <Form.Item name={name} label={name} noStyle={arrows} initialValue={defaultValue} shouldUpdate >
             <Select
               className="nextPrevSelect"
               options={options}
@@ -98,6 +99,7 @@ const NextPrevSelect: React.FC<NextPrevSelectProps> = ({
               value={current_value}
               defaultValue={defaultValue}
               onChange={handleChange}
+              {...rest}
             />
           </Form.Item>
         </ConfigProvider>
