@@ -39,7 +39,7 @@ Comme son nom l'indique, il permet de combiner la clarté et l'efficacité du XM
 La construction du tableau de bord repose sur l'articulation de 3 grands concepts :
 
 - Les `<Dataset>` permettent de rappatrier, filter et traiter laes données depuis des sources distantces (un portail open-data par exemple)
-- Les graphiques `<ChartXXX>` et `<MapXXX>` constituent la partie essentiel du tableau de bord
+- Les graphiques `<ChartXXX>` et `<MapXXX>` constituent la partie essentielle du tableau de bord
 - Les `<Control>` pour que les utilisateurs puissent interragir avec le tableau de bord (filter, activer/désactiver une option, etc.)
 
 Il est possible d'ajouter des éléments dynamiques en Javascript.
