@@ -1,8 +1,9 @@
 import { Radio as AntRadio, Form } from 'antd';
-import type { CheckboxOptionType, RadioGroupProps } from 'antd';
+import type { RadioGroupProps } from 'antd';
 import { useDataset } from '../Dataset/hooks';
 import { from } from 'arquero';
 import { SimpleRecord } from '../../types';
+import { list_to_options } from './Control';
 
 
 // On construit les options depuis le tableau de données, utiliser pour Radio et Select
@@ -10,7 +11,7 @@ export const buildOptionsFromData = (
     data: SimpleRecord[],
     labelField: string = 'label',
     valueField: string = 'value'
-  ): CheckboxOptionType[] => {
+  ): { label: string ; value: string | number }[] => {
 
     const t = from(data);
 
@@ -28,14 +29,14 @@ export const buildOptionsFromData = (
 type ExtendedRadioGroupProps = RadioGroupProps & {
     name?: string;
     dataset?: string;
-    options?: CheckboxOptionType[];
+    options?: { label: string ; value: string | number }[] | string[] | number[];
     labelField?:string,
     valueField?:string
   };
 
 export const Radio: React.FC<ExtendedRadioGroupProps> = ({
     dataset:datasetSource,
-    options = [],
+    options:input_options = [],
     labelField = 'label',
     valueField = 'value',
     name,
@@ -44,6 +45,8 @@ export const Radio: React.FC<ExtendedRadioGroupProps> = ({
     // Ici tu pourrais fetcher les données depuis un contexte/dataset si datasetSource est présent
   
     const data = useDataset(datasetSource)?.data
+    const options = list_to_options(input_options);
+
     const data_options = options || data && buildOptionsFromData(data,labelField, valueField )
     const initial_value = data_options && data_options?.length > 0 && data_options[0].value
 

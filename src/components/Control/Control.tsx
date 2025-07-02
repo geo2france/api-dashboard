@@ -49,6 +49,18 @@ export const useControl = (name: string): string | undefined => {
   return value;
 };
 
+/* Convenient function to return Options from list or Options */
+export const list_to_options = (input : string[] | number[] | { label: string; value: string | number }[] = []):{ label: string ; value: string | number }[] => {
+  if (input === undefined) { return []}
+  return input.map((o) => {
+    if (typeof o == "string" || typeof o == "number"){
+      return {label:String(o), value:o}
+    }
+    return o
+  })
+}
+
+
 interface IControlProps {
   children: ReactElement | ReactElement[];
 }

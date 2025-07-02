@@ -1,7 +1,8 @@
 import React from 'react'
 import { CaretLeftOutlined, CaretRightOutlined } from "@ant-design/icons"
-import { Button, ConfigProvider, Flex, Form, FormInstance, Select, SelectProps} from "antd"
+import { Button, ConfigProvider, Flex, Form, FormInstance, Select } from "antd"
 import { CSSProperties, useEffect, useState } from "react"
+import { list_to_options } from '../Control/Control'
 
 
   // Update field and trigger form OnValueChange, thanks to : https://github.com/ant-design/ant-design/issues/23782#issuecomment-2114700558
@@ -14,7 +15,7 @@ import { CSSProperties, useEffect, useState } from "react"
   }
 
 interface NextPrevSelectProps  {
-    options:SelectProps['options'] | string[] | number[]
+    options:{ label: string ; value: string | number }[] | string[] | number[]
     style?:CSSProperties
     defaultValue?:string | number
     value?:string | number
@@ -55,12 +56,7 @@ const NextPrevSelect: React.FC<NextPrevSelectProps> = ({
     setCurrent_value(value)
   },[value])
 
-  const options:SelectProps['options'] = input_options.map((o) => {
-    if (typeof o == "string" || typeof o == "number"){
-      return {label:o, value:o}
-    }
-    return o
-  })
+  const options = list_to_options(input_options);
 
   const current_index = options?.findIndex((o) => o.value == form?.getFieldValue(name) || o.value == current_value );
 
