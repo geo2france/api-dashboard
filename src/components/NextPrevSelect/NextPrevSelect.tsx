@@ -5,7 +5,7 @@ import { CSSProperties, useEffect, useState } from "react"
 
 
 interface NextPrevSelectProps  {
-    options:SelectProps['options']
+    options:SelectProps['options'] | string[] | number[]
     style?:CSSProperties
     defaultValue?:string | number
     value?:string | number
@@ -29,7 +29,7 @@ const style_button_right:CSSProperties = {
 }
 
 const NextPrevSelect: React.FC<NextPrevSelectProps> = ({
-  options = [],
+  options: input_options = [],
   style,
   value,
   defaultValue,
@@ -41,6 +41,13 @@ const NextPrevSelect: React.FC<NextPrevSelectProps> = ({
   useEffect(() => {
     setCurrent_value(value)
   },[value])
+
+  const options:SelectProps['options'] = input_options.map((o) => {
+    if (typeof o == "string" || typeof o == "number"){
+      return {label:o, value:o}
+    }
+    return o
+  })
 
   const current_index = options?.findIndex((o) => o.value == current_value);
 
