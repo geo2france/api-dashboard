@@ -6,7 +6,7 @@ import { DSL_Filter as Filter } from "../components/Dataset/Filter";
 import { Provider } from "../components/Dataset/Provider";
 import { useDataset } from "../components/Dataset/hooks";
 import { ChartPie } from "../components/Charts/Pie";
-import { YearSerieChart } from "../components/Charts/YearSerie";
+import { ChartYearSerie } from "../components/Charts/YearSerie";
 import { Producer } from "../components/Dataset/Producer";
 import { DSL_Control as Control, useControl } from "../components/Control/Control";
 import { Radio } from "../components/Control/Radio"
@@ -21,7 +21,7 @@ export {
     Filter,
     DataPreview,
     ChartPie,
-    YearSerieChart,
+    ChartYearSerie,
     useDataset,
     Producer,
     Control,

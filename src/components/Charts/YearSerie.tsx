@@ -15,11 +15,11 @@ interface IYearSerieProps {
     yearControl?:string
     yearKey:string
     valueKey:string
-    categoryKey:string
+    categoryKey?:string
     stack?: boolean
     type?: 'bar' | 'line'
 }
-export const YearSerieChart:React.FC<IYearSerieProps> = ({dataset:dataset_id, categoryKey, valueKey, yearKey, stack=true, type:chart_type='bar', yearControl='year'}) => {
+export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, categoryKey, valueKey, yearKey, stack=true, type:chart_type='bar', yearControl='year'}) => {
 
     const dataset = useDataset(dataset_id)
     const data = dataset?.data
@@ -37,10 +37,22 @@ export const YearSerieChart:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
         '#2f6bb3'  // bleu moyen
       ];
 
-    const chart_data = data && from(data).groupby(yearKey).pivot(categoryKey,valueKey ).objects()
+    const chart_data = categoryKey ? data && from(data).groupby(yearKey, categoryKey) //Somme par année et categorykey
+                                            .rollup({[valueKey]:op.sum(valueKey)})
+                                            .groupby(yearKey)
+                                            .pivot(categoryKey,valueKey ).objects()
+                                            :
+                                        data &&  from(data).groupby(yearKey) //Somme par année seulement
+                                        .rollup({[valueKey]:op.sum(valueKey)})
+                                        .objects()
 
-    const distinct_cat:string[] | undefined = data && (from(data).rollup({cat: op.array_agg_distinct(categoryKey)}).object() as { cat: string[] } ).cat
 
+    const distinct_cat:string[] | undefined = categoryKey ? 
+        data && (from(data).rollup({cat: op.array_agg_distinct(categoryKey)}).object() as { cat: string[] } ).cat
+        :
+        [valueKey]
+
+    console.log(distinct_cat)
     const CustomTick = (props:any) => { //Rechart ne fournis pas le type pour ca ?
         const { payload, x, y} = props
         const isCurrentYear = payload.value == current_year;
@@ -77,13 +89,11 @@ export const YearSerieChart:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
                     tick={current_year ? CustomTick : undefined}
                 />
                 {chart_type == 'bar' && distinct_cat?.map((cat, idx) => 
-                   
                             <Bar key={idx} dataKey={cat} stackId={stack ? 'a' : undefined} fill={COLORS[idx % COLORS.length]} /> 
                 )}
                 {chart_type == 'line' && distinct_cat?.map((cat, idx) => 
                    <Line key={idx} dataKey={cat} stroke={COLORS[idx % COLORS.length]}  /> 
                 )}
-                
 
             </ChartCustomType>
         </ResponsiveContainer>
