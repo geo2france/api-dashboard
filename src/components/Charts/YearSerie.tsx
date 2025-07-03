@@ -56,7 +56,7 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
             name:cat,
             type:chart_type === 'area' ? 'line' : chart_type,
             data :categoryKey ? chart_data?.filter((row:SimpleRecord) => row[categoryKey] === cat).map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey] ]))
-                              : chart_data,
+                              : chart_data?.map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey] ])),
             itemStyle:{
                 color:COLORS[idx % COLORS.length],
            },
@@ -65,14 +65,28 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
         }
     )) : {};
 
+    function tooltipFormatter(params: any): string {
+        if (!params || params.length === 0) return '';
+        console.log(params)
+        const year = params[0].value[0];
+        const lines = params.map((p:any) => {
+          const value = Number(p.value[1]).toLocaleString();
+          return `${p.marker} ${p.seriesName} <b><span style="display:inline-block; min-width:80px; text-align:right;">${value}</span></b>`;
+        });
+      
+        return `<div>${year}</div>` + lines.join('<br/>');
+    }
+
     const option:EChartsOption = {
         series:series,
         legend: {
-            show:true
+            show:true,
+            bottom:0
         },
         tooltip: {
             trigger: 'axis',
-        },
+            formatter: tooltipFormatter
+          },
         xAxis: [
             {
                 type: 'time'
