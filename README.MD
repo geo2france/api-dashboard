@@ -45,36 +45,42 @@ La construction du tableau de bord repose sur l'articulation de 3 grands concept
 Il est possible d'ajouter des éléments dynamiques en Javascript.
 
 ```jsx
-<Dashboard>
 
-  <Dataset 
-        id="dma_collecte_traitement" 
-        resource="sinoe-(r)-destination-des-dma-collectes-par-type-de-traitement/lines"
-        url="https://data.ademe.fr/data-fair/api/v1/datasets"
-        type="datafair"
-        pageSize={5000}>
-        <Filter field="L_REGION">Hauts-de-France</Filter> 
-        {/* Un filtre statique appliqué à l'API qui fournie les données */}
+import  { Transform, Dashboard, Dataset, Filter, Producer, Control, ChartPie, useControl } from "api-dashboard/dsl"
 
-        <Filter field="ANNEE">{useControl('annee')}</Filter> 
-        {/* Un second filtre : l'année choisie par l'utilisateur */}
+export const MaPremierePage = () => (
 
-        <Transform>SELECT [ANNEE], [L_TYP_REG_DECHET],  SUM([TONNAGE_DMA]) as [TONNAGE_DMA] FROM ? GROUP BY [ANNEE], [L_TYP_REG_DECHET]</Transform> 
-        {/* Transformation local des données */}
+  <Dashboard>
 
-        <Producer url="https://odema-hautsdefrance.org/">Odema</Producer>
-        {/* Pour créditer les graphiques */}
-  </Dataset>
+    <Dataset 
+          id="dma_collecte_traitement" 
+          resource="sinoe-(r)-destination-des-dma-collectes-par-type-de-traitement/lines"
+          url="https://data.ademe.fr/data-fair/api/v1/datasets"
+          type="datafair"
+          pageSize={5000}>
+          <Filter field="L_REGION">Hauts-de-France</Filter> 
+          {/* Un filtre statique appliqué à l'API qui fournie les données */}
 
-  <Control>
-      <NextPrevSelect name="annee" options={[{label:'2021', value:2021},{label:'2019', value:2019}]} />
-  </Control>
-  {/* Un control permettant à mon utilisateur de choisir l'année */}
+          <Filter field="ANNEE">{useControl('annee')}</Filter> 
+          {/* Un second filtre : l'année choisie par l'utilisateur */}
 
-  <ChartPie title={`Tonnages de déchets en ${useControl('annee')}`} dataset='dma_collecte_traitement' nameKey='L_TYP_REG_DECHET' dataKey='TONNAGE_DMA' />
-  {/* Un graphique camembert standard. J'indique mon jeu de données et les colonnes à utiliser */}
+          <Transform>SELECT [ANNEE], [L_TYP_REG_DECHET],  SUM([TONNAGE_DMA]) as [TONNAGE_DMA] FROM ? GROUP BY [ANNEE], [L_TYP_REG_DECHET]</Transform> 
+          {/* Transformation local des données */}
 
-</Dashboard>
+          <Producer url="https://odema-hautsdefrance.org/">Odema</Producer>
+          {/* Pour créditer les graphiques */}
+    </Dataset>
+
+    <Control>
+          <Select name="annee" options={[2021,2019,2017]} initial_value={2019} arrows={true} />
+    </Control>
+    {/* Un control permettant à mon utilisateur de choisir l'année */}
+
+    <ChartPie title={`Tonnages de déchets en ${useControl('annee')}`} dataset='dma_collecte_traitement' nameKey='L_TYP_REG_DECHET' dataKey='TONNAGE_DMA' />
+    {/* Un graphique camembert standard. J'indique mon jeu de données et les colonnes à utiliser */}
+
+  </Dashboard>
+)
 ```
 
 
@@ -89,7 +95,7 @@ Nous préconisons [Echarts](https://echarts.apache.org) ou [Recharts](https://re
 
 `TODO : guide développement composant`
 
-### Développement de control
+### Développement de contrôles
 
 Il est également possible de développer des contrôle utilisateurs (éléments de formulaires) personalisés.
 
