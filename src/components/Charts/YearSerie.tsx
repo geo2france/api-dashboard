@@ -17,13 +17,13 @@ interface IYearSerieProps {
     valueKey:string
     categoryKey?:string
     stack?: boolean
+    yearMark?:number | string
     type?: 'bar' | 'line' | 'area'
 }
-export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, categoryKey, valueKey, yearKey, stack:stack_input, type:chart_type='bar', yearControl='year'}) => {
+export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, categoryKey, valueKey, yearKey, yearMark, stack:stack_input, type:chart_type='bar', yearControl='year'}) => {
     const stack = stack_input || chart_type == 'line' ? false : true ; // Pas de stack par défaut pour le type line
     const dataset = useDataset(dataset_id)
     const data = dataset?.data
-    //const current_year = useControl(yearControl) 
 
     const COLORS = [
         '#00448e', // bleu foncé
@@ -60,7 +60,13 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
                 color:COLORS[idx % COLORS.length],
            },
            stack: stack ? 'total' : undefined,
-           areaStyle : chart_type === 'area' ? {} : undefined
+           areaStyle : chart_type === 'area' ? {} : undefined,
+           markLine: idx === 0 && yearMark ? {
+            symbol: 'none',
+            data: [
+              { xAxis: String(yearMark) }  
+            ]
+          } : undefined
         }
     )) : {};
 
@@ -94,7 +100,8 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
             {
                 type: 'value',
             }
-        ]
+        ],
+       
     }
      
     return (
