@@ -45,7 +45,6 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
                                         .rollup({[valueKey]:op.sum(valueKey)})
                                         .objects()
 
-      console.log(chart_data)
     const distinct_cat:string[] | undefined = categoryKey ? 
         data && (from(data).rollup({cat: op.array_agg_distinct(categoryKey)}).object() as { cat: string[] } ).cat
         :
@@ -67,7 +66,6 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
 
     function tooltipFormatter(params: any): string {
         if (!params || params.length === 0) return '';
-        console.log(params)
         const year = params[0].value[0];
         const lines = params.map((p:any) => {
           const value = Number(p.value[1]).toLocaleString();
