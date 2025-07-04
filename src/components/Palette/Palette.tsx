@@ -23,9 +23,9 @@ interface UsePaletteProps {
     nColors?: number
 }
 export const usePalette = ({nColors}:UsePaletteProps) => {
-    if (nColors === undefined) { return undefined }
     const palette_context = useContext(PaletteContext);
     const palette_info = palette_context?.palette
+    if (nColors === undefined) { return undefined }
     return palette_info?.steps && chroma.scale(palette_info.steps).mode(palette_info.mode || 'hsl').colors(nColors)
 }
 
@@ -47,12 +47,11 @@ export const Palette:React.FC<PaletteType> = ({ steps, mode }) => {
 
 export const PalettePreview:React.FC = ({}) => {
     const colors = usePalette({nColors:10}) || []
-
     return (
         <>
-        {colors.map((color) => (
-            <Tag key={color} color={color}>{color}</Tag>
-        ))}
+            {colors.map((color) => (
+                <Tag key={color} color={color}>{color}</Tag>
+            ))}
         </>
     )
 }
