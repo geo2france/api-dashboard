@@ -1,6 +1,6 @@
 import React from 'react'
 import { CaretLeftOutlined, CaretRightOutlined } from "@ant-design/icons"
-import { Button, ConfigProvider, Flex, Form, FormInstance, Select, SelectProps } from "antd"
+import { Button, ConfigProvider, Flex, Form, FormInstance, Select } from "antd"
 import { CSSProperties, useEffect, useState } from "react"
 import { list_to_options } from '../Control/Control'
 
@@ -14,8 +14,8 @@ import { list_to_options } from '../Control/Control'
     })
   }
 
-type NextPrevSelectProps = SelectProps & {
-    options:{ label: string ; value: string | number }[] | string[] | number[]
+type NextPrevSelectProps =  {
+    options?:{ label: string | number ; value: string | number }[] | string[] | number[]
     style?:CSSProperties
     defaultValue?:string | number
     value?:string | number
