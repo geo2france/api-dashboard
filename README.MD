@@ -28,21 +28,28 @@ En bref :
 
 Les composants sont actuellement utilisés pour le [tableau de bord de l'Odema](https://github.com/geo2france/odema-dashboard).
 
+## Installation
+
+Version de développment :
+`npm install https://github.com/geo2france/api-dashboard/tarball/dev`
+
+Version stable :
+`npm install https://github.com/geo2france/api-dashboard/tarball/main`
 
 ## Utilisation
 
-### Approche déclarative
+### Concepts principaux
 
 Le tableau de bord est construit de manière déclarative **JSX** (accronyme de JavaScript XML).
 Comme son nom l'indique, il permet de combiner la clarté et l'efficacité du XML, avec la souplesse et la puissance du JavaScript.
 
 La construction du tableau de bord repose sur l'articulation de 3 grands concepts :
 
-- Les `<Dataset>` permettent de rappatrier, filter et traiter laes données depuis des sources distantces (un portail open-data par exemple)
+- Les `<Dataset>` permettent de rappatrier, filter et traiter laes données depuis des sources distantes : [documentation](./src/components/Dataset/README.md)
 - Les graphiques `<ChartXXX>` et `<MapXXX>` constituent la partie essentielle du tableau de bord
-- Les `<Control>` pour que les utilisateurs puissent interragir avec le tableau de bord (filter, activer/désactiver une option, etc.)
+- Les `<Control>` pour que les utilisateurs puissent interragir avec le tableau de bord (filter, activer/désactiver une option, etc.) : [documentation](./src/components/Control/README.md)
 
-Il est possible d'ajouter des éléments dynamiques en Javascript.
+Le JSX permet aussi d'ajouter des éléments dynamiques en Javascript.
 
 ```jsx
 
@@ -83,9 +90,24 @@ export const MaPremierePage = () => (
 )
 ```
 
+### Graphiques standards
 
+Il s'agit de graphiques génériques proposés par la bibliothèque.
+Pour des besoins plus spécifiques, vous pouvez assez facilement [développer vos propres graphiques](#développement-de-composants-dataviz) (_from scracth_ ou en partant d'un graphique générique).
 
-### Développement de composant dataviz
+- [ChartYearSerie](./src/components/Charts/YearSerie.tsx) : pour représenter des séries annuelles en barre, aire ou lignes.
+- [ChartPie](./src/components/Charts/Pie.tsx) : camenbert ou donut.
+
+### Personnaliser le visuel
+
+Le composant [Palette](./src/components/Palette/README.md) peut-être utiliser pour définir une palette de couleur qui sera
+utilisée par l'ensemble des graphiques.
+
+La charte graphique globale du tableau de bord (police, espacements, couleurs...) peut-être personnalisée en éditant la configuration du [theme AntDesign](https://ant.design/docs/react/customize-theme#customize-design-token) (_documentation à rédiger_).
+
+## Guide développeur
+
+### Développement de composants dataviz
 
 La bibliothèque propose des graphiques de bases, mais il possible de développer ses propres composants React.
 Des fonctions sont proposés afin d'aider le développeur dans cette tâche : accéder facilement aux données ou aux options utilisateurs, gestion des erreurs, etc.
@@ -102,15 +124,9 @@ Il est également possible de développer des contrôle utilisateurs (éléments
 `TODO : guide développement control. Le composant doit retourner un <Form.Item />`
 
 
-## Installation
 
-Version de développment :
-`npm install https://github.com/geo2france/api-dashboard/tarball/dev`
 
-Version stable :
-`npm install https://github.com/geo2france/api-dashboard/tarball/main`
-
-## Documentation 
+## Documentation (ancienne)
 
 ⭐ Essentiel  
 👨‍💻 Utilisateur avancé 
