@@ -6,6 +6,7 @@ import Control, { DSL_Control } from "../Control/Control";
 import { SimpleRecord } from "../../types";
 import { Dataset, Provider } from "../../dsl";
 import { DSL_ChartBlock } from "./Block";
+import { DEFAULT_PALETTE, Palette, PaletteContext, PaletteType } from "../Palette/Palette";
 
 const { Header } = Layout;
 
@@ -123,7 +124,8 @@ interface IDSLDashboardPageProps {
 }
 export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) => {
     const [datasets, setdatasets] = useState<Record<string, dataset>>({});
-
+    const [palette, setPalette] = useState<PaletteType>(DEFAULT_PALETTE);
+ 
     //const allDatasetLoaded = Object.values(datasets).every(d => !d.isFetching);
     //const isDatasetError = Object.values(datasets).some(d => d.isError);
 
@@ -144,7 +146,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
 
     const childrenArray = React.Children.toArray(children).filter(isValidElement);
 
-    const logicalComponents:string[] = [Dataset.name, Provider.name]; //Composant logiques, a ne pas mettre dans la grid
+    const logicalComponents:string[] = [Dataset.name, Provider.name, Palette.name]; //Composant logiques, a ne pas mettre dans la grid
 
     const getComponentKind = (c:ReactElement) : "logical" | "control" | "other" => {
         if  (typeof(c.type) != 'string' &&  logicalComponents.includes(c.type.name)) {
@@ -165,7 +167,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
     return (
         <DatasetRegistryContext.Provider value={ pushDataset }>
             <DatasetContext.Provider value={ datasets }>
-
+              <PaletteContext.Provider value={{ palette, setPalette }}>
                     { control_components.length > 0 && <Header
                     style={{
                         padding: 12,
@@ -189,6 +191,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
                        }
                     </Row>
                 {logic_components}
+                </PaletteContext.Provider>
             </ DatasetContext.Provider>
         </DatasetRegistryContext.Provider>
         )

@@ -8,6 +8,7 @@ import { useDataset } from "../Dataset/hooks"
 import { SimpleRecord } from "../../types"
 import { EChartsOption } from "echarts"
 import EChartsReact from "echarts-for-react"
+import { usePalette } from "../Palette/Palette"
 
 interface IYearSerieProps {
     dataset:string
@@ -25,18 +26,6 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
     const dataset = useDataset(dataset_id)
     const data = dataset?.data
 
-    const COLORS = [
-        '#00448e', // bleu foncé
-        '#ffa630', // orange
-        '#8fc03c', // vert vif
-        '#6e40aa', // violet
-        '#fb676f', // rouge clair
-        '#75a4da', // bleu clair
-        '#f82333', // rouge vif
-        '#b4d973', // vert clair
-        '#2f6bb3'  // bleu moyen
-      ];
-
     const chart_data = categoryKey ? data && from(data).groupby(yearKey, categoryKey) //Somme par année et categorykey
                                             .rollup({[valueKey]:op.sum(valueKey)})
                                             .groupby(yearKey).objects()
@@ -50,6 +39,9 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
         :
         [valueKey]
 
+    const COLORS = usePalette({nColors:distinct_cat?.length}) || []
+
+
     const series = distinct_cat ? distinct_cat.map((cat, idx) => (
         {
             name:cat,
@@ -57,7 +49,7 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
             data :categoryKey ? chart_data?.filter((row:SimpleRecord) => row[categoryKey] === cat).map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey] ]))
                               : chart_data?.map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey] ])),
             itemStyle:{
-                color:COLORS[idx % COLORS.length],
+                color:COLORS && COLORS[idx % COLORS.length],
            },
            stack: stack ? 'total' : undefined,
            areaStyle : chart_type === 'area' ? {} : undefined,

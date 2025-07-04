@@ -12,6 +12,7 @@ import { DSL_Control as Control, useControl } from "../components/Control/Contro
 import { Radio } from "../components/Control/Radio"
 import { Select } from "../components/Control/Select"
 import { Input } from "antd";
+import { Palette, usePalette, PalettePreview } from "../components/Palette/Palette";
 
 export {
     Dashboard,
@@ -29,5 +30,8 @@ export {
     Radio,
     Select,
     Input,
+    Palette,
+    usePalette,
+    PalettePreview,
 }
 
