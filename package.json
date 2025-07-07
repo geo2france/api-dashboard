@@ -20,6 +20,9 @@
     "territories",
     "dataviz"
   ],
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "import": "./dist/index.js",
