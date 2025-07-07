@@ -51,7 +51,7 @@ export {WfsProvider, DatafairProvider, FileProvider}
 
 
 // Types
-export type { SimpleRecord } from "./types"
+export type { SimpleRecord, Partner, RouteConfig } from "./types"
 export type { LegendItem } from "./components/MapLegend/MapLegend" 
 
 
