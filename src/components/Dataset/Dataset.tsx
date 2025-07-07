@@ -12,7 +12,7 @@ import { DataProviderContext, getProviderFromType, ProviderType } from "./Provid
 interface IDatasetProps {
     id:string
     provider?:DataProvider // Remplacer/ajouter providerUrl et providerType dans les props Dataset ?
-    url?:`http${'s' | ''}://${string}`;
+    url?:string
     type?:ProviderType
     resource:string
     filters?:CrudFilters
