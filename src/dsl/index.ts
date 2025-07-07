@@ -4,7 +4,7 @@ import { DSL_DataPreview as DataPreview } from "../components/Dataset/DataPrevie
 import { DSL_Transform as Transform} from "../components/Dataset/Transform";
 import { DSL_Filter as Filter } from "../components/Dataset/Filter";
 import { Provider } from "../components/Dataset/Provider";
-import { useDataset } from "../components/Dataset/hooks";
+import { useDataset, useDatasets } from "../components/Dataset/hooks";
 import { ChartPie } from "../components/Charts/Pie";
 import { ChartYearSerie } from "../components/Charts/YearSerie";
 import { Producer } from "../components/Dataset/Producer";
@@ -24,6 +24,7 @@ export {
     ChartPie,
     ChartYearSerie,
     useDataset,
+    useDatasets,
     Producer,
     Control,
     useControl,

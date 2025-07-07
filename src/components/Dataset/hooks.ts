@@ -12,3 +12,12 @@ export const useDataset = (dataset_id? : string) => {
     const firstKey = Object.keys(datasetContext)[0];
     return firstKey ? datasetContext[firstKey] : undefined;
 }
+
+export const useDatasets = (dataset_ids? : string[]) => {
+  const datasetContext = useContext(DatasetContext)
+
+  return (
+    dataset_ids?.map( (dataset_id) =>  datasetContext[dataset_id] )
+  )
+
+}
