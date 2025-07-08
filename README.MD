@@ -30,11 +30,8 @@ Les composants sont actuellement utilisés pour le [tableau de bord de l'Odema](
 
 ## Installation
 
-Version de développment :
-`npm install https://github.com/geo2france/api-dashboard/tarball/dev`
+`npm install https://github.com/geo2france/api-dashboard/releases/latest/download/api-dashboard.tgz`
 
-Version stable :
-`npm install https://github.com/geo2france/api-dashboard/tarball/main`
 
 ## Utilisation
 
