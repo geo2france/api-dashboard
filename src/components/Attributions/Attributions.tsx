@@ -1,12 +1,7 @@
 import { Tooltip, Typography } from 'antd';
 import React, { CSSProperties } from 'react';
-import CC from "../../assets/img/cc.svg?react";
-import BY  from "../../assets/img/by.svg?react";
-import SA from "../../assets/img/sa.svg?react";
-import NC from "../../assets/img/nc.svg?react";
-import ZERO from "../../assets/img/zero.svg?react";
-import PD from "../../assets/img/pd.svg?react";
 import { License } from '../../types';
+import { FaCreativeCommons, FaCreativeCommonsBy, FaCreativeCommonsNc, FaCreativeCommonsPd, FaCreativeCommonsSa, FaCreativeCommonsZero } from 'react-icons/fa';
 
 const { Text, Link } = Typography;
 
@@ -19,6 +14,29 @@ export interface SourceMakerProps {
     maker?:SourceProps,
     sources?:SourceProps[],
 }
+
+
+interface ILogoLicenceProps {
+    license?:License
+    style?: CSSProperties
+}
+const LogoLicence:React.FC<ILogoLicenceProps> = ({license, style}) => {
+    switch(license){
+        case "CC":
+            return <FaCreativeCommons style={style} />
+        case "BY":
+            return <FaCreativeCommonsBy style={style} />
+        case "NC":
+            return <FaCreativeCommonsNc style={style} />
+        case "PD":
+            return <FaCreativeCommonsPd style={style} />
+        case "SA":
+            return <FaCreativeCommonsSa style={style} />
+        case "ZERO":
+            return <FaCreativeCommonsZero style={style} />
+    }
+}
+
 
 interface AttributionProps {
     data:SourceMakerProps | SourceProps[]
@@ -34,14 +52,6 @@ const Attribution: React.FC<AttributionProps> = ({ data, style, licenses }) => {
 
     const plural = (sources?.length ?? 0) > 1 ? 's' : ''
 
-    const logoMapping: { [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>> } = {
-        CC,
-        BY,
-        SA,
-        NC,
-        ZERO,
-        PD,
-      };
 
     return (
         <div style={{paddingLeft:4, paddingBottom:4, ...style}}>
@@ -57,8 +67,7 @@ const Attribution: React.FC<AttributionProps> = ({ data, style, licenses }) => {
                 <span style={{marginLeft:5}}>
                 <Tooltip title={licenses?.join(' ')} placement="bottom" >
                     { licenses?.map((license, index) => {
-                        const LogoComponent = logoMapping[license];
-                        return (<span key={index} style={{marginLeft:2}}><LogoComponent style={licence_logo_style} aria-label={license} /></span>)
+                        return (<span key={index} style={{marginLeft:2}}><LogoLicence license={license} style={licence_logo_style} aria-label={license} /></span>)
                     })}
                 </Tooltip>
                 </span>

@@ -4,7 +4,7 @@ import queryString from "query-string";
 
 type MethodTypes = "get" | "delete" | "head" | "options";
 
-interface GetListParams { // Reprendre les types depuis le projet refine
+export interface GetListParams { // Reprendre les types depuis le projet refine
   resource: string;
   pagination?: any;
   filters?: any[];

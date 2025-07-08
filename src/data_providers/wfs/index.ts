@@ -13,7 +13,7 @@ export const dataProvider = (
   getList: async ({ resource, pagination, filters, sorters, meta }) => {
     const url = `${apiUrl}/`;
 
-    const { current = 1, pageSize = 10, mode = "server" } = pagination ?? {};
+    const { current = 1, pageSize = 10, mode = "off" } = pagination ?? {};
 
     const { headers: headersFromMeta, method } = meta ?? {};
     const requestMethod = (method as MethodTypes) ?? "get";
