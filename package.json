@@ -1,13 +1,13 @@
 {
   "name": "api-dashboard",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "private": "false",
   "description": "Components, hooks and functions collection for dashboards creation",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git@github.com:geo2france/g2f-dashboard.git"
+    "url": "git@github.com:geo2france/api-dashboard.git"
   },
   "author": {
     "name": "Jean-Baptiste Desbas",
