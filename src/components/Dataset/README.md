@@ -1,6 +1,6 @@
 # Dataset
 
-La première étape dans la réalisation du tableau de bord et de définir les données qui seront utilisés.
+La première étape dans la réalisation du tableau de bord consiste à définir les données qui seront utilisés.
 La biblithièque supporte de manière standard différents [fournisseurs](https://github.com/geo2france/api-dashboard/tree/main/src/data_providers).
 Certaines opérations sont génériques (`<Filter>`), alors que d'autres exploitent des capacités 
 spécifiques à un fournisseur (propriété _meta_ de `<Dataset>`).
@@ -28,18 +28,18 @@ On peut également ajouter des métadonnées (producteurs), qui s'afficheront so
 
 ## Transform
 
-Le composant enfant `Transform` est optionnel. Il permet de modifier localement les données du `Dataset` parent. 
+Le composant enfant `Transform` est optionnel. Il permet de **modifier localement** les données du `Dataset` parent. 
 Il doit contenir soit :
 - Une fonction javascript qui traite les données.
 - Une chaîne de caractères qui sera interprétée comme une requête SQL (voir la [documentation Alasql](https://github.com/AlaSQL/alasql/wiki/Select)).
 
 Si plusieurs `Transform` sont ajoutés, ils sont appliqués successivement sur les données.
-Cette opération est effectués côté client, et **ne modifient donc pas la requête**.
+Cette opération est effectués côté client, et **ne modifie donc pas la requête**.
 
 ```jsx
 <Dashboard>
     <Dataset
-    id="monIdentifiantUnique"
+    id="dma_par_type_de_traitement"
     url="https://data.ademe.fr/data-fair/api/v1/datasets"
     type='datafair'
     resource="sinoe-(r)-destination-des-dma-collectes-par-type-de-traitement/lines"
@@ -51,19 +51,7 @@ Cette opération est effectués côté client, et **ne modifient donc pas la req
 </Dashboard>
 ```
 
-```jsx
-<Dashboard>
-    <Dataset
-    id="monIdentifiantUnique"
-    url="https://data.ademe.fr/data-fair/api/v1/datasets"
-    type='datafair'
-    resource="sinoe-(r)-destination-des-dma-collectes-par-type-de-traitement/lines"
-    >
-      <Transform>SELECT [ANNEE] as [annee] FROM ? ORDER BY [ANNEE] DESC LIMIT 1</Transform>
-    </Dataset>
-  {/* [...] */}
-</Dashboard>
-```
+
 
 ## Filter
 

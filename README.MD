@@ -30,15 +30,10 @@ Les composants sont actuellement utilisés pour le [tableau de bord de l'Odema](
 
 ## Installation
 
-Version de développment :
-`npm install https://github.com/geo2france/api-dashboard/tarball/dev`
+`npm install https://github.com/geo2france/api-dashboard/releases/latest/download/api-dashboard.tgz`
 
-Version stable :
-`npm install https://github.com/geo2france/api-dashboard/tarball/main`
 
 ## Utilisation
-
-### Concepts principaux
 
 Le tableau de bord est construit de manière déclarative **JSX** (accronyme de JavaScript XML).
 Comme son nom l'indique, il permet de combiner la clarté et l'efficacité du XML, avec la souplesse et la puissance du JavaScript.
@@ -90,22 +85,17 @@ export const MaPremierePage = () => (
 )
 ```
 
-### Graphiques standards
+## Bien débuter
 
-Il s'agit de graphiques génériques proposés par la bibliothèque.
-Pour des besoins plus spécifiques, vous pouvez assez facilement [développer vos propres graphiques](#développement-de-composants-dataviz) (_from scracth_ ou en partant d'un graphique générique).
+1. Mise en place du projet template (_en cours_)
+2. Créer une nouvelle page
+3. Ajouter des [jeux de données](./src/components/Dataset/README.md)
+4. Ajouter un [graphique](./src/components/Charts/README.md)
+5. Personnaliser son tableau : ajouter une [Palette](./src/components/Palette/README.md), configurer le theme [theme AntDesign](https://ant.design/docs/react/customize-theme#customize-design-token) (_TODO_)
+6. Ajouter de l'interactivité : les [contrôles utilisateur](./src/components/Control/README.md)
 
-- [ChartYearSerie](./src/components/Charts/YearSerie.tsx) : pour représenter des séries annuelles en barre, aire ou lignes.
-- [ChartPie](./src/components/Charts/Pie.tsx) : camenbert ou donut.
 
-### Personnaliser le visuel
-
-Le composant [Palette](./src/components/Palette/README.md) peut-être utiliser pour définir une palette de couleur qui sera
-utilisée par l'ensemble des graphiques.
-
-La charte graphique globale du tableau de bord (police, espacements, couleurs...) peut-être personnalisée en éditant la configuration du [theme AntDesign](https://ant.design/docs/react/customize-theme#customize-design-token) (_documentation à rédiger_).
-
-## Guide développeur
+## Aller plus loin (développeur)
 
 ### Développement de composants dataviz
 
