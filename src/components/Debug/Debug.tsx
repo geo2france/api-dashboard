@@ -4,6 +4,7 @@ import { useAllDatasets } from "../Dataset/hooks"
 import { AiOutlineBug } from "react-icons/ai";
 import { useState } from "react";
 import { DatasetBadgeStatus } from "../Dataset/DataPreview";
+import { ControlPreview } from "../Control/Control";
 
 const { useToken } = theme;
 
@@ -16,6 +17,7 @@ export const Debug:React.FC = () => {
     const { token } = useToken();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const datasets = useAllDatasets()
+
     const items: CollapseProps['items'] = datasets?.map((dataset) => ({
         key: dataset.id,
         label: <span>
@@ -40,6 +42,10 @@ export const Debug:React.FC = () => {
         >
             <Title level={5} >Jeux de données </Title>
             <Collapse accordion items={items} />
+
+            <Divider />
+            <Title level={5} >Contrôles utilisateur </Title>
+            <ControlPreview />
 
             <Divider />
 
