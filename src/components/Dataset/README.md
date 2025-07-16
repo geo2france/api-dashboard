@@ -51,7 +51,41 @@ Cette opération est effectués côté client, et **ne modifie donc pas la requ�
 </Dashboard>
 ```
 
+## Join
 
+`Join` permet de faire une jointure avec un autre jeu de données. 
+L'ordre avec les composants `Transform` est respecté. Ainsi, un `Transform` placé **après** une jointure
+s'appliquera sur le produit de la jointure.
+
+- `dataset` : identifiant du dataset à joindre (= table de droite)
+- `joinKey` : un tableau avec les champs à joindre (ex : `['leftKey','RightKey]`)
+- `joinType` : type de jointure  `right` | `left` | `full` | `inner` (défaut `inner`)
+
+```jsx
+<Dashboard>
+      <Dataset
+        id="ref_epci_odema"
+        resource='odema:territoire_epci'
+        url='https://www.geo2france.fr/geoserver/ows'
+        type='wfs'
+        pageSize={1000}
+      >
+         <Filter field='annee'>{useControl('annee')}</Filter>
+      </Dataset>
+
+      <Dataset 
+        id="sinoe_synthese_indic" 
+        resource='sinoe59-indic-synth-acteur/lines'
+        url="https://data.ademe.fr/data-fair/api/v1/datasets"
+        type='datafair'
+        pageSize={5000}>
+            <Filter field='l_region'>Hauts-de-France</Filter>
+            <Filter field='annee'>{useControl('annee')}</Filter>
+            <Join dataset="ref_epci_odema" joinKey={["c_acteur","c_acteur_sinoe" ]} />
+            <Transform>SELECT c_acteur, name_short as nom, tonnage_omr, tonnage_bio FROM ?</Transform>
+      </Dataset>
+</Dashboard>
+```
 
 ## Filter
 
