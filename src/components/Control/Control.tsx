@@ -1,4 +1,4 @@
-import { Form, Layout } from "antd";
+import { Descriptions, DescriptionsProps, Form, Layout } from "antd";
 import React, { CSSProperties, ReactElement, useContext, useEffect } from "react";
 import { ControlContext } from "../DashboardPage/Page";
 
@@ -47,6 +47,20 @@ export const useControl = (name: string): string | undefined => {
   const value = values[name];
 
   return value;
+};
+
+/*
+ * Hook  pour accéder à tous les controls utilisateur
+ */
+export const useAllControls = (): Record<string, any> => { 
+  const context_controls = useContext(ControlContext);
+  if (!context_controls) {
+    throw new Error("useControl must be used within a ControlProvider");
+  }
+
+  const { values } = context_controls;
+
+  return values;
 };
 
 /* Convenient function to return Options from list or Options */
@@ -102,3 +116,20 @@ export const DSL_Control: React.FC<IControlProps> = ({ children }) => {
 };
 
 //TODO : ajouter la gestion des useSearchParameters (ici au dans la Page ?)
+
+
+
+export const ControlPreview:React.FC = ({}) => {
+  const controlValues = useAllControls()
+
+  const items:DescriptionsProps['items'] = Object.entries(controlValues).map(([key, value]) => ({
+    key: key,
+    label: key,
+    children: <p>{value}</p>,
+  }));
+
+  return (
+    <Descriptions items={items} />
+  )
+
+}

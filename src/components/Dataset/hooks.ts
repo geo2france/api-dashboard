@@ -21,3 +21,8 @@ export const useDatasets = (dataset_ids? : string[]) => {
   )
 
 }
+
+export const useAllDatasets = () => {
+  const datasetContext = useContext(DatasetContext)
+  return useDatasets(Object.keys(datasetContext))
+}

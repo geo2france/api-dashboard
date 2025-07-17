@@ -2,6 +2,14 @@ import Table, { ColumnsType } from "antd/es/table";
 import { Badge } from "antd";
 import { useDataset } from "./hooks";
 
+interface DatasetBadgeStatusProps {
+    isError?: boolean
+    isFetching?: boolean
+}
+export const DatasetBadgeStatus:React.FC<DatasetBadgeStatusProps> = ({isError, isFetching}) => {
+    return <Badge status={isError ? "error" : isFetching ? 'processing' : 'success' } />
+}
+
 interface DSL_DataPreviewProps {
     dataset?: string;
     pageSize?: number; //Default : Antdesign default pagesize (10)
@@ -26,8 +34,7 @@ export const DSL_DataPreview:React.FC<DSL_DataPreviewProps> = ({dataset: dataset
       
     return (
         <>
-            <h3><Badge status={dataset?.isError ? "error" : dataset?.isFetching ? 'processing' : 'success' } /> {dataset?.resource}</h3>
-            <p>Enregistrements : {data?.length}</p>
+            <h3><DatasetBadgeStatus isError={dataset?.isError} isFetching={dataset?.isFetching} /> {dataset?.resource}</h3>
             <Table pagination={{pageSize:pageSize}} dataSource={data} columns={columns} rowKey={(row) => rowKey ? row[rowKey]:JSON.stringify(row)} />
         </>
     )

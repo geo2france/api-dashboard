@@ -1,12 +1,15 @@
-import { useContext, useEffect, ReactNode } from "react"
+import { useContext, useEffect, ReactNode, ReactElement } from "react"
 import { SimpleRecord, useApi } from "../.."
 import { CrudFilters,DataProvider } from "../../data_providers/types"
 import { ControlContext, DatasetRegistryContext } from "../DashboardPage/Page"
 import { Producer, ProducerType } from "./Producer"
 import React from "react"
-import { Filter, Transform } from "../../dsl"
+import { Filter, Transform, useAllDatasets } from "../../dsl"
 import alasql from "alasql"
 import { DataProviderContext, getProviderFromType, ProviderType } from "./Provider"
+import { Join, joinTypeType } from "./Join"
+import { from } from "arquero"
+import { JoinOptions } from "arquero/dist/types/table/types"
 
 
 interface IDatasetProps {
@@ -22,18 +25,6 @@ interface IDatasetProps {
 }
 
  
-
-type transformerFnType = (data: SimpleRecord[]) => SimpleRecord[]
-
-const getTransformerFn = (children: string | transformerFnType):transformerFnType => {
-  if (typeof children === "string") {
-    // Transformation via une requête SQL
-    return (data: SimpleRecord[]) => alasql(children, [data]) as SimpleRecord[];
-  } else {
-    return (data: SimpleRecord[]) => children(data);
-  }
-};
-
 export const DSL_Dataset:React.FC<IDatasetProps> = ({
   children, 
   id, 
@@ -43,7 +34,48 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
   resource, 
   pageSize, 
   meta}) => {
+
+
+    const getTransformerFn = (component:ReactElement) => {
+    /* 
+    * Génére une fonction transformer soit 
+    * - A partir d'un composant Transform (string ou fonction js)
+    * - A partir d'un composant Join
+    */
+      if (typeof component.type!='string' && component.type == Transform) {
+        const children = component.props.children
+        if (typeof children === "string") {
+          // Transformation via une requête SQL
+          return (data: SimpleRecord[]) => data && alasql(children, [data]) as SimpleRecord[];
+        } else {
+          return (data: SimpleRecord[]) => data && children(data);
+        }
+      } 
+      else if (typeof component.type!='string' && component.type === Join){
+        const props = component.props
+  
+        const funct = (data: SimpleRecord[]) => {
+          const join_type:joinTypeType = props.joinType || 'inner';
+          const aq_join_option:JoinOptions = { // Options attendus par arquero
+            left:  { left: true, right: false },
+            right: { left: false, right: true },
+            full: { left: true, right: true },
+            inner: { left: false, right: false },
+          }[join_type] ?? { left: false, right: false };
+
+          const otherData = allDatasets?.find((d) => d.id === props.dataset)?.data;
+          if (!otherData) return undefined; // ou [] ou data selon la logique souhaitée
+          return from(data).join(from(otherData), props.joinKey, undefined, aq_join_option).objects();
+        };
+        return funct
+      } else {
+        throw new Error(`Unknown transformer component: ${component.type}`);
+      }
+    };
+
     const datasetRegistryContext = useContext(DatasetRegistryContext)
+    const allDatasets = useAllDatasets()
+    const someFetching = !!allDatasets?.some(d => d.isFetching);
 
     const controlContext = useContext(ControlContext)
     const controls = controlContext?.values ;
@@ -76,9 +108,9 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
     /* Récuperer les fonctions transformers */
     React.Children.toArray(children)
     .filter((c): c is React.ReactElement => React.isValidElement(c))
-    .filter((c) => typeof c.type!='string' && c.type.name == Transform.name).forEach(
+    .filter((c) => typeof c.type!='string' && (c.type.name == Transform.name || c.type.name == Join.name) ).forEach(
       (c) => {
-        transformers.push( getTransformerFn(c.props.children) )
+        transformers.push( getTransformerFn(c) )
       }
     )
 
@@ -100,8 +132,7 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
            datasetRegistryContext({id:id, resource:resource, data: finalData, isFetching:isFetching, isError:isError, producers:producers});
             //Ajouter une info pour distinguer les erreurs du fourniseurs et celles des transformers ?
         }
-      }, [resource, data, isFetching, children]);
-
+      }, [resource, data, isFetching, someFetching, children]);
 
 
     return (
