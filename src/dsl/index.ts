@@ -14,12 +14,14 @@ import { Select } from "../components/Control/Select"
 import { Input } from "antd";
 import { Palette, usePalette, PalettePreview } from "../components/Palette/Palette";
 import { Debug } from "../components/Debug/Debug";
+import { Join } from "../components/Dataset/Join";
 
 export {
     Dashboard,
     Dataset,
     Provider,
     Transform,
+    Join,
     Filter,
     DataPreview,
     ChartPie,
