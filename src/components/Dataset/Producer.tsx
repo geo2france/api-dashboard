@@ -1,5 +1,5 @@
 import { ReactElement } from "react"
-import { useDataset } from "./hooks"
+import { useDatasets } from "./hooks"
 import { Typography } from "antd"
 
 const {Link} = Typography
@@ -31,18 +31,29 @@ export const ProducersFooter:React.FC<IProducersFooterProps> = ({component}) => 
         // Afin de ne PAS afficher de producteur sur les élements qui ne font appel à aucun dataset (par exemple les bloc statiques)
         if('props' in component && 'dataset' in component.props) 
         {
-                const dataset = useDataset(component.props.dataset);
-                return dataset ? (
+                const dataset_id_arr = Array.isArray(component.props.dataset) ? component.props.dataset : [component.props.dataset]
+                const datasets = useDatasets(dataset_id_arr);
+                const producers = datasets?.flatMap( (dataset) =>
+                  dataset?.producers?.map((p) => ({nom:p.nom, url:p.url}) )
+                ).filter(p => p !== undefined)
+
+                const uniqueProducers = Array.from(
+                  new Map(
+                    producers?.map(p => [p.nom, p]) // clé unique = nom
+                  ).values()
+                );
+                uniqueProducers.sort((a, b) => a.nom.localeCompare(b.nom));
+
+                return datasets ? (
                   <>
-                    {" "}
                     Source des données :{" "}
-                    {dataset.producers?.map((p, idx, arr) => (
-                      <span key={idx}>
-                        <Link href={p.url}>
-                          {p.nom}
-                        </Link>{idx < arr.length - 1 ? ', ' : ''}
-                      </span>
-                    ))}
+                      {uniqueProducers?.map((p, idx, arr) => (
+                        <span key={idx}>
+                          <Link href={p.url}>
+                            {p.nom}
+                          </Link>{idx < arr.length - 1 ? ', ' : ''}
+                        </span>
+                      ))}
                   </>
                 ) : null;
         }
