@@ -1,7 +1,7 @@
 import { Button, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps } from "antd";
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
 import React, { isValidElement, ReactElement, useState, createContext, } from "react";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
 import Control, { DSL_Control } from "../Control/Control";
 import { SimpleRecord } from "../../types";
@@ -197,7 +197,6 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
             </ DatasetContext.Provider>
         </DatasetRegistryContext.Provider>
     </>
-        )
-}
+)}
 
 
