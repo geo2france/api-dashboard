@@ -15,6 +15,7 @@ import { Input } from "antd";
 import { Palette, usePalette, PalettePreview } from "../components/Palette/Palette";
 import { Debug } from "../components/Debug/Debug";
 import { Join } from "../components/Dataset/Join";
+import { ChartEcharts } from "../components/Charts/ChartEcharts";
 
 export {
     Dashboard,
@@ -24,6 +25,7 @@ export {
     Join,
     Filter,
     DataPreview,
+    ChartEcharts,
     ChartPie,
     ChartYearSerie,
     useDataset,
