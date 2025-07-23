@@ -1,6 +1,7 @@
 import { Button, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps } from "antd";
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
 import React, { isValidElement, ReactElement, useState, createContext, } from "react";
+import {Helmet} from "react-helmet";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
 import Control, { DSL_Control } from "../Control/Control";
 import { SimpleRecord } from "../../types";
@@ -121,8 +122,9 @@ export const ControlContext = createContext<ControlContextType | undefined>(unde
 
 interface IDSLDashboardPageProps {
     children : React.ReactNode // TODO, lister les type possible ?React.ReactElement<typeof DashboardElement>[];
+    name? : string
 }
-export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) => {
+export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tableau de bord', children}) => {
     const [datasets, setdatasets] = useState<Record<string, dataset>>({});
     const [palette, setPalette] = useState<PaletteType>(DEFAULT_PALETTE);
  
@@ -138,11 +140,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
         }));
     };
 
-
-
-
-
-      
+    
 
     const childrenArray = React.Children.toArray(children).filter(isValidElement);
 
@@ -165,9 +163,13 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
     const control_components = childrenArray.filter((c) => getComponentKind(c) == 'control');
 
     return (
+    <>
+        <Helmet>
+            <title>{name}</title>
+        </Helmet>
         <DatasetRegistryContext.Provider value={ pushDataset }>
             <DatasetContext.Provider value={ datasets }>
-              <PaletteContext.Provider value={{ palette, setPalette }}>
+                <PaletteContext.Provider value={{ palette, setPalette }}>
                     { control_components.length > 0 && <Header
                     style={{
                         padding: 12,
@@ -182,18 +184,19 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
                     </Header>}
 
                     <Row gutter={[8,8]} style={{ margin: 16 }}>
-                       {  visible_components.map(
+                        {  visible_components.map(
                         (component, idx) => 
                                 <Col  xl={12} xs={24} key={idx}>
-                                   <DSL_ChartBlock>{component}</DSL_ChartBlock>
+                                    <DSL_ChartBlock>{component}</DSL_ChartBlock>
                                 </Col>
                         )
-                       }
+                        }
                     </Row>
                 {logic_components}
                 </PaletteContext.Provider>
             </ DatasetContext.Provider>
         </DatasetRegistryContext.Provider>
+    </>
         )
 }
 
