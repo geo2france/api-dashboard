@@ -6,7 +6,7 @@
 import { from, op } from "arquero"
 import { useDataset } from "../Dataset/hooks"
 import { SimpleRecord } from "../../types"
-import { EChartsOption } from "echarts"
+import { EChartsOption, SeriesOption } from "echarts"
 //import EChartsReact from "echarts-for-react"
 import { usePalette } from "../Palette/Palette"
 import { ChartEcharts } from "./ChartEcharts"
@@ -61,7 +61,7 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
             ]
           } : undefined
         }
-    )) : {};
+    )) as SeriesOption[] : [];
 
     function tooltipFormatter(params: any): string {
         if (!params || params.length === 0) return '';
