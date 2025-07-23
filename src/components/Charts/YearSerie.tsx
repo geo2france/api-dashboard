@@ -7,8 +7,9 @@ import { from, op } from "arquero"
 import { useDataset } from "../Dataset/hooks"
 import { SimpleRecord } from "../../types"
 import { EChartsOption } from "echarts"
-import EChartsReact from "echarts-for-react"
+//import EChartsReact from "echarts-for-react"
 import { usePalette } from "../Palette/Palette"
+import { ChartEcharts } from "./ChartEcharts"
 
 interface IYearSerieProps {
     dataset:string
@@ -83,21 +84,16 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
             trigger: 'axis',
             formatter: tooltipFormatter
           },
-        xAxis: [
-            {
-                type: 'time'
-            }
-        ],
-        yAxis: [
-            {
-                type: 'value',
-            }
-        ],
-       
+        xAxis: {
+            type: 'time',
+        },
+        yAxis:  {
+            type: 'value',
+        },
     }
      
     return (
-        <EChartsReact option={option}/>
+        <ChartEcharts option={option}/>
 
     )
 
