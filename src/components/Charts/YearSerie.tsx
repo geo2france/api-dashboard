@@ -7,7 +7,6 @@ import { from, op } from "arquero"
 import { useDataset } from "../Dataset/hooks"
 import { SimpleRecord } from "../../types"
 import { EChartsOption, SeriesOption } from "echarts"
-//import EChartsReact from "echarts-for-react"
 import { usePalette } from "../Palette/Palette"
 import { ChartEcharts } from "./ChartEcharts"
 
