@@ -28,10 +28,10 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
 
     const chart_data = categoryKey ? data && from(data).groupby(yearKey, categoryKey) //Somme par année et categorykey
                                             .rollup({[valueKey]:op.sum(valueKey)})
-                                            .groupby(yearKey).objects()
+                                            .groupby(yearKey).orderby(yearKey).objects()
                                             :
                                         data &&  from(data).groupby(yearKey) //Somme par année seulement
-                                        .rollup({[valueKey]:op.sum(valueKey)})
+                                        .rollup({[valueKey]:op.sum(valueKey)}).orderby(yearKey)
                                         .objects()
 
     const distinct_cat:string[] | undefined = categoryKey ? 
