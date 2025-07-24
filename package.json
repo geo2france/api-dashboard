@@ -52,6 +52,8 @@
     "echarts": "^5.5.1",
     "echarts-for-react": "^3.0.2",
     "query-string": "~7.1.3",
+    "react-helmet": "^6.1.0",
+    "react-helmet-async": "^2.0.5",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz"
   },
   "devDependencies": {
@@ -66,6 +68,7 @@
     "@types/node": "^22.7.4",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
+    "@types/react-helmet-async": "^1.0.1",
     "@types/react-icons": "^2.2.7",
     "@typescript-eslint/eslint-plugin": "^7.16.1",
     "@typescript-eslint/parser": "^7.16.1",

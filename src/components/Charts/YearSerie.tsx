@@ -6,9 +6,9 @@
 import { from, op } from "arquero"
 import { useDataset } from "../Dataset/hooks"
 import { SimpleRecord } from "../../types"
-import { EChartsOption } from "echarts"
-import EChartsReact from "echarts-for-react"
+import { EChartsOption, SeriesOption } from "echarts"
 import { usePalette } from "../Palette/Palette"
+import { ChartEcharts } from "./ChartEcharts"
 
 interface IYearSerieProps {
     dataset:string
@@ -28,10 +28,10 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
 
     const chart_data = categoryKey ? data && from(data).groupby(yearKey, categoryKey) //Somme par année et categorykey
                                             .rollup({[valueKey]:op.sum(valueKey)})
-                                            .groupby(yearKey).objects()
+                                            .groupby(yearKey).orderby(yearKey).objects()
                                             :
                                         data &&  from(data).groupby(yearKey) //Somme par année seulement
-                                        .rollup({[valueKey]:op.sum(valueKey)})
+                                        .rollup({[valueKey]:op.sum(valueKey)}).orderby(yearKey)
                                         .objects()
 
     const distinct_cat:string[] | undefined = categoryKey ? 
@@ -60,7 +60,7 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
             ]
           } : undefined
         }
-    )) : {};
+    )) as SeriesOption[] : [];
 
     function tooltipFormatter(params: any): string {
         if (!params || params.length === 0) return '';
@@ -83,21 +83,16 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
             trigger: 'axis',
             formatter: tooltipFormatter
           },
-        xAxis: [
-            {
-                type: 'time'
-            }
-        ],
-        yAxis: [
-            {
-                type: 'value',
-            }
-        ],
-       
+        xAxis: {
+            type: 'time',
+        },
+        yAxis:  {
+            type: 'value',
+        },
     }
      
     return (
-        <EChartsReact option={option}/>
+        <ChartEcharts option={option}/>
 
     )
 

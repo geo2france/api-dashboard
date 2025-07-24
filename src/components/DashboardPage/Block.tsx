@@ -70,7 +70,7 @@ export const DSL_ChartBlock:React.FC<IChartBlockProps> = ({children}) => {
             style={{height:'100%'}} 
             extra={has_action && dropdown_toolbox}
             title={config.title}>
-                {children} <br /> 
+                {children} 
                 <ProducersFooter component={children} />
             </Card>
         </ChartBlockContext.Provider>

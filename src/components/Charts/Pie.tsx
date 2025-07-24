@@ -1,21 +1,23 @@
-import { ReactElement, useContext, useEffect } from "react";
-import { Cell, Legend, Pie, PieChart, PieLabelRenderProps, ResponsiveContainer, Tooltip } from "recharts";
+import { useContext, useEffect } from "react";
 import { useDataset } from "../Dataset/hooks";
 import { ChartBlockConfig, ChartBlockContext } from "../DashboardPage/Block";
+import { EChartsOption } from "echarts";
+import { usePalette } from "../Palette/Palette";
+import { SimpleRecord } from "../../types";
+import { from, op } from "arquero";
+import { ChartEcharts } from "./ChartEcharts";
 
 
 interface IChartPieProps {
     dataset?:string, //dataset ID
-    children?:ReactElement,
     dataKey:string,
     nameKey:string,
     unit?:string,
-    labelText?: (props: PieLabelRenderProps) => React.ReactNode; // retourne le contenu à mettre dans <text>
-    legend?:boolean //show legend
     title?:string
+    donut?:boolean
 }
 
-export const ChartPie:React.FC<IChartPieProps> = ({dataset:dataset_id, nameKey, dataKey, unit, children, labelText, title, legend=true}) => {
+export const ChartPie:React.FC<IChartPieProps> = ({dataset:dataset_id, nameKey, dataKey, unit, title, donut=false}) => {
     const dataset = useDataset(dataset_id)
     const blockConfig = useContext(ChartBlockContext)
 
@@ -29,46 +31,25 @@ export const ChartPie:React.FC<IChartPieProps> = ({dataset:dataset_id, nameKey, 
       blockConfig?.setConfig(block_config)
       , [data] )
 
-    const COLORS = [
-        '#00448e', // bleu foncé
-        '#ffa630', // orange
-        '#8fc03c', // vert vif
-        '#6e40aa', // violet
-        '#fb676f', // rouge clair
-        '#75a4da', // bleu clair
-        '#f82333', // rouge vif
-        '#b4d973', // vert clair
-        '#2f6bb3'  // bleu moyen
-      ];
+    const chart_data:SimpleRecord[] | undefined = data && from(data).groupby(nameKey).rollup({value:op.sum(dataKey)}).objects().map((d:SimpleRecord) => ({
+      name: d[nameKey],
+      value: d.value,  
+    }));
 
-    const defaultLabelText = ({ percent, value }: PieLabelRenderProps) => (
-        <>
-          {Number(Math.round((percent ?? 0) * 100)).toLocaleString()}% ({Number(Math.round(value ?? 0)).toLocaleString()}
-          {unit ? ` ${unit}` : ''})
-        </>
-      );
+    const option:EChartsOption = {
+      color:usePalette({nColors:chart_data?.length}),
+      xAxis:{show:false}, yAxis:{show:false},
+      series:[{
+        type:'pie',
+        data:chart_data,
+        radius : donut ? ['40%','75%'] : [0, '75%']
+      }],
+      tooltip:{
+        show:true,
+        valueFormatter: v => `${v?.toLocaleString()} ${unit || ''} `
+      }
+    }
 
-    const customLabel = (props: PieLabelRenderProps) => {
-        const { cx, x, y, fill } = props;
-        return (
-          <text x={x} y={y} fill={fill} textAnchor={x > Number(cx) ? 'start' : 'end'}>
-            {labelText ? labelText(props) : defaultLabelText(props)}
-          </text>
-        );
-    };
-
-    return (
-    <ResponsiveContainer height={324} width='100%' >
-     <PieChart>
-        {legend && <Legend />}
-        <Tooltip />
-         <Pie data={data} label={customLabel} labelLine cornerRadius={4} {...{dataKey, nameKey}} >
-            {data?.map((_entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-         </Pie>
-         {children}
-    </PieChart>
-    </ResponsiveContainer>
-    )
+    return <ChartEcharts option={option}/>  
+       
 }

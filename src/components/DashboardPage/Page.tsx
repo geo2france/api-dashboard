@@ -1,10 +1,11 @@
 import { Button, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps } from "antd";
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
 import React, { isValidElement, ReactElement, useState, createContext, } from "react";
+import { Helmet } from "react-helmet-async";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
 import Control, { DSL_Control } from "../Control/Control";
 import { SimpleRecord } from "../../types";
-import { Dataset, Provider } from "../../dsl";
+import { Dataset, Debug, Provider } from "../../dsl";
 import { DSL_ChartBlock } from "./Block";
 import { DEFAULT_PALETTE, Palette, PaletteContext, PaletteType } from "../Palette/Palette";
 
@@ -21,7 +22,7 @@ type Section =  {
 
 interface IDashboardPageProps {
     control? : React.ReactElement | React.ReactElement[]
-    children : React.ReactElement<typeof DashboardElement>[];
+    children : React.ReactElement<typeof DashboardElement>[] | React.ReactElement<typeof DashboardElement>;
     row_gutter? : RowProps['gutter']
     sections?: string[] | Section[]
 }
@@ -31,9 +32,12 @@ const getSection = (child: React.ReactElement): string | undefined =>
     React.isValidElement<IDashboardElementProps>(child) ? child.props.section : undefined ;
   
 
-const DashboardPage:React.FC<IDashboardPageProps> = ({children, control, row_gutter=[8,8], sections}) => {
+const DashboardPage:React.FC<IDashboardPageProps> = ({children:children_input, control, row_gutter=[8,8], sections}) => {
     let sections_std:Section[] = []
     const screens = Grid.useBreakpoint();
+    const children = React.Children.toArray(children_input).filter((child) =>
+        React.isValidElement(child)
+      );
     
     if (sections && typeof(sections[0]) === 'string'){
         sections_std = (sections as string[]).map((s) => ({key:s}) ) 
@@ -121,8 +125,9 @@ export const ControlContext = createContext<ControlContextType | undefined>(unde
 
 interface IDSLDashboardPageProps {
     children : React.ReactNode // TODO, lister les type possible ?React.ReactElement<typeof DashboardElement>[];
+    name? : string
 }
-export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) => {
+export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tableau de bord', children}) => {
     const [datasets, setdatasets] = useState<Record<string, dataset>>({});
     const [palette, setPalette] = useState<PaletteType>(DEFAULT_PALETTE);
  
@@ -138,15 +143,11 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
         }));
     };
 
-
-
-
-
-      
+    
 
     const childrenArray = React.Children.toArray(children).filter(isValidElement);
 
-    const logicalComponents:string[] = [Dataset.name, Provider.name, Palette.name]; //Composant logiques, a ne pas mettre dans la grid
+    const logicalComponents:string[] = [Dataset.name, Provider.name, Palette.name, Debug.name]; //Composant logiques, a ne pas mettre dans la grid
 
     const getComponentKind = (c:ReactElement) : "logical" | "control" | "other" => {
         if  (typeof(c.type) != 'string' &&  logicalComponents.includes(c.type.name)) {
@@ -165,9 +166,13 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
     const control_components = childrenArray.filter((c) => getComponentKind(c) == 'control');
 
     return (
+    <>
+        <Helmet>
+            <title>{name}</title>
+        </Helmet>
         <DatasetRegistryContext.Provider value={ pushDataset }>
             <DatasetContext.Provider value={ datasets }>
-              <PaletteContext.Provider value={{ palette, setPalette }}>
+                <PaletteContext.Provider value={{ palette, setPalette }}>
                     { control_components.length > 0 && <Header
                     style={{
                         padding: 12,
@@ -182,19 +187,17 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({children}) =
                     </Header>}
 
                     <Row gutter={[8,8]} style={{ margin: 16 }}>
-                       {  visible_components.map(
+                        {  visible_components.map(
                         (component, idx) => 
                                 <Col  xl={12} xs={24} key={idx}>
-                                   <DSL_ChartBlock>{component}</DSL_ChartBlock>
+                                    <DSL_ChartBlock>{component}</DSL_ChartBlock>
                                 </Col>
                         )
-                       }
+                        }
                     </Row>
                 {logic_components}
                 </PaletteContext.Provider>
             </ DatasetContext.Provider>
         </DatasetRegistryContext.Provider>
-        )
-}
-
-
+    </>
+)}

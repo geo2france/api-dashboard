@@ -9,6 +9,7 @@ import { ErrorComponent } from "./Error";
 import { DasbhoardFooter } from "./Footer";
 import { createContext, useState } from "react";
 import { ControlContext } from "../DashboardPage/Page";
+import { HelmetProvider } from "react-helmet-async";
 
 //import '../../index.css' //TODO a intégrer en jsx
 
@@ -67,6 +68,7 @@ const DashboardApp: React.FC<DashboardApprProps> = ({route_config, theme, logo, 
     return (
         <QueryClientProvider client={queryClient}>
           <ConfigProvider theme={theme || default_theme /* Merger plutôt ?*/}>
+          <HelmetProvider>
           <AppContext.Provider value={ context_values }>
             <ControlContext.Provider value={{ values:controls, pushValue:pushControl  }}>
               <HashRouter>
@@ -91,6 +93,7 @@ const DashboardApp: React.FC<DashboardApprProps> = ({route_config, theme, logo, 
               </HashRouter>
             </ControlContext.Provider>
           </AppContext.Provider>
+          </HelmetProvider>
           </ConfigProvider>
         </QueryClientProvider>
     )
