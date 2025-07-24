@@ -103,7 +103,7 @@ La bibliothèque propose des graphiques de bases, mais il possible de développe
 Des fonctions sont proposés afin d'aider le développeur dans cette tâche : accéder facilement aux données ou aux options utilisateurs, gestion des erreurs, etc.
 
 Le développeur est libre d'utiliser bibliothèque dataviz ou carto de son choix, à partir du moment où le composant retourne un élément visuelle.
-Nous préconisons [Echarts](https://echarts.apache.org) ou [Recharts](https://recharts.org/), mais il en existe une multitude.
+Nous préconisons [Echarts](https://echarts.apache.org), mais d'autres sont utilisables ([Recharts](https://recharts.org/), [Chart.js](https://www.chartjs.org/), etc.)
 
 `TODO : guide développement composant`
 
