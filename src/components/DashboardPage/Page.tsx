@@ -22,7 +22,7 @@ type Section =  {
 
 interface IDashboardPageProps {
     control? : React.ReactElement | React.ReactElement[]
-    children : React.ReactElement<typeof DashboardElement>[];
+    children : React.ReactElement<typeof DashboardElement>[] | React.ReactElement<typeof DashboardElement>;
     row_gutter? : RowProps['gutter']
     sections?: string[] | Section[]
 }
@@ -32,9 +32,12 @@ const getSection = (child: React.ReactElement): string | undefined =>
     React.isValidElement<IDashboardElementProps>(child) ? child.props.section : undefined ;
   
 
-const DashboardPage:React.FC<IDashboardPageProps> = ({children, control, row_gutter=[8,8], sections}) => {
+const DashboardPage:React.FC<IDashboardPageProps> = ({children:children_input, control, row_gutter=[8,8], sections}) => {
     let sections_std:Section[] = []
     const screens = Grid.useBreakpoint();
+    const children = React.Children.toArray(children_input).filter((child) =>
+        React.isValidElement(child)
+      );
     
     if (sections && typeof(sections[0]) === 'string'){
         sections_std = (sections as string[]).map((s) => ({key:s}) ) 
@@ -198,5 +201,3 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
         </DatasetRegistryContext.Provider>
     </>
 )}
-
-
