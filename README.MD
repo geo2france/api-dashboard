@@ -30,7 +30,7 @@ Les composants sont actuellement utilisés pour le [tableau de bord de l'Odema](
 
 ## Installation
 
-`npm install https://github.com/geo2france/api-dashboard/releases/latest/download/api-dashboard.tgz`
+`npm i @geo2france/api-dashboard`
 
 
 ## Utilisation

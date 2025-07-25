@@ -1,13 +1,13 @@
 {
-  "name": "api-dashboard",
+  "name": "@geo2france/api-dashboard",
   "version": "1.5.0",
-  "private": "false",
-  "description": "Components, hooks and functions collection for dashboards creation",
+  "private": false,
+  "description": "Build dashboards with JSX/TSX",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git@github.com:geo2france/api-dashboard.git"
+    "url": "git+ssh://git@github.com/geo2france/api-dashboard.git"
   },
   "author": {
     "name": "Jean-Baptiste Desbas",
