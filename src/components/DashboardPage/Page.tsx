@@ -126,9 +126,9 @@ export const ControlContext = createContext<ControlContextType | undefined>(unde
 interface IDSLDashboardPageProps {
     children : React.ReactNode // TODO, lister les type possible ?React.ReactElement<typeof DashboardElement>[];
     name? : string
-    span?: number
+    columns?: number
 }
-export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tableau de bord', children, span=12}) => {
+export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tableau de bord', columns=2, children}) => {
     const [datasets, setdatasets] = useState<Record<string, dataset>>({});
     const [palette, setPalette] = useState<PaletteType>(DEFAULT_PALETTE);
  
@@ -190,7 +190,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
                     <Row gutter={[8,8]} style={{ margin: 16 }}>
                         {  visible_components.map(
                         (component, idx) => 
-                                <Col xl={span} xs={24} key={idx}>
+                                <Col xl={24/columns} xs={24} key={idx}>
                                     <DSL_ChartBlock>{component}</DSL_ChartBlock>
                                 </Col>
                         )
