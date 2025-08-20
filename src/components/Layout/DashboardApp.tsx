@@ -43,16 +43,17 @@ interface AppContextProps {
   
 export const AppContext = createContext<AppContextProps>({});  
 
-interface DashboardApprProps {
+export interface DashboardConfig {
   title?: string;
   subtitle?: string;
-  route_config: RouteConfig[];
+  routes: RouteConfig[];
   theme?: ThemeConfig;
   logo: string;
   brands?: Partner[];
 }
 
-const DashboardApp: React.FC<DashboardApprProps> = ({route_config, theme, logo, brands, title, subtitle}) => {
+
+const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, title, subtitle}) => {
 
     const context_values = { title, subtitle, logo };
     
@@ -77,7 +78,7 @@ const DashboardApp: React.FC<DashboardApprProps> = ({route_config, theme, logo, 
                           element={
                               <Layout>
                                   <Layout>
-                                      <DashboardSider route_config={route_config}/>
+                                      <DashboardSider route_config={routes}/>
                                       <Content style={{width:"85%"}}>
                                           <Outlet />
                                       </Content>
@@ -86,7 +87,7 @@ const DashboardApp: React.FC<DashboardApprProps> = ({route_config, theme, logo, 
                               </Layout>
                           }
                       >
-                      {generateRoutes(route_config)}
+                      {generateRoutes(routes)}
                       <Route path="*" element={<ErrorComponent />} />
                     </Route>
                   </Routes>

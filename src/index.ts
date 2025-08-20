@@ -53,7 +53,7 @@ export {WfsProvider, DatafairProvider, FileProvider}
 // Types
 export type { SimpleRecord, Partner, RouteConfig } from "./types"
 export type { LegendItem } from "./components/MapLegend/MapLegend" 
-
+export type { DashboardConfig } from "./components/Layout/DashboardApp"
 
 // DSL
 import * as DSL from './dsl';
