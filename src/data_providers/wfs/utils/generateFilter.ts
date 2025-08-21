@@ -1,10 +1,10 @@
 import { CrudOperators } from "../../types";
-import { mapOperator } from "./mapOperator";
 
 
 const map_ogc_filer = (input:CrudOperators) => {
   switch (input) {
     case "eq":
+    case "ne":
       return "PropertyIsEqualTo"
     case "gt":
       return "PropertyIsGreaterThan"
@@ -40,6 +40,8 @@ export const generateFilter = (filters?: any[]) => {
     const doc = document.implementation.createDocument('', 'Filter', null)
     doc.documentElement.setAttribute('xmlns:fes',"http://www.opengis.net/fes/2.0")
     const and = doc.createElement( 'fes:And' )
+    const not = doc.createElement( 'fes:Not' )
+
     doc.documentElement.appendChild(and)
 
     filters.map((filter) => {
@@ -91,8 +93,15 @@ export const generateFilter = (filters?: any[]) => {
       else{
         el.textContent = filter.value
       }
-      and.appendChild(f)
+
       f.appendChild(el)
+
+      if (filter.operator.startsWith('n')){ // Opérateur NOT
+        not.appendChild(f)
+        and.appendChild(not)
+      }else{
+        and.appendChild(f)
+      }
 
     })
 
