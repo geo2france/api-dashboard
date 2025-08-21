@@ -8,6 +8,12 @@ const map_ogc_filer = (input:CrudOperators) => {
       return "PropertyIsEqualTo"
     case "gt":
       return "PropertyIsGreaterThan"
+    case "gte":
+      return "PropertyIsGreaterThanOrEqualTo"
+    case "lt":
+      return "PropertyIsLessThan"
+    case "lte":
+      return "PropertyIsLessThanOrEqualTo"
     case "contains":
     case "containss":
     case "ncontains":
@@ -21,7 +27,9 @@ const map_ogc_filer = (input:CrudOperators) => {
     case "nendswith":
       return "PropertyIsLike"
     default:
-      return "PropertyIsEqualTo"
+        throw new Error(
+          `[wfs-data-provider]: Unssuported operator ${input}`
+          ); 
   }
 }
 
@@ -71,7 +79,6 @@ export const generateFilter = (filters?: any[]) => {
         f.setAttribute('matchCase', 'true');
       }
       
-      /* DEV NOTE : erreur 400 sur les match, OK pour isequal */
       if (["contains","containss","ncontains","ncontainss"].includes(filter.operator)){
         el.textContent = `%${filter.value}%`
       }
