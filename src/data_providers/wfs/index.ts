@@ -18,7 +18,7 @@ export const dataProvider = (
     const { headers: headersFromMeta, method } = meta ?? {};
     const requestMethod = (method as MethodTypes) ?? "get";
 
-    const {cql_filter:queryFilters, bbox} = generateFilter(filters);
+    const {filter:queryFilters, bbox} = generateFilter(filters);
     const generatedSort = generateSort(sorters);
 
     const query: {
@@ -30,7 +30,7 @@ export const dataProvider = (
       outputformat: string;
       typenames: string;
       sortby: string;
-      cql_filter?: string;
+      filter?: string;
       bbox?:string;
       srsname?:string;
       propertyname?:string;
@@ -47,7 +47,7 @@ export const dataProvider = (
     }
 
     if (queryFilters) {
-      query.cql_filter=queryFilters
+      query.filter=queryFilters
     }
 
     if (bbox !==''){
