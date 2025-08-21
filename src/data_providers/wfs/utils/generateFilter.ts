@@ -58,7 +58,7 @@ export const generateFilter = (filters?: any[]) => {
       }
       const f = doc.createElement( map_ogc_filer(filter.operator) )
 
-      let el = doc.createElement('fes:ValueReference')
+      let el = doc.createElement('fes:ValueReference') // Ou PropertyName sur WFS 1 ?
       el.textContent = filter.field
       f.appendChild(el)
 
