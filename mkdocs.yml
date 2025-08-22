@@ -1,1 +1,17 @@
-site_name: My Docs
+site_name: Api-Dashboard
+
+nav:
+  - Utilisation: 
+      - usage/template.md
+      - usage/page.md
+      - usage/dataset.md
+      - usage/dataviz.md
+      - usage/controles.md
+  - Fournisseurs de données:
+      - providers/wfs.md
+      - providers/datafair.md
+      - providers/file.md
+
+theme:
+  name: readthedocs
+  language: fr

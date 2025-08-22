@@ -1,10 +1,16 @@
-# Charts
+# Graphiques (dataviz)
 
-Graphiques standards prêts à être utilisés.
+La bibliothèque fournie quelques graphiques de base pouvant être utiliser
+directement.
 
-## SerieYear
+Ma sa grande force réside dans le fait de pouvoir créer vos propres graphiques à
+partir de n'importe quelle bibliothèque (ECharts, Rechart, Chart.js, D3.js, etc.).
 
-Représentation de séries annuelles.
+## Graphiques standards
+
+### YearSerie
+
+Adapté aux représentations de valeurs annuelles.
 
 
 | Nom           | Type                      | Requis | Par défaut | Description |
@@ -20,7 +26,8 @@ Représentation de séries annuelles.
 
 ![yearserie](yearserie.png)
 
-## Pie
+
+### Pie
 
 Graphique "camembert".
 Si des catégories sont dupliquées, les valeurs de celles-ci sont automatiquement sommées.
@@ -33,6 +40,10 @@ Si des catégories sont dupliquées, les valeurs de celles-ci sont automatiqueme
 | `donut`    | `boolean`    |      | `false`    | Affiche le graphique en style **donut** (camembert avec un trou central).   |
 | `unit `    | `string `    |      |            | Unité à afficher (ex: _%_, _kg_, etc.)   |
 | `title `   | `string `    |      |            | Titre du graphique |
+
+![pie screenshot](screenshot_pie.png)
+
+#### Exemple
 
 ```jsx
 <Dashboard>
@@ -64,4 +75,7 @@ Si des catégories sont dupliquées, les valeurs de celles-ci sont automatiqueme
 
 </Dashboard>
 ```
-![pie screenshot](screenshot_pie.png)
+
+## Développer vos propres graphiques
+
+*TODO*

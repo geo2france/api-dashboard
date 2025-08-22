@@ -1,4 +1,4 @@
-# Dataset
+# Données
 
 La première étape dans la réalisation du tableau de bord consiste à définir les données qui seront utilisés.
 La biblithièque supporte de manière standard différents [fournisseurs](https://github.com/geo2france/api-dashboard/tree/main/src/data_providers).
@@ -6,7 +6,10 @@ Certaines opérations sont génériques (`<Filter>`), alors que d'autres exploit
 spécifiques à un fournisseur (propriété _meta_ de `<Dataset>`).
 
 
-## Dataset
+## Source de données
+
+### Connecter une source
+
 Le composant `Dataset` permet de définir des jeux de données qui seront utilisés par
 les graphiques.
 On peut également ajouter des métadonnées (producteurs), qui s'afficheront sous les graphiques utilisant ce dataset.
@@ -25,16 +28,35 @@ On peut également ajouter des métadonnées (producteurs), qui s'afficheront so
 </Dashboard>
 ```
 
+### Filter les données
 
-## Transform
+Il s'agit de filtres **envoyés à l'API du fournisseur de données**.
+Il utilise des opérateurs standards (`eq`, `ne`, `contains`, etc.) qui sont ensuite automatiquement 
+traduits dans le format attendu par le fournisseur de données. Voir la [liste des opérateur](https://github.com/geo2france/api-dashboard/blob/b9c1ddb511f6bf722704b4935160eacdcfe33cc2/src/data_providers/types.ts#L23-L45). Attention, les fournisseurs ne supportent pas toujours tous les opérateurs.
 
-Le composant enfant `Transform` est optionnel. Il permet de **modifier localement** les données du `Dataset` parent. 
+```jsx
+<Filter field='L_REGION'>Hauts-de-France</Filter> // operateur eq (égalité) par défaut
+<Filter field='L_TYP_REG_DECHET' operator='ne'>Encombrants</Filter>
+```
+
+### Fournisseurs diposnibles
+
+- WFS 1.1
+- DataFair
+- Fichier
+
+## Manipuler les données
+
+### Transform
+
+Le composant enfant `<Transform>` est optionnel. Il permet de **modifier localement** les données du `<Dataset>` parent. 
 Il doit contenir soit :
-- Une fonction javascript qui traite les données.
-- Une chaîne de caractères qui sera interprétée comme une requête SQL (voir la [documentation Alasql](https://github.com/AlaSQL/alasql/wiki/Select)).
 
-Si plusieurs `Transform` sont ajoutés, ils sont appliqués successivement sur les données.
-Cette opération est effectués côté client, et **ne modifie donc pas la requête**.
+- Une **fonction javascript** qui traite les données.
+- Une **requête SQL** (chaîne de caractères) (voir la [documentation Alasql](https://github.com/AlaSQL/alasql/wiki/Select)).
+
+Si plusieurs `<Transform>` sont ajoutés, ils sont appliqués successivement sur les données.
+Cette opération est effectuée côté client, et **ne modifie donc pas l'appel à l'API**.
 
 ```jsx
 <Dashboard>
@@ -51,7 +73,7 @@ Cette opération est effectués côté client, et **ne modifie donc pas la requ�
 </Dashboard>
 ```
 
-## Join
+### Join
 
 `Join` permet de faire une jointure avec un autre jeu de données. 
 L'ordre avec les composants `Transform` est respecté. Ainsi, un `Transform` placé **après** une jointure
@@ -87,16 +109,7 @@ s'appliquera sur le produit de la jointure.
 </Dashboard>
 ```
 
-## Filter
 
-Il s'agit de filtres envoyés à l'API du fournisseur de données.
-Il utilise des opérateurs standards (`eq`, `ne`, `contains`, etc.) qui sont ensuite automatiquement 
-traduits dans le format attendu par le fournisseur de données. Voir la [liste des opérateur](https://github.com/geo2france/api-dashboard/blob/b9c1ddb511f6bf722704b4935160eacdcfe33cc2/src/data_providers/types.ts#L23-L45). Attention, les fournisseurs ne supportent pas toujours tous les opérateurs.
-
-```jsx
-<Filter field='L_REGION'>Hauts-de-France</Filter> // operateur eq (égalité) par défaut
-<Filter field='L_TYP_REG_DECHET' operator='ne'>Encombrants</Filter>
-```
 
 ## Performances et eco-conception 🌱
 
@@ -112,13 +125,14 @@ Idéalement, on utilisera la même propriété meta pour les dataset lié au mê
 
 ```jsx
 <Dataset
-   id="epci_hdf_pop"
-   resource="spld:epci"
-   url='https://www.geo2france.fr/geoserver/ows'
-   type='wfs'
-   pageSize={1000}
-   meta={{properties:['nature_epci', 'pop_mun', 'nom_epci']}}
- >
+  id="epci_hdf_pop"
+  resource="spld:epci"
+  url='https://www.geo2france.fr/geoserver/ows'
+  type='wfs'
+  pageSize={1000}
+  meta={{properties:['nature_epci', 'pop_mun', 'nom_epci']}} >
+  
+</Dataset>
 ```
 
 
