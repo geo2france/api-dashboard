@@ -23,7 +23,7 @@ export const dataProvider = (
 
     const query: {
       startindex?: number;
-      count?: number;
+      maxfeatures?: number;
       service: string;
       request: string;
       version: string;
@@ -34,12 +34,12 @@ export const dataProvider = (
       bbox?:string;
       srsname?:string;
       propertyname?:string;
-    } = {service:'WFS', request: 'GetFeature', sortby : '', version:'2.0.0', outputformat:'application/json', typename: resource,
+    } = {service:'WFS', request: 'GetFeature', sortby : '', version:'1.1.0', outputformat:'application/json', typename: resource,
     srsname:meta?.srsname, propertyname:meta?.properties?.join(',')};
 
     if (mode === "server") {
       query.startindex = (current - 1) * pageSize;
-      query.count = pageSize;
+      query.maxfeatures = pageSize;
     }
 
     if (generatedSort) {

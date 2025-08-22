@@ -38,11 +38,15 @@ export const generateFilter = (filters?: any[]) => {
   let ogc_filter: string = ''
   if (filters && filters.length > 0) {
     const doc = document.implementation.createDocument('', 'Filter', null)
-    doc.documentElement.setAttribute('xmlns:fes',"http://www.opengis.net/fes/2.0")
-    const and = doc.createElement( 'fes:And' )
-    const not = doc.createElement( 'fes:Not' )
-
-    doc.documentElement.appendChild(and)
+    //doc.documentElement.setAttribute('xmlns:fes',"http://www.opengis.net/fes/2.0") // Namespace pour WFS 2
+    const and = doc.createElement( 'And' )
+    let filters_root
+    if (filters.length > 1) {
+          doc.documentElement.appendChild(and)
+          filters_root = and
+    }else{
+        filters_root = doc.documentElement
+    }
 
     filters.map((filter) => {
 
@@ -58,11 +62,11 @@ export const generateFilter = (filters?: any[]) => {
       }
       const f = doc.createElement( map_ogc_filer(filter.operator) )
 
-      let el = doc.createElement('fes:ValueReference') // Ou PropertyName sur WFS 1 ?
+      let el = doc.createElement('PropertyName') // ValueReference sur WFS 2 ?
       el.textContent = filter.field
       f.appendChild(el)
 
-      el = doc.createElement('fes:Literal')
+      el = doc.createElement('Literal')
 
       if ((["contains","containss","ncontains","ncontainss",
         "startswith","startswiths","nstartswith","nstartswiths",
@@ -97,10 +101,11 @@ export const generateFilter = (filters?: any[]) => {
       f.appendChild(el)
 
       if (filter.operator.startsWith('n')){ // Opérateur NOT
+        const not = doc.createElement( 'Not' )
         not.appendChild(f)
-        and.appendChild(not)
+        filters_root.appendChild(not)
       }else{
-        and.appendChild(f)
+        filters_root.appendChild(f)
       }
 
     })
