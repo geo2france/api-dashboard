@@ -26,5 +26,9 @@ export const useApi = ({dataProvider, resource, filters, pagination, sorters, me
         enabled: enabled,
         placeholderData:(prev) => prev,
         staleTime: 5*60*1e3, //Default staletime 5min
+        throwOnError: (err) => {
+            console.error(err);
+            return false;
+        },
     })
 )

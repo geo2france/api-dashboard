@@ -11,35 +11,35 @@ export const dataProvider = (
   httpClient: AxiosInstance = axiosInstance
 ):DataProvider => ({
   getList: async ({ resource, pagination, filters, sorters, meta }) => {
-    const url = `${apiUrl}/`;
+    const url = `${apiUrl}`;
 
     const { current = 1, pageSize = 10, mode = "off" } = pagination ?? {};
 
     const { headers: headersFromMeta, method } = meta ?? {};
     const requestMethod = (method as MethodTypes) ?? "get";
 
-    const {cql_filter:queryFilters, bbox} = generateFilter(filters);
+    const {filter:queryFilters, bbox} = generateFilter(filters);
     const generatedSort = generateSort(sorters);
 
     const query: {
       startindex?: number;
-      count?: number;
+      maxfeatures?: number;
       service: string;
       request: string;
       version: string;
       outputformat: string;
-      typenames: string;
+      typename: string;
       sortby: string;
-      cql_filter?: string;
+      filter?: string;
       bbox?:string;
       srsname?:string;
       propertyname?:string;
-    } = {service:'WFS', request: 'GetFeature', sortby : '', version:'2.0.0', outputformat:'application/json', typenames: resource,
+    } = {service:'WFS', request: 'GetFeature', sortby : '', version:'1.1.0', outputformat:'application/json', typename: resource,
     srsname:meta?.srsname, propertyname:meta?.properties?.join(',')};
 
     if (mode === "server") {
       query.startindex = (current - 1) * pageSize;
-      query.count = pageSize;
+      query.maxfeatures = pageSize;
     }
 
     if (generatedSort) {
@@ -47,15 +47,21 @@ export const dataProvider = (
     }
 
     if (queryFilters) {
-      query.cql_filter=queryFilters
+      query.filter=queryFilters
     }
 
     if (bbox !==''){
       query.bbox=bbox
     }
 
+    const urlObj = new URL(url);
+    const base_params = Object.fromEntries(urlObj.searchParams.entries()); // Params renseignés par l'utilisateur dans l'URL (notament MAP=XXX pour qgis server)
+    const base_url = urlObj.origin + urlObj.pathname
     const { data, headers:_headers } = await httpClient[requestMethod](
-      `${url}?${queryString.stringify({...query, sortby : undefined})}&sortby=${query.sortby}&`, //"le + de sortby ne doit pas être urlencode"
+      
+      `${base_url}?${queryString.stringify({...query, sortby : undefined})}
+        &sortby=${query.sortby}
+        &${Object.entries(base_params).map(([k, v]) => `${k}=${v}`).join('&') }`, //le + de sortby et les paramètres de bases ne doivent pas être urlencode
       {
         headers: headersFromMeta,
       }
