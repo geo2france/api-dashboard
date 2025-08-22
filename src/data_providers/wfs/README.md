@@ -1,16 +1,8 @@
 # wfs-data-provider
 
-## Fournisseurs de données (non exhaustif)
+Fournisseur **WFS 1.1** compatible QGIS Server et GeoServer.
 
-- [Geo2France](https://www.geo2france.fr/datahub/)
-- [Métropole Européenne de Lille](https://data.lillemetropole.fr/)
-- [DataGrandEst](https://www.datagrandest.fr/data4citizen)
-
-## CRUD
-
-Only read operations are supported (pagination, sorters, getlist, getone, getmany).
-
-## Supported filters operators
+## Opérateurs supportés
 - `ne`
 - `gte`
 - `gt`
@@ -31,8 +23,7 @@ Only read operations are supported (pagination, sorters, getlist, getone, getman
 - `nendswiths`
 - `in`
 
-In combination with `geometry` field, the `in` operator is used to specify the _bounding box_.
-Otherwith, it is used to check if field is included in array.
+L'opérateur `in`, appliqué sur la champs `geometry` permet de définir la _bounding box_ de la requête.
 
 
 ## Meta
@@ -41,3 +32,9 @@ Otherwith, it is used to check if field is included in array.
 - `propertyname` : return only given list of properties (e.g. : `['name','annee']`). Useful for avoid fetching large geometries.
 
 See [WFS Reference](https://docs.geoserver.org/latest/en/user/services/wfs/reference.html) for details.
+
+## Exemples de fournisseurs de données
+
+- [Geo2France](https://www.geo2france.fr/datahub/)
+- [Métropole Européenne de Lille](https://data.lillemetropole.fr/)
+- [DataGrandEst](https://www.datagrandest.fr/data4citizen)
