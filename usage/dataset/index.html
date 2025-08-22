@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Données - Api-Dashboard</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Donn\u00e9es";
+        var mkdocs_page_input_path = "usage/dataset.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Api-Dashboard
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Utilisation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../template/">Mise en place du projet</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../page/">Page</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Données</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#source-de-donnees">Source de données</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#connecter-une-source">Connecter une source</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#filter-les-donnees">Filter les données</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#fournisseurs-diposnibles">Fournisseurs diposnibles</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#manipuler-les-donnees">Manipuler les données</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#transform">Transform</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#join">Join</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#performances-et-eco-conception">Performances et eco-conception 🌱</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#provider-wfs">Provider WFS</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#datapreview">DataPreview</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../dataviz/">Graphiques (dataviz)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../controles/">Contrôles</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Fournisseurs de données</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../providers/wfs/">WFS</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../providers/datafair/">DataFair</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../providers/file/">Fichier</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Api-Dashboard</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Utilisation</li>
+      <li class="breadcrumb-item active">Données</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="donnees">Données</h1>
+<p>La première étape dans la réalisation du tableau de bord consiste à définir les données qui seront utilisés.
+La biblithièque supporte de manière standard différents <a href="https://github.com/geo2france/api-dashboard/tree/main/src/data_providers">fournisseurs</a>.
+Certaines opérations sont génériques (<code>&lt;Filter&gt;</code>), alors que d'autres exploitent des capacités 
+spécifiques à un fournisseur (propriété <em>meta</em> de <code>&lt;Dataset&gt;</code>).</p>
+<h2 id="source-de-donnees">Source de données</h2>
+<h3 id="connecter-une-source">Connecter une source</h3>
+<p>Le composant <code>Dataset</code> permet de définir des jeux de données qui seront utilisés par
+les graphiques.
+On peut également ajouter des métadonnées (producteurs), qui s'afficheront sous les graphiques utilisant ce dataset.</p>
+<pre><code class="language-jsx">&lt;Dashboard&gt;
+    &lt;Dataset
+    id=&quot;monIdentifiantUnique&quot;
+    url=&quot;https://data.ademe.fr/data-fair/api/v1/datasets&quot;
+    type='datafair'    resource=&quot;sinoe-(r)-destination-des-dma-collectes-par-type-de-traitement/lines&quot;
+    &gt;
+      &lt;Producer url=&quot;https://www.sinoe.org&quot;&gt;Ademe&lt;/Producer&gt;
+      &lt;Producer url=&quot;https://odema-hautsdefrance.org/&quot;&gt;Odema&lt;/Producer&gt;
+    &lt;/Dataset&gt;
+  {/* [...] */}
+&lt;/Dashboard&gt;
+</code></pre>
+<h3 id="filter-les-donnees">Filter les données</h3>
+<p>Il s'agit de filtres <strong>envoyés à l'API du fournisseur de données</strong>.
+Il utilise des opérateurs standards (<code>eq</code>, <code>ne</code>, <code>contains</code>, etc.) qui sont ensuite automatiquement 
+traduits dans le format attendu par le fournisseur de données. Voir la <a href="https://github.com/geo2france/api-dashboard/blob/b9c1ddb511f6bf722704b4935160eacdcfe33cc2/src/data_providers/types.ts#L23-L45">liste des opérateur</a>. Attention, les fournisseurs ne supportent pas toujours tous les opérateurs.</p>
+<pre><code class="language-jsx">&lt;Filter field='L_REGION'&gt;Hauts-de-France&lt;/Filter&gt; // operateur eq (égalité) par défaut
+&lt;Filter field='L_TYP_REG_DECHET' operator='ne'&gt;Encombrants&lt;/Filter&gt;
+</code></pre>
+<h3 id="fournisseurs-diposnibles">Fournisseurs diposnibles</h3>
+<ul>
+<li>WFS 1.1</li>
+<li>DataFair</li>
+<li>Fichier</li>
+</ul>
+<h2 id="manipuler-les-donnees">Manipuler les données</h2>
+<h3 id="transform">Transform</h3>
+<p>Le composant enfant <code>&lt;Transform&gt;</code> est optionnel. Il permet de <strong>modifier localement</strong> les données du <code>&lt;Dataset&gt;</code> parent. 
+Il doit contenir soit :</p>
+<ul>
+<li>Une <strong>fonction javascript</strong> qui traite les données.</li>
+<li>Une <strong>requête SQL</strong> (chaîne de caractères) (voir la <a href="https://github.com/AlaSQL/alasql/wiki/Select">documentation Alasql</a>).</li>
+</ul>
+<p>Si plusieurs <code>&lt;Transform&gt;</code> sont ajoutés, ils sont appliqués successivement sur les données.
+Cette opération est effectuée côté client, et <strong>ne modifie donc pas l'appel à l'API</strong>.</p>
+<pre><code class="language-jsx">&lt;Dashboard&gt;
+    &lt;Dataset
+    id=&quot;dma_par_type_de_traitement&quot;
+    url=&quot;https://data.ademe.fr/data-fair/api/v1/datasets&quot;
+    type='datafair'
+    resource=&quot;sinoe-(r)-destination-des-dma-collectes-par-type-de-traitement/lines&quot;
+    &gt;
+      &lt;Transform&gt;{(data) =&gt; data.filter((e) =&gt; e.TONNAGE_DMA &gt; 3000)}&lt;/Transform&gt;
+      &lt;Transform&gt;SELECT * FROM ? ORDER BY [TONNAGE_DMA] DESC LIMIT 5&lt;/Transform&gt;
+    &lt;/Dataset&gt;
+  {/* [...] */}
+&lt;/Dashboard&gt;
+</code></pre>
+<h3 id="join">Join</h3>
+<p><code>Join</code> permet de faire une jointure avec un autre jeu de données. 
+L'ordre avec les composants <code>Transform</code> est respecté. Ainsi, un <code>Transform</code> placé <strong>après</strong> une jointure
+s'appliquera sur le produit de la jointure.</p>
+<ul>
+<li><code>dataset</code> : identifiant du dataset à joindre (= table de droite)</li>
+<li><code>joinKey</code> : un tableau avec les champs à joindre (ex : <code>['leftKey','RightKey]</code>)</li>
+<li><code>joinType</code> : type de jointure  <code>right</code> | <code>left</code> | <code>full</code> | <code>inner</code> (défaut <code>inner</code>)</li>
+</ul>
+<pre><code class="language-jsx">&lt;Dashboard&gt;
+      &lt;Dataset
+        id=&quot;ref_epci_odema&quot;
+        resource='odema:territoire_epci'
+        url='https://www.geo2france.fr/geoserver/ows'
+        type='wfs'
+        pageSize={1000}
+      &gt;
+         &lt;Filter field='annee'&gt;{useControl('annee')}&lt;/Filter&gt;
+      &lt;/Dataset&gt;
+
+      &lt;Dataset 
+        id=&quot;sinoe_synthese_indic&quot; 
+        resource='sinoe59-indic-synth-acteur/lines'
+        url=&quot;https://data.ademe.fr/data-fair/api/v1/datasets&quot;
+        type='datafair'
+        pageSize={5000}&gt;
+            &lt;Filter field='l_region'&gt;Hauts-de-France&lt;/Filter&gt;
+            &lt;Filter field='annee'&gt;{useControl('annee')}&lt;/Filter&gt;
+            &lt;Join dataset=&quot;ref_epci_odema&quot; joinKey={[&quot;c_acteur&quot;,&quot;c_acteur_sinoe&quot; ]} /&gt;
+            &lt;Transform&gt;SELECT c_acteur, name_short as nom, tonnage_omr, tonnage_bio FROM ?&lt;/Transform&gt;
+      &lt;/Dataset&gt;
+&lt;/Dashboard&gt;
+</code></pre>
+<h2 id="performances-et-eco-conception">Performances et eco-conception 🌱</h2>
+<p>La bibliothèque va systématiquement éviter de lancer plusieurs fois la même requête.
+Il est donc important de différencier les opérations s'appliquant côté fournisseur de données de celles effectuées par le client.</p>
+<h3 id="provider-wfs">Provider WFS</h3>
+<p>Le WFS permet d'alléger les requêtes en ne demandant que les champs nécessaire (https://docs.geoserver.org/main/en/user/services/wfs/reference.html#getfeature).
+Cette fonctionnalité (non standard entre les différents fournisseurs), peut être utilisée en utilisant la propriété <em>meta</em> de <code>&lt;Dataset&gt;</code>.</p>
+<p>Idéalement, on utilisera la même propriété meta pour les dataset lié au même fournisseur, afin de réduire le nombre de requête sur le serveur.</p>
+<pre><code class="language-jsx">&lt;Dataset
+  id=&quot;epci_hdf_pop&quot;
+  resource=&quot;spld:epci&quot;
+  url='https://www.geo2france.fr/geoserver/ows'
+  type='wfs'
+  pageSize={1000}
+  meta={{properties:['nature_epci', 'pop_mun', 'nom_epci']}} &gt;
+
+&lt;/Dataset&gt;
+</code></pre>
+<h2 id="datapreview">DataPreview</h2>
+<p>Un tableau simple pour visualiser les données du dataset. Il s'agit d'un composant utilisable pour faciliter la conception 🔧 du tableau de bord.
+La clé <code>rowKey</code> (colonne qui contient une clé unique) du tableau est optionnelle, mais améliore les performances sur des gros datasets.</p>
+<pre><code class="language-jsx">&lt;Dashboard&gt;
+    &lt;Dataset
+    id=&quot;monIdentifiantUnique&quot;
+    url=&quot;https://data.ademe.fr/data-fair/api/v1/datasets&quot;
+    type='datafair'    
+    resource=&quot;sinoe-(r)-destination-des-dma-collectes-par-type-de-traitement/lines&quot;
+    /&gt;
+
+    &lt;DataPreview dataset_id='myuniquedatasetid' pageSize={5} rowKey='_i'/&gt;
+
+  {/* [...] */}
+&lt;/Dashboard&gt;
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../page/" class="btn btn-neutral float-left" title="Page"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../dataviz/" class="btn btn-neutral float-right" title="Graphiques (dataviz)">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../page/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../dataviz/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
