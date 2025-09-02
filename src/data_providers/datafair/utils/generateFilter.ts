@@ -4,7 +4,6 @@ export const generateFilter = (filters?: any[]) => {
   if (filters) {
     filters.map((filter) => {
       if (filter.operator !== "or" && filter.operator !== "and" && "field" in filter){ // LogicalFilter
-
         const value = (() => {switch (filter.operator){
           case "contains":
             return filter.value
@@ -16,6 +15,8 @@ export const generateFilter = (filters?: any[]) => {
           case "endswith":
             return `*${filter.value}`
           case "in":
+                    console.log(filter.value)
+
             return filter.value.join(' ')
 
         }})()
