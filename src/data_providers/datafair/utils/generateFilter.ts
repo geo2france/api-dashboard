@@ -15,8 +15,6 @@ export const generateFilter = (filters?: any[]) => {
           case "endswith":
             return `*${filter.value}`
           case "in":
-                    console.log(filter.value)
-
             return filter.value.join(' ')
 
         }})()
