@@ -61,7 +61,11 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#developper-vos-propres-graphiques">Développer vos propres graphiques</a>
+    <li class="toctree-l2"><a class="reference internal" href="#developper-vos-propres-graphiques">Développer vos propres graphiques 🔧</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#graphique-echarts">Graphique Echarts</a>
+    </li>
+        </ul>
     </li>
     </ul>
                   </li>
@@ -268,8 +272,73 @@ Si des catégories sont dupliquées, les valeurs de celles-ci sont automatiqueme
 
 &lt;/Dashboard&gt;
 </code></pre>
-<h2 id="developper-vos-propres-graphiques">Développer vos propres graphiques</h2>
-<p><em>TODO</em></p>
+<h2 id="developper-vos-propres-graphiques">Développer vos propres graphiques 🔧</h2>
+<p>Il est possible d'écrire un composant dont le rendu est un visuel.
+N'importe quel bibliothèque peut-être utilisée, ou même du HTML.</p>
+<h3 id="graphique-echarts">Graphique Echarts</h3>
+<p>Api-dashboard fourni un composant <code>&lt;ChartEcharts&gt;</code> permettant de faciliter la création de graphiques Echarts.</p>
+<p>Il suffit de fournir un objet de configuration ECharts via la propriété <code>options</code>.
+Pour un usage plus avancé, la propriété <code>ref</code> permet de récupérer l'instance ECharts (réagir à des évenements, déclencher des actions sur le graphique).</p>
+<table>
+<thead>
+<tr>
+<th>Propriété</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>option</code></td>
+<td><code>object</code></td>
+<td>Objet de configuration ECharts</td>
+</tr>
+<tr>
+<td><code>ref</code></td>
+<td><code>React.RefAttributes&lt;EChartsReact&gt;</code></td>
+<td>Référence de l'instance ECharts</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-jsx">import React,  { useRef, useEffect } from &quot;react&quot;;
+import { ChartEcharts } from &quot;@geo2france/api-dashboard&quot;;
+
+
+export default function MonGraphiqueCustom() {
+
+  const chartRef = useRef(null);
+
+  useEffect(() =&gt; {
+    if (chartRef.current) {
+      const mychart = chartRef.current.getEchartsInstance();
+      // Cf. https://echarts.apache.org/en/api.html#echartsInstance
+      mychart.on('click', (e) =&gt; ( console.log('clicked',e) ) );
+    }  
+  }, [ ]);
+
+
+  // Cf. https://echarts.apache.org/en/option.html
+  const options = {
+    xAxis: {
+        type: 'category',
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [
+        {
+        data: [150, 230, 224, 218, 135, 147, 260],
+        type: 'line'
+        }
+    ]
+  };
+
+  return (
+      &lt;ChartEcharts options={options} ref={chartRef} /&gt;
+  );
+}
+</code></pre>
               
             </div>
           </div><footer>
