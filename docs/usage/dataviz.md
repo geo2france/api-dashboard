@@ -76,6 +76,63 @@ Si des catégories sont dupliquées, les valeurs de celles-ci sont automatiqueme
 </Dashboard>
 ```
 
-## Développer vos propres graphiques
+## Développer vos propres graphiques 🔧
 
-*TODO*
+Il est possible d'écrire un composant dont le rendu est un visuel.
+N'importe quel bibliothèque peut-être utilisée, ou même du HTML.
+
+### Graphique Echarts
+
+Api-dashboard fourni un composant `<ChartEcharts>` permettant de faciliter la création de graphiques Echarts.
+
+Il suffit de fournir un objet de configuration ECharts via la propriété `options`.
+Pour un usage plus avancé, la propriété `ref` permet de récupérer l'instance ECharts (réagir à des évenements, déclencher des actions sur le graphique).
+
+
+
+| Propriété        | Type          | Description                                                                 |
+|------------|---------------|-----------------------------------------------------------------------------|
+| `option `  | `object`      | Objet de configuration ECharts                                         |
+| `ref`  | `React.RefAttributes<EChartsReact>`      |   Référence de l'instance ECharts  |
+
+
+```jsx
+import React,  { useRef, useEffect } from "react";
+import { ChartEcharts } from "@geo2france/api-dashboard";
+
+
+export default function MonGraphiqueCustom() {
+
+  const chartRef = useRef(null);
+
+  useEffect(() => {
+    if (chartRef.current) {
+      const mychart = chartRef.current.getEchartsInstance();
+      // Cf. https://echarts.apache.org/en/api.html#echartsInstance
+      mychart.on('click', (e) => ( console.log('clicked',e) ) );
+    }  
+  }, [ ]);
+
+
+  // Cf. https://echarts.apache.org/en/option.html
+  const options = {
+    xAxis: {
+        type: 'category',
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [
+        {
+        data: [150, 230, 224, 218, 135, 147, 260],
+        type: 'line'
+        }
+    ]
+  };
+
+  return (
+      <ChartEcharts options={options} ref={chartRef} />
+  );
+}
+```
