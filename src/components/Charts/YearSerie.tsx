@@ -54,8 +54,8 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
         {
             name:cat,
             type:chart_type === 'area' ? 'line' : chart_type,
-            data :categoryKey ? chart_data?.filter((row:SimpleRecord) => row[categoryKey] === cat).map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey]]))
-                              : chart_data?.map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey] ])),
+            data :categoryKey ? chart_data?.filter((row:SimpleRecord) => row[categoryKey] === cat).map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey] || 0 ]))
+                              : chart_data?.map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey] || 0 ])),
             itemStyle:{
                 color:COLORS && COLORS[idx % COLORS.length],
            },
