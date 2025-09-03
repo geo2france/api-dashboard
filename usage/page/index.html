@@ -106,7 +106,7 @@ import  { Dashboard, Dataset, Control, ChartPie } from &quot;@geo2france/api-das
 
 export const MaPremierePage = () =&gt; (
 
-  &lt;Dashboard&gt;
+  &lt;Dashboard debug&gt;
 
     &lt;Dataset 
           id=&quot;dma_collecte_traitement&quot; 
@@ -140,9 +140,9 @@ Les graphiques utilisent ensuite des couleurs réparties de façon optimale le l
 &lt;/Dasbboard&gt;
 </code></pre>
 <h2 id="debug">Debug</h2>
-<p>Lors de la conception du tableau de bord, il est possible d'ajouter un composant <code>&lt;Debug/&gt;</code>
-directement dans <code>&lt;Dashboard&gt;</code>. 
-Celui-ci ajoute un bouton dans le coin supérieur droit, permettant d'afficher différentes informations utiles.</p>
+<p>L'ajout de la propriété <code>debug</code> au composant <code>&lt;Dashboard&gt;</code> ajoute un bouton dans le coin supérieur droit, 
+permettant d'afficher différentes informations utiles (jeux de données chargés, contrôles utilisateurs, etc.).</p>
+<p>Idéalement, à retirer dans la version en production.</p>
 <p><img alt="debug.png" src="../debug.png" /></p>
               
             </div>
