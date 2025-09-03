@@ -13,7 +13,6 @@ import { ChartEcharts } from "./ChartEcharts"
 interface IYearSerieProps {
     dataset:string
     title?:string
-    yearControl?:string
     yearKey:string
     valueKey:string
     categoryKey?:string
@@ -21,7 +20,7 @@ interface IYearSerieProps {
     yearMark?:number | string
     type?: 'bar' | 'line' | 'area'
 }
-export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, categoryKey, valueKey, yearKey, yearMark, stack:stack_input, type:chart_type='bar', yearControl='year'}) => {
+export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, categoryKey, valueKey, yearKey, yearMark, stack:stack_input, type:chart_type='bar'}) => {
     const stack = stack_input || chart_type == 'line' ? false : true ; // Pas de stack par défaut pour le type line
     const dataset = useDataset(dataset_id)
     const data = dataset?.data
