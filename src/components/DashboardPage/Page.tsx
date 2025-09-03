@@ -127,8 +127,9 @@ interface IDSLDashboardPageProps {
     children : React.ReactNode // TODO, lister les type possible ?React.ReactElement<typeof DashboardElement>[];
     name? : string
     columns?: number
+    debug?: boolean
 }
-export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tableau de bord', columns=2, children}) => {
+export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tableau de bord', columns=2, children, debug=false}) => {
     const [datasets, setdatasets] = useState<Record<string, dataset>>({});
     const [palette, setPalette] = useState<PaletteType>(DEFAULT_PALETTE);
  
@@ -165,6 +166,10 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
     const visible_components = childrenArray.filter((c) => c && getComponentKind(c)=='other');
     const logic_components = childrenArray.filter((c) => getComponentKind(c) == 'logical');
     const control_components = childrenArray.filter((c) => getComponentKind(c) == 'control');
+
+    if (debug && !logic_components.some((c) => typeof c.type !== "string" && c.type.name === Debug.name) ){
+        logic_components.push(<Debug key="debug_property"/>);
+    }
 
     return (
     <>
