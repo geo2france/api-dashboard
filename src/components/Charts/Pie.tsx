@@ -33,10 +33,18 @@ export const ChartPie:React.FC<IChartPieProps> = ({dataset:dataset_id, nameKey, 
       blockConfig?.setConfig(block_config)
       , [data] )
 
-    const chart_data1:SimpleRecord[] | undefined =  data && from(data).groupby(nameKey).rollup({value:op.sum(dataKey)}).objects().map((d:SimpleRecord) => ({
-      name: d[nameKey],
-      value: d.value,  
-    }));
+    const chart_data1: SimpleRecord[] =
+      data && data.length > 0
+        ? from(data)
+            .groupby(nameKey)
+            .rollup({ value: op.sum(dataKey) })
+            .objects()
+            .map((d: any) => ({
+              name: d[nameKey],
+              value: d.value,
+            }))
+        : [];
+
 
     const chart_data = merge_others({dataset:chart_data1 || [], min:other || -1 })
 
