@@ -9,6 +9,7 @@ export { useMapControl } from "./utils/useMapControl";
 // Helpers
 export { BaseRecordToGeojsonPoint } from "./utils/baserecordtogeojsonpoint"
 export {cardStyles} from "./utils/cardStyles"
+export { merge_others } from "./utils/merge_others"
 
 // Components
 import KeyFigure from "./components/KeyFigure/KeyFigure"

@@ -6,6 +6,7 @@ import { usePalette } from "../Palette/Palette";
 import { SimpleRecord } from "../../types";
 import { from, op } from "arquero";
 import { ChartEcharts } from "./ChartEcharts";
+import { merge_others } from "../..";
 
 
 interface IChartPieProps {
@@ -15,9 +16,10 @@ interface IChartPieProps {
     unit?:string,
     title?:string
     donut?:boolean
+    other?:number | null // Merge categorie with less than `other` percent
 }
 
-export const ChartPie:React.FC<IChartPieProps> = ({dataset:dataset_id, nameKey, dataKey, unit, title, donut=false}) => {
+export const ChartPie:React.FC<IChartPieProps> = ({dataset:dataset_id, nameKey, dataKey, unit, title, donut=false, other=5}) => {
     const dataset = useDataset(dataset_id)
     const blockConfig = useContext(ChartBlockContext)
 
@@ -31,10 +33,21 @@ export const ChartPie:React.FC<IChartPieProps> = ({dataset:dataset_id, nameKey, 
       blockConfig?.setConfig(block_config)
       , [data] )
 
-    const chart_data:SimpleRecord[] | undefined = data && from(data).groupby(nameKey).rollup({value:op.sum(dataKey)}).objects().map((d:SimpleRecord) => ({
-      name: d[nameKey],
-      value: d.value,  
-    }));
+    const chart_data1: SimpleRecord[] =
+      data && data.length > 0
+        ? from(data)
+            .groupby(nameKey)
+            .rollup({ value: op.sum(dataKey) })
+            .objects()
+            .map((d: any) => ({
+              name: d[nameKey],
+              value: d.value,
+            }))
+        : [];
+
+
+    const chart_data = merge_others({dataset:chart_data1 || [], min:other || -1 })
+
 
     const option:EChartsOption = {
       color:usePalette({nColors:chart_data?.length}),
