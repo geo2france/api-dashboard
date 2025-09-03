@@ -40,6 +40,7 @@ Si des catégories sont dupliquées, les valeurs de celles-ci sont automatiqueme
 | `donut`    | `boolean`    |      | `false`    | Affiche le graphique en style **donut** (camembert avec un trou central).   |
 | `unit `    | `string `    |      |            | Unité à afficher (ex: _%_, _kg_, etc.)   |
 | `title `   | `string `    |      |            | Titre du graphique |
+| `other`    | `number | null`|   |  1         | Regrouper les catégories représentant moins de x% dans une catégorie "Autres". `null` pour désactiver | 
 
 ![pie screenshot](screenshot_pie.png)
 

@@ -16,7 +16,7 @@ import  { Dashboard, Dataset, Control, ChartPie } from "@geo2france/api-dashboar
 
 export const MaPremierePage = () => (
 
-  <Dashboard>
+  <Dashboard debug>
 
     <Dataset 
           id="dma_collecte_traitement" 
@@ -57,8 +57,9 @@ La palette s'applique à l'ensemble de la page.
 
 ## Debug
 
-Lors de la conception du tableau de bord, il est possible d'ajouter un composant `<Debug/>`
-directement dans `<Dashboard>`. 
-Celui-ci ajoute un bouton dans le coin supérieur droit, permettant d'afficher différentes informations utiles.
+L'ajout de la propriété `debug` au composant `<Dashboard>` ajoute un bouton dans le coin supérieur droit, 
+permettant d'afficher différentes informations utiles (jeux de données chargés, contrôles utilisateurs, etc.).
+
+Idéalement, à retirer dans la version en production.
 
 ![debug.png](debug.png)

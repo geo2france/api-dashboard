@@ -26,28 +26,36 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
     const dataset = useDataset(dataset_id)
     const data = dataset?.data
 
-    const chart_data = categoryKey ? data && from(data).groupby(yearKey, categoryKey) //Somme par année et categorykey
-                                            .rollup({[valueKey]:op.sum(valueKey)})
-                                            .groupby(yearKey).orderby(yearKey).objects()
-                                            :
-                                        data &&  from(data).groupby(yearKey) //Somme par année seulement
-                                        .rollup({[valueKey]:op.sum(valueKey)}).orderby(yearKey)
-                                        .objects()
+    let chart_data:SimpleRecord[] = []
+    let distinct_cat:string[] = []
 
-    const distinct_cat:string[] | undefined = categoryKey ? 
-        data && (from(data).rollup({cat: op.array_agg_distinct(categoryKey)}).object() as { cat: string[] } ).cat
-        :
-        [valueKey]
+    if (data && data.length > 0) {
+        const grouped_data = categoryKey ? from(data).groupby(yearKey, categoryKey) //Somme par année et categorykey
+                                                .rollup({[valueKey]:op.sum(valueKey)})
+                                                .groupby(yearKey).orderby(yearKey)
+                                                :
+                                             from(data).groupby(yearKey) //Somme par année seulement
+                                            .rollup({[valueKey]:op.sum(valueKey)}).orderby(yearKey)
+                                            
+ 
+        const all_years = from(data).groupby(yearKey).rollup({[yearKey]: op.any(yearKey)})
+        const all_cats= categoryKey ? (from(data).groupby(categoryKey).rollup({[categoryKey]: op.any(categoryKey)})) : from([{'cat':valueKey}])
+        const full = all_years.cross(all_cats) // Contient chaque annee x catégorie (pour éviter les trous)
+
+        distinct_cat = all_cats.array(categoryKey || 'cat') as string[] // Pour générer chaque serie
+
+        chart_data = full.join_left(grouped_data).objects()
+
+    }
 
     const COLORS = usePalette({nColors:distinct_cat?.length}) || []
 
-
-    const series = distinct_cat ? distinct_cat.map((cat, idx) => (
+    const series = distinct_cat.map((cat, idx) => (
         {
             name:cat,
             type:chart_type === 'area' ? 'line' : chart_type,
-            data :categoryKey ? chart_data?.filter((row:SimpleRecord) => row[categoryKey] === cat).map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey] ]))
-                              : chart_data?.map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey] ])),
+            data :categoryKey ? chart_data?.filter((row:SimpleRecord) => row[categoryKey] === cat).map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey] || 0 ]))
+                              : chart_data?.map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey] || 0 ])),
             itemStyle:{
                 color:COLORS && COLORS[idx % COLORS.length],
            },
@@ -60,7 +68,7 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
             ]
           } : undefined
         }
-    )) as SeriesOption[] : [];
+    )) as SeriesOption[];
 
     function tooltipFormatter(params: any): string {
         if (!params || params.length === 0) return '';
