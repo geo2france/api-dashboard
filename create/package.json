@@ -1,6 +1,6 @@
 {
   "name": "@geo2france/create-api-dashboard",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": false,
   "description": "CLI to scaffold a new project using @geo2france/api-dashboard",
   "bin": {
