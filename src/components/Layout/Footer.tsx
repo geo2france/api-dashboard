@@ -1,4 +1,4 @@
-import { Layout, Typography } from "antd";
+import { Button, Layout, Typography } from "antd";
 import { CSSProperties, useContext, useState } from "react";
 
 import { UpOutlined, DownOutlined } from "@ant-design/icons";
@@ -58,28 +58,19 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
       </div>
 
       {/* Bouton carré de contrôle pour afficher ou cacher le footer */}
-      <div
+      <Button
         style={{
           position: "absolute",
           bottom: "5px",
           right: "10px",
-          cursor: "pointer",
           zIndex: 1001,
-          backgroundColor: "#dead8f",
-          padding: "5px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          borderRadius: "4px",
         }}
+        type="primary"
         onClick={toggleCollapse}
+        aria-label={ isCollapsed ? "Développer le footer" : "Réduire le footer" }
       >
-        {isCollapsed ? (
-          <UpOutlined style={{ fontSize: "16px", color: "#fff" }} />
-        ) : (
-          <DownOutlined style={{ fontSize: "16px", color: "#fff" }} />
-        )}
-      </div>
+        { isCollapsed ? <UpOutlined /> : <DownOutlined /> }
+      </Button>
     </Layout.Footer>
   );
 };
