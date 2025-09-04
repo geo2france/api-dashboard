@@ -40,14 +40,16 @@ const DashboardSider: React.FC<DbSiderProps> = ({style, logo, route_config}) => 
   };
 
   const siderStyle: CSSProperties = {
+    overflow: 'auto',
     height: "100vh",
     backgroundColor: token.colorBgContainer,
     zIndex: 2, 
+    position: 'sticky',
+    top:'0',
     ...style
   };
 
   return (
-    <>
     <Layout.Sider
       theme="light"
       collapsible
@@ -104,7 +106,6 @@ const DashboardSider: React.FC<DbSiderProps> = ({style, logo, route_config}) => 
         </Col>
       </Row>
     </Layout.Sider>
- </>
   );
 };
 
