@@ -46,6 +46,7 @@ const DashboardSider: React.FC<DbSiderProps> = ({style, logo, route_config}) => 
     zIndex: 2, 
     position: 'sticky',
     top:'0',
+    borderRight: "1px solid #ccc", 
     ...style
   };
 
