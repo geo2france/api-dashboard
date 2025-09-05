@@ -9,6 +9,8 @@ import { SimpleRecord } from "../../types"
 import { EChartsOption, SeriesOption } from "echarts"
 import { usePalette } from "../Palette/Palette"
 import { ChartEcharts } from "./ChartEcharts"
+import { useContext, useEffect } from "react"
+import { ChartBlockConfig, ChartBlockContext } from "../DashboardPage/Block"
 
 interface IYearSerieProps {
     dataset:string
@@ -20,13 +22,23 @@ interface IYearSerieProps {
     yearMark?:number | string
     type?: 'bar' | 'line' | 'area'
 }
-export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, categoryKey, valueKey, yearKey, yearMark, stack:stack_input, type:chart_type='bar'}) => {
+export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, categoryKey, valueKey, yearKey, yearMark, stack:stack_input, title, type:chart_type='bar'}) => {
     const stack = stack_input || chart_type == 'line' ? false : true ; // Pas de stack par défaut pour le type line
     const dataset = useDataset(dataset_id)
     const data = dataset?.data
+    
 
     let chart_data:SimpleRecord[] = []
     let distinct_cat:string[] = []
+
+    const blockConfig = useContext(ChartBlockContext) //TODO : créer un hook pour simplifier la config du block
+    const block_config:ChartBlockConfig = {
+      title: title,
+      dataExport: data
+    }
+    useEffect(() => 
+      blockConfig?.setConfig(block_config)
+      , [title, data] )
 
     if (data && data.length > 0) {
         const grouped_data = categoryKey ? from(data).groupby(yearKey, categoryKey) //Somme par année et categorykey
