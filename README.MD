@@ -29,7 +29,15 @@ Les composants sont actuellement utilisés pour le [tableau de bord de l'Odema](
 
 ## Installation
 
-`npm i @geo2france/api-dashboard`
+Pour créer un nouveau tableau de bord :
+
+```sh
+npm init @geo2france/api-dashboard@latest nom-du-projet
+cd nom-du-projet && npm install
+
+# Lancer le serveur de développement
+npm run dev
+```
 
 Consulter la [documentation](https://geo2france.github.io/api-dashboard/) du projet.
 
