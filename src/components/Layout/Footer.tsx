@@ -1,11 +1,11 @@
-import { Layout, Typography } from "antd";
+import { Button, Layout, Typography } from "antd";
 import { CSSProperties, useContext, useState } from "react";
 
 import { UpOutlined, DownOutlined } from "@ant-design/icons";
 import { Partner } from "../../types";
 import { AppContext } from "./DashboardApp";
 
-const { Text, Link } = Typography;
+const { Text } = Typography;
 
 interface DbFooterProps {
     brands?: Partner[];
@@ -21,7 +21,7 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
   const app_context = useContext(AppContext)
 
   const style_img: CSSProperties = {
-    height: "60px",
+    maxHeight: "60px",
     marginRight: "20px",
   };
 
@@ -35,7 +35,8 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
         position: "sticky",
         right: "0",
         width: "100%",
-        height: isCollapsed ? "0px" : "150px", 
+        padding:2,
+        height: isCollapsed ? "40px" : "80px", 
         transition: "height 0.5s ease-in-out",
         overflow: "hidden",
         borderTop: "1px solid #ccc", 
@@ -44,15 +45,7 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
     >
       {/* Texte affiché uniquement lorsque le footer est rétracté */}
       {isCollapsed && (
-        <div style={{
-          color: "#000",
-          fontSize: "14px",
-          marginTop:-15,
-        }}>
-          <Link href="/" target="_blank">
-            <Text>{app_context?.title} - {app_context?.subtitle}</Text>
-          </Link>
-        </div>
+            <Text type="secondary">{app_context?.title} - {app_context?.subtitle}</Text>
       )}
 
       {/* Logos et contenu du footer affichés lorsque déplié */}
@@ -65,28 +58,19 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
       </div>
 
       {/* Bouton carré de contrôle pour afficher ou cacher le footer */}
-      <div
+      <Button
         style={{
           position: "absolute",
           bottom: "5px",
           right: "10px",
-          cursor: "pointer",
           zIndex: 1001,
-          backgroundColor: "#dead8f",
-          padding: "5px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          borderRadius: "4px",
         }}
+        type="primary"
         onClick={toggleCollapse}
+        aria-label={ isCollapsed ? "Développer le footer" : "Réduire le footer" }
       >
-        {isCollapsed ? (
-          <UpOutlined style={{ fontSize: "16px", color: "#fff" }} />
-        ) : (
-          <DownOutlined style={{ fontSize: "16px", color: "#fff" }} />
-        )}
-      </div>
+        { isCollapsed ? <UpOutlined /> : <DownOutlined /> }
+      </Button>
     </Layout.Footer>
   );
 };

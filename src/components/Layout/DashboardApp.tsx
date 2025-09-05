@@ -76,15 +76,15 @@ const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, t
                   <Routes>
                     <Route
                           element={
-                              <Layout>
-                                  <Layout>
+                                  <Layout hasSider  style={{ minHeight: '100vh' }}>
                                       <DashboardSider route_config={routes}/>
-                                      <Content style={{width:"85%"}}>
+                                      <Layout> 
+                                      <Content style={{width:"100%"}}>
                                           <Outlet />
                                       </Content>
+                                      <DasbhoardFooter brands={brands} />
+                                      </Layout> 
                                   </Layout>
-                                  <DasbhoardFooter brands={brands} />
-                              </Layout>
                           }
                       >
                       {generateRoutes(routes)}

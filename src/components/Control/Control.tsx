@@ -23,6 +23,7 @@ const Control: React.FC<IControlProps> = ({ children, style = {} }) => {
         backgroundColor: "#fff",
         height: "auto",
         width: "100%",
+        borderBottom: "1px solid #ccc", 
         ...style,
       }}
     >
