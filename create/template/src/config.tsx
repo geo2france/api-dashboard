@@ -4,7 +4,7 @@ import { HomePage } from './pages/home';
 import { MaPremierePage } from './pages/page1';
 import { HeatMapOutlined, PieChartOutlined } from '@ant-design/icons';
 import MyLogo from '/img/logo.svg?url';
-import { MaDeuxiemePage } from './pages/page2';
+import { PageBiodiv } from './pages/page_biodiv';
 
 
 
@@ -47,9 +47,9 @@ export const config:DashboardConfig = {
             icon: <HeatMapOutlined />
         },
         { 
-            path:"page2",
-            label:"Deuxieme page",
-            element:<MaDeuxiemePage />,
+            path:"biodiversite",
+            label:"Biodiversité",
+            element:<PageBiodiv />,
             icon: <PieChartOutlined />
         }
     ]
