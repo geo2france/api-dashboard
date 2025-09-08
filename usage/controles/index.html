@@ -57,6 +57,10 @@
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#radio-et-select">Radio et Select</a>
     </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#developper-vos-controles">Développer vos contrôles</a>
+        <ul>
     <li class="toctree-l3"><a class="reference internal" href="#input">Input</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#slider">Slider</a>
@@ -68,8 +72,6 @@
     <li class="toctree-l3"><a class="reference internal" href="#swith-checkbox">Swith / Checkbox</a>
     </li>
         </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#developper-vos-controles">Développer vos contrôles</a>
     </li>
     </ul>
                   </li>
@@ -157,6 +159,27 @@ Les propriétés initiales des composants <a href="https://ant.design/components
 <pre><code class="language-tsx">    &lt;Radio name=&quot;radio&quot; dataset='myuniquedatasetid' valueField='L_TYP_REG_DECHET' labelField='L_TYP_REG_DECHET'/&gt;
     &lt;Select name=&quot;radio2&quot; options={[{label:'A', value:'a'}, {label:'B', value:'b'}]}/&gt;
 </code></pre>
+<h2 id="developper-vos-controles">Développer vos contrôles</h2>
+<p>Il est possible de dévélopper vos contrôles où d'utiliser des éléments de formulaires de <a href="https://ant.design/components/form">AntDesign</a>.
+Il est nécessaire de fournir un <a href="https://ant.design/components/form#formitem">Form.Item</a> au composant <code>Controle</code>, <strong>avec un nom</strong>.</p>
+<pre><code class="language-tsx">import { Control, Dashboard } from &quot;@geo2france/api-dashboard/dsl&quot;
+import { Form, Slider, Switch } from &quot;antd&quot;
+
+&lt;Dashboard&gt;
+  &lt;Control&gt;
+
+    &lt;Form.Item name=&quot;Mon Slider&quot; initialValue={25}&gt;
+      &lt;Slider min={10} max={30} style={{width:150}}&gt;&lt;/Slider&gt;
+    &lt;/Form.Item&gt;
+
+    &lt;Form.Item name=&quot;Mon Switch&quot; initialValue={true}&gt;
+      &lt;Switch /&gt;
+    &lt;/Form.Item&gt;
+
+  &lt;/Control&gt;
+&lt;/Dashboard&gt;
+</code></pre>
+<p><img alt="Formulaire" src="../form_antd.png" /></p>
 <h3 id="input">Input</h3>
 <h3 id="slider">Slider</h3>
 <p>A venir</p>
@@ -166,8 +189,6 @@ Les propriétés initiales des composants <a href="https://ant.design/components
 <p>A venir</p>
 <h3 id="swith-checkbox">Swith / Checkbox</h3>
 <p>A venir</p>
-<h2 id="developper-vos-controles">Développer vos contrôles</h2>
-<p><em>TODO</em></p>
               
             </div>
           </div><footer>
