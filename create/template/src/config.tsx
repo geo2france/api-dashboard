@@ -5,7 +5,8 @@ import { MaPremierePage } from './pages/page1';
 import { HeatMapOutlined, PieChartOutlined } from '@ant-design/icons';
 import MyLogo from '/img/logo.svg?url';
 import { PageBiodiv } from './pages/page_biodiv';
-
+import { PacmanPage } from './pages/pacman';
+import { ImPacman } from "react-icons/im";
 
 
 export const config:DashboardConfig = {
@@ -51,6 +52,12 @@ export const config:DashboardConfig = {
             label:"Biodiversité",
             element:<PageBiodiv />,
             icon: <PieChartOutlined />
+        },
+        {
+          path:"pacman",
+          label:"Pacman",
+          element:<PacmanPage />,
+          icon:<ImPacman />
         }
     ]
 }

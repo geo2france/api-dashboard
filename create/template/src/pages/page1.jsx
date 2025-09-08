@@ -1,6 +1,8 @@
 
 import  {Transform, Dashboard, Dataset, Filter, 
   Producer, Control, ChartPie, useControl, Select, Radio, ChartYearSerie, Palette, Debug, Join } from "@geo2france/api-dashboard/dsl"
+import { Slider, Form, Switch } from "antd"
+import Pacman from "../charts/Pacman"
 
 
 
@@ -75,6 +77,12 @@ export const MaPremierePage = () => (
       <Control>
         <Select name="annee" options={[2017,2019,2021]} initial_value="2019" arrows={true} />
         <Radio name="test" options={['a','b','c']} initalValue="a" optionType="button"></Radio>
+        <Form.Item name="pacman">
+          <Slider min={10} max={30} style={{width:150}}></Slider>
+        </Form.Item>
+        <Form.Item name="pacman_auto">
+          <Switch />
+        </Form.Item>
       </Control>
 
       <ChartYearSerie title='Capacite isdnd' 
@@ -89,33 +97,13 @@ export const MaPremierePage = () => (
       <Palette steps={['#95c11f','#ed1c24','#0f4496']} />
 
       <ChartPie 
-        title="Population couverte par un scot"
+        title="Population couverte par un SCOT"
         dataset="scot"
         nameKey="proc_cours"
         dataKey="pop"
         unit="🧍"
       />
 
-      <div>Cette carte contient du HTML</div>
-
-     {/* <ChartEcharts 
-        option={ {
-          xAxis: {
-            type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-          },
-          yAxis: {
-            type: 'value'
-          },
-          series: [
-            {
-              data: [150, 230, 224, 218, 135, 147, 260],
-              type: 'line'
-            }
-          ]
-        }}
-      
-      /> */}
     </Dashboard>
 
 )
