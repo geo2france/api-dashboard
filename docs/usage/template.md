@@ -12,7 +12,7 @@ Utiliser `npm run dev` pour lancer un environnement de devéloppement, et `npm r
 
 ## Gestion des pages
 
-Le fichier `config.ts` peut-être éditer pour personnaliser l'application : thème graphique, titre, routes, etc.
+Le fichier `config.ts` peut-être édité pour personnaliser l'application : thème graphique, titre, routes, etc.
 
 ## Personnalisation
 
