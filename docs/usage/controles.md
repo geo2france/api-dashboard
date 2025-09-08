@@ -61,6 +61,32 @@ Les propriétés initiales des composants [Radio.Group](https://ant.design/compo
     <Radio name="radio" dataset='myuniquedatasetid' valueField='L_TYP_REG_DECHET' labelField='L_TYP_REG_DECHET'/>
     <Select name="radio2" options={[{label:'A', value:'a'}, {label:'B', value:'b'}]}/>
 ```
+
+## Développer vos contrôles
+
+Il est possible de dévélopper vos contrôles où d'utiliser des éléments de formulaires de [AntDesign](https://ant.design/components/form).
+Il est nécessaire de fournir un [Form.Item](https://ant.design/components/form#formitem) au composant `Controle`, **avec un nom**.
+
+```tsx
+import { Control, Dashboard } from "@geo2france/api-dashboard/dsl"
+import { Form, Slider, Switch } from "antd"
+
+<Dashboard>
+  <Control>
+
+    <Form.Item name="Mon Slider" initialValue={25}>
+      <Slider min={10} max={30} style={{width:150}}></Slider>
+    </Form.Item>
+
+    <Form.Item name="Mon Switch" initialValue={true}>
+      <Switch />
+    </Form.Item>
+
+  </Control>
+</Dashboard>
+```
+![Formulaire](form_antd.png)
+
 ### Input
 
 ### Slider
@@ -79,6 +105,3 @@ A venir
 
 A venir
 
-## Développer vos contrôles
-
-*TODO*
