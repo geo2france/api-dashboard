@@ -9,8 +9,7 @@ import { SimpleRecord } from "../../types"
 import { EChartsOption, SeriesOption } from "echarts"
 import { usePalette } from "../Palette/Palette"
 import { ChartEcharts } from "./ChartEcharts"
-import { useContext, useEffect } from "react"
-import { ChartBlockConfig, ChartBlockContext } from "../DashboardPage/Block"
+import { useBlockConfig } from "../DashboardPage/Block"
 
 interface IYearSerieProps {
     dataset:string
@@ -31,15 +30,11 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
     let chart_data:SimpleRecord[] = []
     let distinct_cat:string[] = []
 
-    const blockConfig = useContext(ChartBlockContext) //TODO : créer un hook pour simplifier la config du block
-    const block_config:ChartBlockConfig = {
+    useBlockConfig({ 
       title: title,
       dataExport: data
-    }
-    useEffect(() => 
-      blockConfig?.setConfig(block_config)
-      , [title, data] )
-
+    })
+    
     if (data && data.length > 0) {
         const grouped_data = categoryKey ? from(data).groupby(yearKey, categoryKey) //Somme par année et categorykey
                                                 .rollup({[valueKey]:op.sum(valueKey)})
