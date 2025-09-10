@@ -1,10 +1,9 @@
 import { Card, Dropdown, theme } from "antd";
 import { createContext, useContext, useEffect, useId, useState } from "react";
 import { SimpleRecord } from "../../types";
-import { FaFileCsv } from "react-icons/fa";
-import { AiOutlineMore } from "react-icons/ai";
+import { Icon } from "@iconify/react";
 import { ProducersFooter } from "../Dataset/Producer";
-
+import { MoreOutlined } from '@ant-design/icons';
 
 const { useToken } = theme;
 
@@ -32,7 +31,7 @@ export const DSL_ChartBlock:React.FC<IChartBlockProps> = ({children}) => {
             key: "export_data_csv",
             label: (
               <a onClick={() => handleExportData()}>
-                <FaFileCsv /> CSV
+                <Icon icon="hugeicons:csv-01" /> CSV
               </a>
             ),
             disabled: config.dataExport === undefined
@@ -44,7 +43,7 @@ export const DSL_ChartBlock:React.FC<IChartBlockProps> = ({children}) => {
     const dropdown_toolbox = (
         <Dropdown menu={{ items: menu_items}}>
           <a style={{ color: token.colorTextBase }}>
-            <AiOutlineMore />
+            <MoreOutlined />
           </a>
         </Dropdown>
       );

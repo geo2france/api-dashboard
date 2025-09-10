@@ -142,3 +142,19 @@ export default function MonGraphiqueCustom({}) {
   );
 }
 ```
+
+### Icônes
+
+Api-dashboard utilise la bibliothèque [Iconify](https://iconify.design/) pour les icônes.
+Iconify étant installé comme dépendance, elle est directement utilisable dans le projet.
+
+De très nombreuses icônes sont disponibles dans le [catalogue](https://icon-sets.iconify.design/) qui aggrège de nombreuses bibliothèques d'icônes.
+Le composant `Icon` supporte différentes propriétées permettant de personnaliser le rendu (couleur, dimensions, transformations, etc.). 
+
+Consulter la [documentation officielle](https://iconify.design/docs/icon-components/react/#properties).
+
+```tsx
+import { Icon } from '@iconify/react';
+
+<Icon icon="cib:creative-commons" />
+```

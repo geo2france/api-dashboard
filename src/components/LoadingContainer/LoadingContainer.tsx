@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect, useRef, useState } from "react";
 import { Empty, Spin, theme } from 'antd';
-import { PiEmptyFill } from "react-icons/pi";
+import { Icon } from '@iconify/react';
 
 interface LoadingContainerProps {
     isFetching: boolean;
@@ -47,7 +47,7 @@ const LoadingContainer:React.FC<LoadingContainerProps> = ({isFetching, children,
             {noData && <Empty 
                         style={{position:"relative", top:"50%", right:"50%", marginBottom:50, transform: "translate(50%, -50%)"}} 
                         description="Pas de données disponibles"
-                        image={<PiEmptyFill size={80} color={token.colorPrimary}/>} />
+                        image={<Icon icon="ph:empty-fill" width={80} color={token.colorPrimary}/>} />
             }
             { blur ? <Spin size="large" style={{position:'absolute', left:'50%', top:'50%' }}/> : <></>}
         </>
