@@ -102,10 +102,14 @@ import React,  { useRef, useEffect } from "react";
 import { ChartEcharts } from "@geo2france/api-dashboard";
 
 
-export default function MonGraphiqueCustom() {
+export default function MonGraphiqueCustom({}) {
 
+  useBlockConfig({
+    title:'Mon super graphique'
+  })
+
+  // Optionnel, permet de récuperer l'instance Echarts du graphique
   const chartRef = useRef(null);
-
   useEffect(() => {
     if (chartRef.current) {
       const mychart = chartRef.current.getEchartsInstance();
@@ -113,6 +117,7 @@ export default function MonGraphiqueCustom() {
       mychart.on('click', (e) => ( console.log('clicked',e) ) );
     }  
   }, [ ]);
+
 
 
   // Cf. https://echarts.apache.org/en/option.html
