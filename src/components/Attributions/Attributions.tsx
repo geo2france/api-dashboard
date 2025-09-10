@@ -1,7 +1,7 @@
 import { Tooltip, Typography } from 'antd';
 import React, { CSSProperties } from 'react';
 import { License } from '../../types';
-import { FaCreativeCommons, FaCreativeCommonsBy, FaCreativeCommonsNc, FaCreativeCommonsPd, FaCreativeCommonsSa, FaCreativeCommonsZero } from 'react-icons/fa';
+import { Icon } from '@iconify/react';
 
 const { Text, Link } = Typography;
 
@@ -23,17 +23,17 @@ interface ILogoLicenceProps {
 const LogoLicence:React.FC<ILogoLicenceProps> = ({license, style}) => {
     switch(license){
         case "CC":
-            return <FaCreativeCommons style={style} />
+            return <Icon icon="cib:creative-commons" style={style} />
         case "BY":
-            return <FaCreativeCommonsBy style={style} />
+            return <Icon icon="cib:creative-commons-by" style={style} />
         case "NC":
-            return <FaCreativeCommonsNc style={style} />
+            return <Icon icon="cib:creative-commons-nc" style={style} />
         case "PD":
-            return <FaCreativeCommonsPd style={style} />
+            return <Icon icon="cib:creative-commons-pd" style={style} />
         case "SA":
-            return <FaCreativeCommonsSa style={style} />
+            return <Icon icon="cib:creative-commons-sa" style={style} />
         case "ZERO":
-            return <FaCreativeCommonsZero style={style} />
+            return <Icon icon="cib:creative-commons-zero" style={style} />
     }
 }
 

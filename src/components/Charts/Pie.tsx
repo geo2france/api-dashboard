@@ -1,12 +1,11 @@
-import { useContext, useEffect } from "react";
 import { useDataset } from "../Dataset/hooks";
-import { ChartBlockConfig, ChartBlockContext } from "../DashboardPage/Block";
 import { EChartsOption } from "echarts";
 import { usePalette } from "../Palette/Palette";
 import { SimpleRecord } from "../../types";
 import { from, op } from "arquero";
 import { ChartEcharts } from "./ChartEcharts";
 import { merge_others } from "../..";
+import { useBlockConfig } from "../DashboardPage/Block"
 
 
 interface IChartPieProps {
@@ -21,17 +20,13 @@ interface IChartPieProps {
 
 export const ChartPie:React.FC<IChartPieProps> = ({dataset:dataset_id, nameKey, dataKey, unit, title, donut=false, other=5}) => {
     const dataset = useDataset(dataset_id)
-    const blockConfig = useContext(ChartBlockContext)
 
     const data = dataset?.data
 
-    const block_config:ChartBlockConfig = {
+    useBlockConfig({ 
       title: title,
       dataExport: data
-    }
-    useEffect(() => 
-      blockConfig?.setConfig(block_config)
-      , [data] )
+    })
 
     const chart_data1: SimpleRecord[] =
       data && data.length > 0

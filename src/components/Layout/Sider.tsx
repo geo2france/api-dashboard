@@ -4,11 +4,10 @@ import { Layout, Menu, theme, Row, Col, Button, Divider } from "antd";
 
 import { NavLink, useLocation } from "react-router-dom";
 
-import { MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 import { generateMenuItems } from "../../utils/route_utils";
 import { RouteConfig } from "../../types";
 import { AppContext } from "./DashboardApp";
-
+import { Icon } from "@iconify/react";
 
 const style_img: CSSProperties = {
   height:52,
@@ -84,7 +83,7 @@ const DashboardSider: React.FC<DbSiderProps> = ({style, logo, route_config}) => 
             <Button 
               type="text"
               onClick={() => setCollapsed(!collapsed)}
-              icon={collapsed ? <MdOutlineKeyboardDoubleArrowRight/> : <MdOutlineKeyboardDoubleArrowLeft/>}
+              icon={collapsed ? <Icon icon="material-symbols:keyboard-double-arrow-right-rounded" /> : <Icon icon="material-symbols:keyboard-double-arrow-left-rounded" /> }
               style={{
                 fontSize: '28px',
                 width: 32,

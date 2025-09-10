@@ -1,9 +1,8 @@
 import React, { useRef } from 'react'
 import { Button, Card, Typography } from "antd"
 import { CSSProperties, ReactElement, useState } from "react"
-import { BsInfoCircle, BsInfoCircleFill } from "react-icons/bs"
 import { cardStyles } from "../../utils/cardStyles";
-
+import { InfoCircleFilled, InfoCircleOutlined } from "@ant-design/icons"
 const { Text } = Typography;
 
 
@@ -40,7 +39,7 @@ const FlipCard: React.FC<FlipCardProps> = ({ title, information, children }) => 
             shape="circle"
             aria-label="info"
             onClick={toggleFlipped}> 
-              {filled ? <BsInfoCircleFill /> : <BsInfoCircle  /> }
+              {filled ? <InfoCircleFilled /> : <InfoCircleOutlined /> }
         </Button>
       )
     }

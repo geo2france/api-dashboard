@@ -102,10 +102,14 @@ import React,  { useRef, useEffect } from "react";
 import { ChartEcharts } from "@geo2france/api-dashboard";
 
 
-export default function MonGraphiqueCustom() {
+export default function MonGraphiqueCustom({}) {
 
+  useBlockConfig({
+    title:'Mon super graphique'
+  })
+
+  // Optionnel, permet de récuperer l'instance Echarts du graphique
   const chartRef = useRef(null);
-
   useEffect(() => {
     if (chartRef.current) {
       const mychart = chartRef.current.getEchartsInstance();
@@ -113,6 +117,7 @@ export default function MonGraphiqueCustom() {
       mychart.on('click', (e) => ( console.log('clicked',e) ) );
     }  
   }, [ ]);
+
 
 
   // Cf. https://echarts.apache.org/en/option.html
@@ -136,4 +141,20 @@ export default function MonGraphiqueCustom() {
       <ChartEcharts options={options} ref={chartRef} />
   );
 }
+```
+
+### Icônes
+
+Api-dashboard utilise la bibliothèque [Iconify](https://iconify.design/) pour les icônes.
+Iconify étant installé comme dépendance, elle est directement utilisable dans le projet.
+
+De très nombreuses icônes sont disponibles dans le [catalogue](https://icon-sets.iconify.design/) qui aggrège de nombreuses bibliothèques d'icônes.
+Le composant `Icon` supporte différentes propriétées permettant de personnaliser le rendu (couleur, dimensions, transformations, etc.). 
+
+Consulter la [documentation officielle](https://iconify.design/docs/icon-components/react/#properties).
+
+```tsx
+import { Icon } from '@iconify/react';
+
+<Icon icon="cib:creative-commons" />
 ```

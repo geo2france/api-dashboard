@@ -16,6 +16,8 @@ import { Palette, usePalette, PalettePreview } from "../components/Palette/Palet
 import { Debug } from "../components/Debug/Debug";
 import { Join } from "../components/Dataset/Join";
 import { ChartEcharts } from "../components/Charts/ChartEcharts";
+import { useBlockConfig } from "../components/DashboardPage/Block";
+
 
 export {
     Dashboard,
@@ -31,6 +33,7 @@ export {
     useDataset,
     useDatasets,
     useAllDatasets,
+    useBlockConfig,
     Producer,
     Control,
     useControl,

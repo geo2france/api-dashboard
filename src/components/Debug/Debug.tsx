@@ -1,7 +1,7 @@
 import { Badge, Collapse, CollapseProps, Divider, FloatButton, Modal, theme, Typography } from "antd"
 import { DataPreview, PalettePreview } from "../../dsl"
 import { useAllDatasets } from "../Dataset/hooks"
-import { AiOutlineBug } from "react-icons/ai";
+import { BugOutlined } from "@ant-design/icons"
 import { useState } from "react";
 import { DatasetBadgeStatus } from "../Dataset/DataPreview";
 import { ControlPreview } from "../Control/Control";
@@ -29,7 +29,7 @@ export const Debug:React.FC = () => {
         children: <DataPreview dataset={dataset.id} pageSize={3}/>
     }))
     return (<>
-        <FloatButton icon={<AiOutlineBug />} type="primary" onClick={() => setIsModalOpen(true)} style={{top:5}} className="debugFloatButton"/>;
+        <FloatButton icon={<BugOutlined />} type="primary" onClick={() => setIsModalOpen(true)} style={{top:5}} className="debugFloatButton"/>;
         <Modal
             title="Information concepteur"
             width="90%"
