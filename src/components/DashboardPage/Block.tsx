@@ -1,5 +1,5 @@
 import { Card, Dropdown, theme } from "antd";
-import { createContext, useId, useState } from "react";
+import { createContext, useContext, useEffect, useId, useState } from "react";
 import { SimpleRecord } from "../../types";
 import { FaFileCsv } from "react-icons/fa";
 import { AiOutlineMore } from "react-icons/ai";
@@ -75,4 +75,15 @@ export const DSL_ChartBlock:React.FC<IChartBlockProps> = ({children}) => {
             </Card>
         </ChartBlockContext.Provider>
     )
+}
+
+
+export const useBlockConfig = ({ title, dataExport }:ChartBlockConfig) => {
+    const blockContext = useContext(ChartBlockContext)
+        useEffect(() => 
+          blockContext?.setConfig({
+            title:title,
+            dataExport:dataExport
+          })
+          , [title, dataExport] )
 }
