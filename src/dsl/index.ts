@@ -17,6 +17,7 @@ import { Debug } from "../components/Debug/Debug";
 import { Join } from "../components/Dataset/Join";
 import { ChartEcharts } from "../components/Charts/ChartEcharts";
 import { useBlockConfig } from "../components/DashboardPage/Block";
+import { Statistics, StatisticsCollection } from "../components/Charts/Statistics";
 
 
 export {
@@ -30,6 +31,8 @@ export {
     ChartEcharts,
     ChartPie,
     ChartYearSerie,
+    Statistics,
+    StatisticsCollection,
     useDataset,
     useDatasets,
     useAllDatasets,
