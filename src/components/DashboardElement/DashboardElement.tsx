@@ -3,8 +3,8 @@ import {
   FileImageOutlined,
   FullscreenOutlined,
   MoreOutlined,
+  QuestionCircleOutlined,
 } from "@ant-design/icons";
-import { HiQuestionMarkCircle } from "react-icons/hi2";
 import { Card, theme, Modal, Dropdown, MenuProps, Flex, Button, Popover, Typography } from "antd";
 import React, { ReactElement, ReactNode, createContext, useEffect, useState } from "react";
 import Attribution, { SourceMakerProps, SourceProps } from "../Attributions/Attributions";
@@ -215,7 +215,7 @@ const DashboardElement: React.FC<IDashboardElementProps> = ({
               >
                 <Button 
                   type="link" 
-                  icon={<HiQuestionMarkCircle />} 
+                  icon={<QuestionCircleOutlined />} 
                   style={{fontSize:"150%"}}/>
               </Popover>
             )}

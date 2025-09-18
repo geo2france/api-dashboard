@@ -77,6 +77,43 @@ Si des catégories sont dupliquées, les valeurs de celles-ci sont automatiqueme
 </Dashboard>
 ```
 
+### Statistiques
+
+Il s'agit de carte permettant de présenter des chiffres clés. On les regroupera généralement au sein d'un bloc.
+Ce composant afficher la **dernière valeur** du dataset, il doit donc être ordonnée.
+![Statistics](statistics.png)
+
+| Nom                | Type                                  | Requis | Par défaut | Description                                                                 |
+|-------------------|---------------------------------------|--------|------------|-----------------------------------------------------------------------------|
+| `dataset`         | `string`                              | ✳️     | —          | Identifiant du jeu de données à utiliser.                                   |
+| `dataKey`         | `string`                              | ✳️     | —          | Nom de la colonne contenant les valeurs à afficher.                         |
+| `evolutionSuffix` | `string`                              |        | —          | Texte à afficher après l’évolution (ex : "depuis l’an dernier").           |
+| `relativeEvolution` | `boolean`                            |        | `false`    | Afficher l'évolution en pourcentage ; sinon dans la même unité que la valeur. |
+| `title`           | `string`                              |        | —          | Titre de la carte statistique.                                              |
+| `color`           | `string`                              |        | —          | Couleur de la carte.                                   |
+| `unit`            | `string`                              |        | —          | Unité de la valeur (ex : kg, %, €).                                        |
+| `invertColor`     | `boolean`                             |        | `false`    | Inverse la logique de couleur de l’évolution (rouge/vert).                  |
+| `icon`            | `ReactElement | string`              |        | —          | Icône affichée sur la carte (composant ou nom d’icône pour Iconify.js).    |
+| `help`            | `string`                              |        | —          | Texte affiché dans la tooltip d’aide.        |
+| `compareWith`     | `"first" | "previous"`               |        | —          | Comparer la valeur avec la première valeur ou la valeur précédente. |
+
+#### Exemple
+
+```jsx
+      <StatisticsCollection title="Chiffres clés">
+
+        <Statistics dataset="capacite_isdnd_region" dataKey="capacite" unit="T" color="orange" 
+          icon="material-symbols-light:1x-mobiledata-badge-sharp" compare="first" invertColor relativeEvolution evolutionSuffix="depuis 2010"/>
+
+        <Statistics dataset="capacite_isdnd_region" dataKey="capacite" unit="🎃" color="green" 
+          icon="pajamas:discord" compareWith="previous" invertColor relativeEvolution evolutionSuffix="depuis l'année dernière"/>
+
+        <Statistics dataset="capacite_isdnd_region" dataKey="capacite" unit="T" color="purple" 
+          icon="pajamas:accessibility" relativeEvolution evolutionSuffix="depuis 2010"/>
+
+    </StatisticsCollection>
+```
+
 ## Développer vos propres graphiques 🔧
 
 Il est possible d'écrire un composant dont le rendu est un visuel.
@@ -102,10 +139,14 @@ import React,  { useRef, useEffect } from "react";
 import { ChartEcharts } from "@geo2france/api-dashboard";
 
 
-export default function MonGraphiqueCustom() {
+export default function MonGraphiqueCustom({}) {
 
+  useBlockConfig({
+    title:'Mon super graphique'
+  })
+
+  // Optionnel, permet de récuperer l'instance Echarts du graphique
   const chartRef = useRef(null);
-
   useEffect(() => {
     if (chartRef.current) {
       const mychart = chartRef.current.getEchartsInstance();
@@ -113,6 +154,7 @@ export default function MonGraphiqueCustom() {
       mychart.on('click', (e) => ( console.log('clicked',e) ) );
     }  
   }, [ ]);
+
 
 
   // Cf. https://echarts.apache.org/en/option.html
@@ -136,4 +178,20 @@ export default function MonGraphiqueCustom() {
       <ChartEcharts options={options} ref={chartRef} />
   );
 }
+```
+
+### Icônes
+
+Api-dashboard utilise la bibliothèque [Iconify](https://iconify.design/) pour les icônes.
+Iconify étant installé comme dépendance, elle est directement utilisable dans le projet.
+
+De très nombreuses icônes sont disponibles dans le [catalogue](https://icon-sets.iconify.design/) qui aggrège de nombreuses bibliothèques d'icônes.
+Le composant `Icon` supporte différentes propriétées permettant de personnaliser le rendu (couleur, dimensions, transformations, etc.). 
+
+Consulter la [documentation officielle](https://iconify.design/docs/icon-components/react/#properties).
+
+```tsx
+import { Icon } from '@iconify/react';
+
+<Icon icon="cib:creative-commons" />
 ```
