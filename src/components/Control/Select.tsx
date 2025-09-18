@@ -49,15 +49,15 @@ export const Select: React.FC<ExtendedSelectProps> = ({
       return <></>
     }
 
+    const value =  initial_value == null || initial_value == false
+            ? undefined
+            : initial_value
     return (
       <NextPrevSelect
         name={name}
         options={data_options}
-        defaultValue={
-          initial_value == null || initial_value == false
-            ? undefined
-            : initial_value
-        }
+        defaultValue={ value }
+        value={ value }
         arrows={arrows}
         optionFilterProp="label"
         {...rest}

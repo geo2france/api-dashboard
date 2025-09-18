@@ -54,7 +54,7 @@ const NextPrevSelect: React.FC<NextPrevSelectProps> = ({
   const form = Form.useFormInstance();
 
   useEffect(() => {
-    setCurrent_value(value)
+    value && handleChange(value)
   },[value])
 
   const options = list_to_options(input_options);
