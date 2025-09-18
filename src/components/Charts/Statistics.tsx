@@ -1,8 +1,9 @@
 import { QuestionCircleOutlined } from "@ant-design/icons";
-import { Avatar, Card, Flex, Tooltip, Typography } from "antd"
-import { ReactElement } from "react";
+import { Avatar, Card, Col, Flex, Row, Tooltip, Typography } from "antd"
+import { Children, ReactElement } from "react";
 import { useDataset } from "../Dataset/hooks";
 import { Icon } from "@iconify/react";
+import { useBlockConfig } from "../DashboardPage/Block";
 
 const { Text, Paragraph} = Typography;
 
@@ -45,7 +46,6 @@ interface StatisticsProps {
 
 
 // DEV : modele cf https://bootstrapbrain.com/component/bootstrap-statistics-card-example/
-// TODO : un bloc pour regrouper plusieurs cards ?
 
 /**
  * Composant `Statistics` affichant une valeur d'un dataset avec son évolution.
@@ -80,8 +80,7 @@ export const Statistics: React.FC<StatisticsProps> = ({
     const value = dataset?.data?.slice(-1)[0][dataKey] ; // Dernière valeur du dataset
     const compare_value = compareWith === 'previous' ? dataset?.data?.slice(-2)[0][dataKey] : dataset?.data?.slice(0,1)[0][dataKey] ; //Première ou avant dernière
 
-
-    const evolution = relativeEvolution ? Math.round(100*((value - compare_value) / compare_value)) : value - compare_value ;
+    const evolution = relativeEvolution ? 100*((value - compare_value) / compare_value) : value - compare_value ;
     const evolution_unit = relativeEvolution ? '%' : unit ;
     const evolution_is_good = invertColor ? evolution! < 0 : evolution! > 0;
 
@@ -92,7 +91,6 @@ export const Statistics: React.FC<StatisticsProps> = ({
       title={title}
       style={{
         borderLeft: `4px solid ${color}`,
-        borderRadius: 0,
         height:"100%"
       }}
         styles={{
@@ -122,13 +120,53 @@ export const Statistics: React.FC<StatisticsProps> = ({
 
       {evolution && <Paragraph style={{marginBottom:"0.5rem"}}>
         <Text strong type={ evolution_is_good ? "success" : "danger"} style={{fontSize:"120%"}}>
-            { evolution < 0 ? '':'+'}{evolution}&nbsp;{ evolution_unit }
+            { evolution < 0.1 ? '':'+'}
+            { evolution.toLocaleString(undefined,  {maximumFractionDigits: 1}) }
+            &nbsp;{ evolution_unit }
         </Text>{" "}
         <Text italic type="secondary">
-            {evolutionSuffix}
+            { evolutionSuffix }
         </Text>
       </Paragraph> }
     </Flex>
     </Card>
   );
+}
+
+
+type StatisticsCollectionProps = {
+  /**
+   * Un ou plusieurs composants `<Statistics>`.
+   */
+  children: ReactElement<typeof Statistics> | ReactElement<typeof Statistics>[];
+
+  /**
+   * Nombre de colonnes (défaut : 3)
+   */
+  columns?: number
+
+  /**
+   * Titre du bloc.  
+   */
+  title?: string
+};
+
+/**
+ * `StatisticsCollection` permet de regrouper plusieurs cartes statistiques
+ * dans un bloc
+ * 
+ * @param {StatisticsProps} props - Propriétés du composant
+ * @returns {ReactElement} Collection de cartes statistiques
+ * ```
+ */
+export const StatisticsCollection:React.FC<StatisticsCollectionProps> = ( {children, columns=3, title} ) => {
+  const arrayChildren = Children.toArray(children);
+  useBlockConfig({title:title})
+  return (
+      <Row gutter={[8,8]}>
+      { arrayChildren.map( (c, index) => (
+        <Col  xl={24/columns} xs={24} key={index}>{c}</Col>
+      ))}
+      </Row>
+  )
 }
