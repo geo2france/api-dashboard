@@ -110,7 +110,8 @@ type dataset = {
     data?: SimpleRecord[];
     isFetching: boolean;
     isError: boolean;
-    producers?:any[]
+    producers?:any[];
+    geojson?:any
 }
 
 
