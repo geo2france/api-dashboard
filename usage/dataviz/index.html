@@ -59,11 +59,19 @@
     </li>
         </ul>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#statistiques">Statistiques</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#exemple_1">Exemple</a>
+    </li>
+        </ul>
+    </li>
         </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#developper-vos-propres-graphiques">Développer vos propres graphiques 🔧</a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#graphique-echarts">Graphique Echarts</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#icones">Icônes</a>
     </li>
         </ul>
     </li>
@@ -279,6 +287,114 @@ Si des catégories sont dupliquées, les valeurs de celles-ci sont automatiqueme
 
 &lt;/Dashboard&gt;
 </code></pre>
+<h3 id="statistiques">Statistiques</h3>
+<p>Il s'agit de carte permettant de présenter des chiffres clés. On les regroupera généralement au sein d'un bloc.
+Ce composant afficher la <strong>dernière valeur</strong> du dataset, il doit donc être ordonnée.
+<img alt="Statistics" src="../statistics.png" /></p>
+<table>
+<thead>
+<tr>
+<th>Nom</th>
+<th>Type</th>
+<th>Requis</th>
+<th>Par défaut</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dataset</code></td>
+<td><code>string</code></td>
+<td>✳️</td>
+<td>—</td>
+<td>Identifiant du jeu de données à utiliser.</td>
+</tr>
+<tr>
+<td><code>dataKey</code></td>
+<td><code>string</code></td>
+<td>✳️</td>
+<td>—</td>
+<td>Nom de la colonne contenant les valeurs à afficher.</td>
+</tr>
+<tr>
+<td><code>evolutionSuffix</code></td>
+<td><code>string</code></td>
+<td></td>
+<td>—</td>
+<td>Texte à afficher après l’évolution (ex : "depuis l’an dernier").</td>
+</tr>
+<tr>
+<td><code>relativeEvolution</code></td>
+<td><code>boolean</code></td>
+<td></td>
+<td><code>false</code></td>
+<td>Afficher l'évolution en pourcentage ; sinon dans la même unité que la valeur.</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td><code>string</code></td>
+<td></td>
+<td>—</td>
+<td>Titre de la carte statistique.</td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td><code>string</code></td>
+<td></td>
+<td>—</td>
+<td>Couleur de la carte.</td>
+</tr>
+<tr>
+<td><code>unit</code></td>
+<td><code>string</code></td>
+<td></td>
+<td>—</td>
+<td>Unité de la valeur (ex : kg, %, €).</td>
+</tr>
+<tr>
+<td><code>invertColor</code></td>
+<td><code>boolean</code></td>
+<td></td>
+<td><code>false</code></td>
+<td>Inverse la logique de couleur de l’évolution (rouge/vert).</td>
+</tr>
+<tr>
+<td><code>icon</code></td>
+<td><code>ReactElement | string</code></td>
+<td></td>
+<td>—</td>
+<td>Icône affichée sur la carte (composant ou nom d’icône pour Iconify.js).</td>
+</tr>
+<tr>
+<td><code>help</code></td>
+<td><code>string</code></td>
+<td></td>
+<td>—</td>
+<td>Texte affiché dans la tooltip d’aide.</td>
+</tr>
+<tr>
+<td><code>compareWith</code></td>
+<td><code>"first" | "previous"</code></td>
+<td></td>
+<td>—</td>
+<td>Comparer la valeur avec la première valeur ou la valeur précédente.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="exemple_1">Exemple</h4>
+<pre><code class="language-jsx">      &lt;StatisticsCollection title=&quot;Chiffres clés&quot;&gt;
+
+        &lt;Statistics dataset=&quot;capacite_isdnd_region&quot; dataKey=&quot;capacite&quot; unit=&quot;T&quot; color=&quot;orange&quot; 
+          icon=&quot;material-symbols-light:1x-mobiledata-badge-sharp&quot; compare=&quot;first&quot; invertColor relativeEvolution evolutionSuffix=&quot;depuis 2010&quot;/&gt;
+
+        &lt;Statistics dataset=&quot;capacite_isdnd_region&quot; dataKey=&quot;capacite&quot; unit=&quot;🎃&quot; color=&quot;green&quot; 
+          icon=&quot;pajamas:discord&quot; compareWith=&quot;previous&quot; invertColor relativeEvolution evolutionSuffix=&quot;depuis l'année dernière&quot;/&gt;
+
+        &lt;Statistics dataset=&quot;capacite_isdnd_region&quot; dataKey=&quot;capacite&quot; unit=&quot;T&quot; color=&quot;purple&quot; 
+          icon=&quot;pajamas:accessibility&quot; relativeEvolution evolutionSuffix=&quot;depuis 2010&quot;/&gt;
+
+    &lt;/StatisticsCollection&gt;
+</code></pre>
 <h2 id="developper-vos-propres-graphiques">Développer vos propres graphiques 🔧</h2>
 <p>Il est possible d'écrire un composant dont le rendu est un visuel.
 N'importe quel bibliothèque peut-être utilisée, ou même du HTML.</p>
@@ -311,10 +427,14 @@ Pour un usage plus avancé, la propriété <code>ref</code> permet de récupére
 import { ChartEcharts } from &quot;@geo2france/api-dashboard&quot;;
 
 
-export default function MonGraphiqueCustom() {
+export default function MonGraphiqueCustom({}) {
 
+  useBlockConfig({
+    title:'Mon super graphique'
+  })
+
+  // Optionnel, permet de récuperer l'instance Echarts du graphique
   const chartRef = useRef(null);
-
   useEffect(() =&gt; {
     if (chartRef.current) {
       const mychart = chartRef.current.getEchartsInstance();
@@ -322,6 +442,7 @@ export default function MonGraphiqueCustom() {
       mychart.on('click', (e) =&gt; ( console.log('clicked',e) ) );
     }  
   }, [ ]);
+
 
 
   // Cf. https://echarts.apache.org/en/option.html
@@ -345,6 +466,16 @@ export default function MonGraphiqueCustom() {
       &lt;ChartEcharts options={options} ref={chartRef} /&gt;
   );
 }
+</code></pre>
+<h3 id="icones">Icônes</h3>
+<p>Api-dashboard utilise la bibliothèque <a href="https://iconify.design/">Iconify</a> pour les icônes.
+Iconify étant installé comme dépendance, elle est directement utilisable dans le projet.</p>
+<p>De très nombreuses icônes sont disponibles dans le <a href="https://icon-sets.iconify.design/">catalogue</a> qui aggrège de nombreuses bibliothèques d'icônes.
+Le composant <code>Icon</code> supporte différentes propriétées permettant de personnaliser le rendu (couleur, dimensions, transformations, etc.). </p>
+<p>Consulter la <a href="https://iconify.design/docs/icon-components/react/#properties">documentation officielle</a>.</p>
+<pre><code class="language-tsx">import { Icon } from '@iconify/react';
+
+&lt;Icon icon=&quot;cib:creative-commons&quot; /&gt;
 </code></pre>
               
             </div>
