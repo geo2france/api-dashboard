@@ -1,4 +1,4 @@
-import  { ChartYearSerie, Dashboard, Dataset, Debug, Filter, Palette, Producer, Transform } from "@geo2france/api-dashboard/dsl"
+import  { ChartYearSerie, Dashboard, Dataset, Debug, Filter, Palette, Producer, Statistics, StatisticsCollection, Transform } from "@geo2france/api-dashboard/dsl"
 import { Typography } from "antd"
 
 export const PageBiodiv = () => (
@@ -29,7 +29,20 @@ export const PageBiodiv = () => (
         meta={{properties:['ref_year', 'n_sp']}}
        >
             <Filter operator="gte" field="ref_year">2015-01-01</Filter>
-            <Transform>SELECT year([ref_year]) as annee, sum(LEAST([n_sp],1)) as presence FROM ? GROUP BY year([ref_year])</Transform>
+            <Transform>SELECT year([ref_year]) as annee, sum(LEAST([n_sp],1)) as presence FROM ? GROUP BY year([ref_year]) ORDER BY annee ASC</Transform>
+            
+            <Producer url="https://www.geo2france.fr/datahub/dataset/66865703-8c00-41b9-a7a2-226edd705c7b">Picardie Nature</Producer>
+       </Dataset>
+
+        <Dataset
+        id="atlas_amphibiens"
+        type="wfs"
+        url="https://www.geo2france.fr/geoserver/picardie_nature/ows"
+        resource="picardie_nature:atlas_amphibiens"
+        meta={{properties:['ref_year', 'n_sp']}}
+       >
+            <Filter operator="gte" field="ref_year">2020-01-01</Filter>
+            <Transform>SELECT year([ref_year]) as annee, sum(LEAST([n_sp],1)) as presence FROM ? GROUP BY year([ref_year]) ORDER BY annee ASC</Transform>
             
             <Producer url="https://www.geo2france.fr/datahub/dataset/66865703-8c00-41b9-a7a2-226edd705c7b">Picardie Nature</Producer>
        </Dataset>
@@ -40,6 +53,16 @@ export const PageBiodiv = () => (
             yearKey="annee"
             valueKey="presence"
         />
+
+        <StatisticsCollection title="Atlas en 2025 - Mailles 10x10km de présence">
+            <Statistics dataset="atlas_cocc" dataKey="presence" compareWith="first" color="#d90019" icon="game-icons:ladybug" 
+            evolutionSuffix="Depuis 2015" title="Coccinelles"/>
+
+            <Statistics dataset="atlas_amphibiens" title="Amphibiens" dataKey="presence" compareWith="first" color="green" icon="fa7-solid:frog" 
+            evolutionSuffix="Depuis 2020"/>
+
+
+        </StatisticsCollection>
     </Dashboard>
 
 )
