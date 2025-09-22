@@ -47,6 +47,7 @@
   "dependencies": {
     "@iconify/react": "^6.0.1",
     "@turf/bbox": "^7.2.0",
+    "@turf/invariant": "^7.2.0",
     "alasql": "^4.6.6",
     "arquero": "^8.0.3",
     "axios": "^1.12.2",

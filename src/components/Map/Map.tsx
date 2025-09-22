@@ -4,7 +4,10 @@ import type {MapRef, AnyLayer} from 'react-map-gl/maplibre';
 import { ReactElement, useEffect, useRef } from "react"
 import { useDataset } from '../Dataset/hooks';
 import bbox from '@turf/bbox';
-import { AnyPaint } from 'mapbox-gl';
+import { getType } from '@turf/invariant'
+import { AnyPaint, CirclePaint, FillPaint, LinePaint } from 'mapbox-gl';
+import React from 'react';
+import { usePalette } from '../Palette/Palette';
 
 type LayerType = AnyLayer["type"]; 
 
@@ -19,11 +22,17 @@ interface MapProps {
 export const Map:React.FC<MapProps> = ({children}) => {
     const mapRef = useRef<MapRef>(null);
 
+    const children_array = React.Children.toArray(children)
+                                          .filter(React.isValidElement) as React.ReactElement[];
+
+    const colors = usePalette({nColors:children_array.length})
 
     return (
         <Maplibre ref={mapRef}>
             <BaseLayer layer="osm"/>
-            {children}
+            {children_array.map((c, i) =>
+                React.cloneElement(c, { color:c.props.color ?? colors?.[i] })
+            )}
         </Maplibre>
         )
 }
@@ -59,12 +68,41 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, color = 'red', type='
     // src (lib proj4 pour convertir)
     // A partir de ces info, on génère un geojson valide
 
-    let default_paint = {}
-    if (type == 'circle') {
-        default_paint = {"circle-color":color}
-    } // TODO ajouter d'autre défault (fill et line)
-
     const geojson = data?.geojson ;
+    const geom_type = geojson?.features?.[0] && getType(geojson?.features?.[0]);
+
+    //let default_paint = {}
+    const layers = [];
+
+    /** POINT */
+    if (geom_type === 'Point' || geom_type === 'MultiPoint') {
+        const default_paint:CirclePaint = {"circle-color":color}
+        type = 'circle'
+        layers.push(
+            <Layer id={dataset} type="circle" paint={(paint ?? default_paint) as any}  />
+        )
+    }
+    /** POLYGON */ 
+    else if (geom_type === 'Polygon' || geom_type === 'MultiPolygon') {     
+        const default_paint:FillPaint = {"fill-color":color}
+        type = 'fill'
+        layers.push(
+            <Layer id={dataset} type="fill" paint={(paint ?? default_paint) as any}/>
+        )
+        layers.push(
+            <Layer id={dataset + '_line'} type='line' paint={{"line-color":'black'}}/>
+        )
+    } 
+    /** LINESTRING */ 
+    else if (geom_type === 'LineString' || geom_type === 'MultiLineString') {
+        const default_paint:LinePaint = { "line-color": color }
+        type = 'line'
+        layers.push(
+            <Layer id={dataset} type="line" paint={(paint ?? default_paint) as any} />
+        )
+    }
+
+    //devnote : regarder la colonne contenant les valeurs pour proposer une représentation (catégorie ou choroplèthe)
 
     useEffect( () => {
         if(geojson){
@@ -75,12 +113,13 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, color = 'red', type='
 
     return (
        <>
-       { geojson && <Source
-            type="geojson"
-            data={geojson}
-        >
-            <Layer id={dataset} type={type} paint={paint || default_paint}/>
-        </Source> }
+        { geojson && <Source
+                type="geojson"
+                data={geojson}
+            >
+                { layers }
+
+            </Source> }
         </>
     )
 }
