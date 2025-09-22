@@ -5,9 +5,10 @@ import { ReactElement, useEffect, useRef } from "react"
 import { useDataset } from '../Dataset/hooks';
 import bbox from '@turf/bbox';
 import { getType } from '@turf/invariant'
-import { AnyPaint, CirclePaint, FillPaint, LinePaint } from 'mapbox-gl';
+import { AnyPaint, CirclePaint, Expression, FillPaint, LinePaint } from 'mapbox-gl';
 import React from 'react';
 import { usePalette } from '../Palette/Palette';
+import { from, op } from 'arquero';
 
 type LayerType = AnyLayer["type"]; 
 
@@ -31,7 +32,7 @@ export const Map:React.FC<MapProps> = ({children}) => {
         <Maplibre ref={mapRef}>
             <BaseLayer layer="osm"/>
             {children_array.map((c, i) =>
-                React.cloneElement(c, { color:c.props.color ?? colors?.[i] })
+                React.cloneElement(c, { key:i, color:c.props.color ?? colors?.[i] })
             )}
         </Maplibre>
         )
@@ -50,6 +51,9 @@ interface MapLayerProps {
 
     /** Les paint properties de maplibre cf. https://maplibre.org/maplibre-style-spec/layers/#paint */
     paint?:AnyPaint
+
+    /** Colonne contenant la variable à représenter */
+    categoryKey?: string
 }
 
 /**
@@ -59,7 +63,7 @@ interface MapLayerProps {
  * @param { MapLayerProps } props 
  * @returns { ReactElement }
  */
-export const MapLayer:React.FC<MapLayerProps> = ({dataset, color = 'red', type='circle', paint}) => {
+export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 'red', type='circle', paint}) => {
     const {current: map} = useMap();
     const data = useDataset(dataset)
 
@@ -71,34 +75,58 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, color = 'red', type='
     const geojson = data?.geojson ;
     const geom_type = geojson?.features?.[0] && getType(geojson?.features?.[0]);
 
-    //let default_paint = {}
-    const layers = [];
+    /** Type de données dans categoryKey (string ou number) */
+    const type_value = categoryKey && typeof (data?.data?.[0][categoryKey])
 
+    /** Valeurs distinctes (si type string) */
+    const values = (type_value === 'string') && categoryKey && data?.data && from(data?.data).rollup({ a: op.array_agg_distinct(categoryKey) }).get('a',0) || undefined
+
+    /** Couleurs de la palette */
+    const colors = usePalette({nColors:Array.isArray(values) ? values?.length : 1})
+
+
+    const match = Array.isArray(values) ? values?.map((v, i) => ({
+        val: v,
+        color: colors?.[i],
+    })) : undefined ;
+
+    /** Expression mapLibre qui permet de mapper les valeurs et les couleurs de la palette */
+    const expression: Expression | undefined = 
+        match && categoryKey
+            ? [
+                "match",
+                ["get", categoryKey],
+                ...match?.flatMap( (s) => [s.val, s.color]), 
+                "purple" // fallback
+            ] as Expression
+    : undefined;
+
+    const layers = [];
     /** POINT */
     if (geom_type === 'Point' || geom_type === 'MultiPoint') {
-        const default_paint:CirclePaint = {"circle-color":color}
+        const default_paint:CirclePaint = {"circle-color": expression ?? color ?? colors![0] }
         type = 'circle'
         layers.push(
-            <Layer id={dataset} type="circle" paint={(paint ?? default_paint) as any}  />
+            <Layer key={dataset} id={dataset} type="circle" paint={(paint ?? default_paint) as any}  />
         )
     }
     /** POLYGON */ 
     else if (geom_type === 'Polygon' || geom_type === 'MultiPolygon') {     
-        const default_paint:FillPaint = {"fill-color":color}
+        const default_paint:FillPaint = { "fill-color" : expression ?? color ?? colors![0] }
         type = 'fill'
         layers.push(
-            <Layer id={dataset} type="fill" paint={(paint ?? default_paint) as any}/>
+            <Layer key={dataset} id={dataset} type="fill" paint={(paint ?? default_paint) as any}/>
         )
         layers.push(
-            <Layer id={dataset + '_line'} type='line' paint={{"line-color":'black'}}/>
+            <Layer key={dataset + '_line'}id={dataset + '_line'} type='line' paint={{"line-color":'black'}}/>
         )
     } 
     /** LINESTRING */ 
     else if (geom_type === 'LineString' || geom_type === 'MultiLineString') {
-        const default_paint:LinePaint = { "line-color": color }
+        const default_paint:LinePaint = { "line-color": expression ?? color ?? colors![0]  }
         type = 'line'
         layers.push(
-            <Layer id={dataset} type="line" paint={(paint ?? default_paint) as any} />
+            <Layer key={dataset} id={dataset} type="line" paint={(paint ?? default_paint) as any} />
         )
     }
 
