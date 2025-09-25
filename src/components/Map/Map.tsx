@@ -1,7 +1,7 @@
 // Composant carto
 import  Maplibre, { Layer, LayerProps, Source, SourceProps, useMap } from 'react-map-gl/maplibre';
 import type {MapRef, AnyLayer} from 'react-map-gl/maplibre';
-import { ReactElement, useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
 import { useDataset } from '../Dataset/hooks';
 import bbox from '@turf/bbox';
 import { getType } from '@turf/invariant'
@@ -12,28 +12,18 @@ import { from, op } from 'arquero';
 
 type LayerType = AnyLayer["type"]; 
 
-interface MapProps {
-    children? : ReactElement | ReactElement[]
-}
 
 /**
- * Un caneva de carto dans lequel on pourra
- * ajouter des layer (un layer s'alimente sur un dataset)
+ * Une carto simple avec un layer
+ * 
  *  */
-export const Map:React.FC<MapProps> = ({children}) => {
+export const Map:React.FC<MapLayerProps> = ({dataset, color, type, paint, categoryKey}) => {
     const mapRef = useRef<MapRef>(null);
-
-    const children_array = React.Children.toArray(children)
-                                          .filter(React.isValidElement) as React.ReactElement[];
-
-    const colors = usePalette({nColors:children_array.length})
 
     return (
         <Maplibre ref={mapRef}>
             <BaseLayer layer="osm"/>
-            {children_array.map((c, i) =>
-                React.cloneElement(c, { key:i, color:c.props.color ?? colors?.[i] })
-            )}
+            <MapLayer dataset={dataset} color={color} type={type} paint={paint} categoryKey={categoryKey}></MapLayer>
         </Maplibre>
         )
 }
