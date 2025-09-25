@@ -1,7 +1,7 @@
 // Composant carto
-import  Maplibre, { Layer, LayerProps, Source, SourceProps, useMap } from 'react-map-gl/maplibre';
+import  Maplibre, { Layer, LayerProps, Source, SourceProps, useMap, Popup } from 'react-map-gl/maplibre';
 import type {MapRef, AnyLayer} from 'react-map-gl/maplibre';
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useDataset } from '../Dataset/hooks';
 import bbox from '@turf/bbox';
 import { getType } from '@turf/invariant'
@@ -9,6 +9,7 @@ import { AnyPaint, CirclePaint, Expression, FillPaint, LinePaint } from 'mapbox-
 import React from 'react';
 import { usePalette } from '../Palette/Palette';
 import { from, op } from 'arquero';
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 type LayerType = AnyLayer["type"]; 
 
@@ -17,13 +18,51 @@ type LayerType = AnyLayer["type"];
  * Une carto simple avec un layer
  * 
  *  */
-export const Map:React.FC<MapLayerProps> = ({dataset, color, type, paint, categoryKey}) => {
+
+interface MapProps extends MapLayerProps {
+  /** Afficher une popup après un click sur la carte */
+  popup?: boolean;
+}
+
+export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey, popup = false}) => {
     const mapRef = useRef<MapRef>(null);
+    const [clickedFeature, setClickedFeature] = useState<any>(undefined);
+
+    const onClickMap = (evt:any) => {
+       setClickedFeature({...evt.features[0], ...{lngLat:evt.lngLat}})
+    }
+
+    const onMouseMoveMap = (evt:any) => {
+        if (!mapRef.current) {
+            return
+        }
+        if (evt?.features.length > 0 && popup) {
+            mapRef.current.getCanvasContainer().style.cursor = 'pointer'
+        }else {
+            mapRef.current.getCanvasContainer().style.cursor = 'grab'
+        }
+  }
 
     return (
-        <Maplibre ref={mapRef}>
+        <Maplibre 
+          ref={mapRef} 
+          interactiveLayerIds={[dataset]} 
+          onClick={onClickMap}  
+          onMouseMove={onMouseMoveMap} 
+          style={{ width: '100%', height:'500px' }} >
+
             <BaseLayer layer="osm"/>
+
             <MapLayer dataset={dataset} color={color} type={type} paint={paint} categoryKey={categoryKey}></MapLayer>
+            
+            { clickedFeature?.properties && categoryKey && popup &&
+                <Popup longitude={clickedFeature.lngLat.lng} 
+                        latitude={clickedFeature.lngLat.lat} 
+                        onClose={() => {setClickedFeature(null)} }>
+                    <div> {clickedFeature.properties[categoryKey]} </div> {/** Afficher toutes les props ? */}
+                </Popup> 
+            }
+
         </Maplibre>
         )
 }
@@ -56,7 +95,6 @@ interface MapLayerProps {
 export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 'red', type='circle', paint}) => {
     const {current: map} = useMap();
     const data = useDataset(dataset)
-
     //dev note : besoin d'être plus générique pour supporter autre chose que le wfs (le seul fournisseur qui donne du geojson)
     // ajouter en props : x field, y field
     // src (lib proj4 pour convertir)
@@ -108,7 +146,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 
             <Layer key={dataset} id={dataset} type="fill" paint={(paint ?? default_paint) as any}/>
         )
         layers.push(
-            <Layer key={dataset + '_line'}id={dataset + '_line'} type='line' paint={{"line-color":'black'}}/>
+            <Layer key={dataset + '_line'}id={dataset + '_line'} type='line' paint={{"line-width":0.5,"line-color":'#fff'}}/>
         )
     } 
     /** LINESTRING */ 
@@ -131,14 +169,13 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 
 
     return (
        <>
-        { geojson && <Source
-                type="geojson"
-                data={geojson}
-            >
+        { geojson && 
+            <Source type="geojson" data={geojson} >
                 { layers }
-
-            </Source> }
-        </>
+            </Source> 
+        }
+           
+       </>
     )
 }
 
