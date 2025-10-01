@@ -31,13 +31,15 @@ export const map_locale = {
 interface MapProps extends MapLayerProps {
   /** Afficher une popup après un click sur la carte */
   popup?: boolean;
+
+  /** Titre du graphique */
   title?: string;
 }
 
 export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey, popup = false, title}) => {
     const mapRef = useRef<MapRef>(null);
     const [clickedFeature, setClickedFeature] = useState<any>(undefined);
-    
+
     useBlockConfig({title:title})
 
     const onClickMap = (evt:any) => {
