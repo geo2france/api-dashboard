@@ -16,6 +16,11 @@ import { LegendControl, LegendItem } from '../MapLegend/MapLegend';
 
 type LayerType = AnyLayer["type"]; 
 
+export const map_locale = {
+    'CooperativeGesturesHandler.WindowsHelpText': 'Utilisez Ctrl + molette pour zommer sur la carte.',
+    'CooperativeGesturesHandler.MacHelpText': 'Utilisez ⌘ + molette pour zommer sur la carte.',
+    'CooperativeGesturesHandler.MobileHelpText': 'Utilisez deux doights pour déplacer la carte.',
+}
 
 /**
  * Une carto simple avec un layer
@@ -48,6 +53,8 @@ export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey
 
     return (
         <Maplibre 
+          cooperativeGestures
+          locale={map_locale}
           ref={mapRef} 
           interactiveLayerIds={[dataset]} 
           onClick={onClickMap}  
