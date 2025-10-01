@@ -9,7 +9,9 @@ interface useMapControlProps {
     legendElement : React.ReactElement
     position?: ControlPosition
 }
-
+/** A déprécier ? utiliser plutôt le composant LegendControl ?
+ * Uniquement pour legacy
+ */
 export const useMapControl = ({mapRef, legendElement, position='top-right'}:useMapControlProps) => {
 
     useEffect(() => {

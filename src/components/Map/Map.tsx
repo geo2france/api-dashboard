@@ -1,6 +1,6 @@
 // Composant carto
 import  Maplibre, { Layer, LayerProps, Source, SourceProps, useMap, Popup } from 'react-map-gl/maplibre';
-import type {MapRef, AnyLayer} from 'react-map-gl/maplibre';
+import type {MapRef, AnyLayer  } from 'react-map-gl/maplibre';
 import { useEffect, useRef, useState } from "react"
 import { useDataset } from '../Dataset/hooks';
 import bbox from '@turf/bbox';
@@ -10,6 +10,9 @@ import React from 'react';
 import { usePalette } from '../Palette/Palette';
 import { from, op } from 'arquero';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { LegendControl, LegendItem } from '../MapLegend/MapLegend';
+
+
 
 type LayerType = AnyLayer["type"]; 
 
@@ -129,6 +132,10 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 
             ] as Expression
     : undefined;
 
+    const legendItems:LegendItem[] = match?.map((e) => ({color:e.color, label:e.val})).sort((a, b) =>
+    a.label.localeCompare(b.label)) || []
+
+
     const layers = [];
     /** POINT */
     if (geom_type === 'Point' || geom_type === 'MultiPoint') {
@@ -174,7 +181,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 
                 { layers }
             </Source> 
         }
-           
+           <LegendControl items={legendItems} /> 
        </>
     )
 }
