@@ -12,8 +12,7 @@
 | `popup`  | `boolean`                  |        | `false`           | Afficher une popup au clic sur un élement. |
 | `title`        | `string`                  |        |           | Titre du graphique. |
 | `paint`        | `object`                 |        |     | Pour définir finement le style de la couche. Voir la  [documentation](https://maplibre.org/maplibre-style-spec/layers/#paint) de MapLibre. |
-| `color`     | `string`        |        |           | Couleur du symbole (sinon, définit à partir de la palette). Sans effet si `categoryKey` ou  `paint` sont définis.  |
-| `type`         | `'bar' \| 'line' \| 'area'` |        | `'line'` | Type de graphique à afficher. |
+| `color`     | `string`        |        |           | Couleur du symbole (sinon définie à partir de la palette). Sans effet si `categoryKey` ou  `paint` sont définis.  |
 
 
 ## Exemple
