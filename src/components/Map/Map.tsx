@@ -11,6 +11,7 @@ import { usePalette } from '../Palette/Palette';
 import { from, op } from 'arquero';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { LegendControl, LegendItem } from '../MapLegend/MapLegend';
+import { useBlockConfig } from '../DashboardPage/Block';
 
 
 
@@ -30,11 +31,14 @@ export const map_locale = {
 interface MapProps extends MapLayerProps {
   /** Afficher une popup après un click sur la carte */
   popup?: boolean;
+  title?: string;
 }
 
-export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey, popup = false}) => {
+export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey, popup = false, title}) => {
     const mapRef = useRef<MapRef>(null);
     const [clickedFeature, setClickedFeature] = useState<any>(undefined);
+    
+    useBlockConfig({title:title})
 
     const onClickMap = (evt:any) => {
        setClickedFeature({...evt.features[0], ...{lngLat:evt.lngLat}})
