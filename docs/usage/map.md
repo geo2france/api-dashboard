@@ -1,18 +1,18 @@
 # Cartographie
 
-
+![documentation](https://maplibre.org/maplibre-style-spec/layers/#paint)
 
 ## Propriétés
 
 | Nom           | Type                      | Requis | Par défaut | Description |
 |----------------|---------------------------|--------|------------|-------------|
 | `dataset`      | `string`                  | ✳️      | —          | Identifiant du dataset à utiliser. |
-| `categorieKey`  | `string`                  |       |          | Nom de la colonne contennant les catégories |
+| `categoryKey`  | `string`                  |       |          | Nom de la colonne contennant les catégories |
 | `title  `     | `string`                  |        |          | Titre de la carte |
-| `popup`  | `boolean`                  |        | `false`           | Afficher une popup lors au clique sur un élement. |
+| `popup`  | `boolean`                  |        | `false`           | Afficher une popup au clic sur un élement. |
 | `title`        | `string`                  |        |           | Titre du graphique. |
-| `paint`        | `object`                 |        |     |  |
-| `color`     | `string`        |        |           | Couleur du symbole (sinon, définit à partir de la palette) |
+| `paint`        | `object`                 |        |     | Pour définir finement le style de la couche. Voir la  [documentation](https://maplibre.org/maplibre-style-spec/layers/#paint) de MapLibre. |
+| `color`     | `string`        |        |           | Couleur du symbole (sinon, définit à partir de la palette). Sans effet si `categoryKey` ou  `paint` sont définis.  |
 | `type`         | `'bar' \| 'line' \| 'area'` |        | `'line'` | Type de graphique à afficher. |
 
 
