@@ -4,7 +4,8 @@ import type {MapRef, AnyLayer  } from 'react-map-gl/maplibre';
 import { useEffect, useRef, useState } from "react"
 import { useDataset } from '../Dataset/hooks';
 import bbox from '@turf/bbox';
-import { getType } from '@turf/invariant'
+import { getType} from '@turf/invariant'
+import { featureCollection, point } from '@turf/helpers'
 import { AnyPaint, CirclePaint, Expression, FillPaint, LinePaint } from 'mapbox-gl';
 import React from 'react';
 import { usePalette } from '../Palette/Palette';
@@ -12,6 +13,9 @@ import { from, op } from 'arquero';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { LegendControl, LegendItem } from '../MapLegend/MapLegend';
 import { useBlockConfig } from '../DashboardPage/Block';
+import { SimpleRecord } from '../../types';
+import { parseNumber } from '../../utils/parsers';
+import { FeatureCollection } from 'geojson';
 
 
 
@@ -21,6 +25,23 @@ export const map_locale = {
     'CooperativeGesturesHandler.WindowsHelpText': 'Utilisez Ctrl + molette pour zommer sur la carte.',
     'CooperativeGesturesHandler.MacHelpText': 'Utilisez ⌘ + molette pour zommer sur la carte.',
     'CooperativeGesturesHandler.MobileHelpText': 'Utilisez deux doights pour déplacer la carte.',
+}
+
+
+/** Construire un geojson a partir d'un tableau de données*/
+const build_geojson = (params: {
+  data: SimpleRecord[];   // dataset contient un tableau d'enregistrements
+  xKey: string 
+  yKey: string;
+}): FeatureCollection => {
+
+    const { data, xKey, yKey } = params;
+    const features_collection = featureCollection( data.map((e:SimpleRecord) => {
+        const [x, y] = [ parseNumber(e[xKey] ), parseNumber(e[yKey] ) ]
+        return point([x, y],  {...e}  ) 
+    }) )
+
+    return features_collection
 }
 
 /**
@@ -36,7 +57,7 @@ interface MapProps extends MapLayerProps {
   title?: string;
 }
 
-export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey, popup = false, title}) => {
+export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey, popup = false, title, xKey, yKey}) => {
     const mapRef = useRef<MapRef>(null);
     const [clickedFeature, setClickedFeature] = useState<any>(undefined);
 
@@ -69,7 +90,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey
 
             <BaseLayer layer="osm"/>
 
-            <MapLayer dataset={dataset} color={color} type={type} paint={paint} categoryKey={categoryKey}></MapLayer>
+            <MapLayer dataset={dataset} color={color} type={type} paint={paint} categoryKey={categoryKey} xKey={xKey} yKey={yKey}></MapLayer>
             
             { clickedFeature?.properties && categoryKey && popup &&
                 <Popup longitude={clickedFeature.lngLat.lng} 
@@ -99,7 +120,14 @@ interface MapLayerProps {
 
     /** Colonne contenant la variable à représenter */
     categoryKey?: string
+
+    /** Colonne contenant la coordonnée x / longitude */
+    xKey?: string
+
+    /** Colonne contenant la coordonnées y / latitude */
+    yKey?: string
 }
+
 
 /**
  * Composant à utiliser comme enfant d'une <Map>
@@ -108,15 +136,16 @@ interface MapLayerProps {
  * @param { MapLayerProps } props 
  * @returns { ReactElement }
  */
-export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 'red', type='circle', paint}) => {
+export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 'red', type='circle', paint, xKey, yKey}) => {
     const {current: map} = useMap();
     const data = useDataset(dataset)
-    //dev note : besoin d'être plus générique pour supporter autre chose que le wfs (le seul fournisseur qui donne du geojson)
-    // ajouter en props : x field, y field
     // src (lib proj4 pour convertir)
-    // A partir de ces info, on génère un geojson valide
 
-    const geojson = data?.geojson ;
+    // Si x et y sont definie, on construit le geojson
+    const geojson = xKey && yKey && data?.data ? 
+        build_geojson({data:data.data, xKey:xKey, yKey:yKey})
+        : data?.geojson // Sinon on utilise le geojson (fournisseur wfs)
+
     const geom_type = geojson?.features?.[0] && getType(geojson?.features?.[0]);
 
     /** Type de données dans categoryKey (string ou number) */
