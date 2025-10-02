@@ -18,7 +18,7 @@ import { Join } from "../components/Dataset/Join";
 import { ChartEcharts } from "../components/Charts/ChartEcharts";
 import { useBlockConfig } from "../components/DashboardPage/Block";
 import { Statistics, StatisticsCollection } from "../components/Charts/Statistics";
-
+import { MapLayer, Map } from "../components/Map/Map";
 
 export {
     Dashboard,
@@ -48,5 +48,7 @@ export {
     usePalette,
     PalettePreview,
     Debug,
+    Map,
+    MapLayer
 }
 
