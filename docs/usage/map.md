@@ -1,6 +1,6 @@
 # Cartographie
 
-![documentation](https://maplibre.org/maplibre-style-spec/layers/#paint)
+![](map.png)
 
 ## Propriétés
 
