@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Page - Api-Dashboard</title>
+    <title>Cartographie - Api-Dashboard</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Page";
-        var mkdocs_page_input_path = "usage/page.md";
+        var mkdocs_page_name = "Cartographie";
+        var mkdocs_page_input_path = "usage/map.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -43,19 +43,19 @@
               <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../template/">Mise en place du projet</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Page</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#palette-graphique">Palette graphique</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#debug">Debug</a>
-    </li>
-    </ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../page/">Page</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../dataset/">Données</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../dataviz/">Graphiques (dataviz)</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../map/">Cartographie</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Cartographie</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#proprietes">Propriétés</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#exemple">Exemple</a>
+    </li>
+    </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../controles/">Contrôles</a>
                   </li>
@@ -84,7 +84,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
           <li class="breadcrumb-item">Utilisation</li>
-      <li class="breadcrumb-item active">Page</li>
+      <li class="breadcrumb-item active">Cartographie</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -93,65 +93,132 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="page">Page</h1>
-<p>Une page est de tableau de bord est rendue par le composant <code>&lt;Dasbhoard&gt;</code>.</p>
-<p>Cette page va contenir :</p>
-<ul>
-<li>Des jeux de données (<code>&lt;Dataset&gt;</code>)</li>
-<li>Une barre de contrôles utilisateurs (<code>&lt;Control&gt;</code>)</li>
-<li>Et bien sûr des <em>dataviz</em> et/ou cartographies !</li>
-</ul>
-<pre><code class="language-jsx">// Exemple minimaliste. On affiche un camenbert à partir d'un jeu de données 
-// proposé par l'ADEME sur son portail open-data
-
-import  { Dashboard, Dataset, Control, ChartPie } from &quot;@geo2france/api-dashboard&quot;
-
-export const MaPremierePage = () =&gt; (
-
-  &lt;Dashboard debug&gt;
-
+                <h1 id="cartographie">Cartographie</h1>
+<p><img alt="" src="../map.png" /></p>
+<h2 id="proprietes">Propriétés</h2>
+<table>
+<thead>
+<tr>
+<th>Nom</th>
+<th>Type</th>
+<th>Requis</th>
+<th>Par défaut</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dataset</code></td>
+<td><code>string</code></td>
+<td>✳️</td>
+<td>—</td>
+<td>Identifiant du dataset à utiliser.</td>
+</tr>
+<tr>
+<td><code>categoryKey</code></td>
+<td><code>string</code></td>
+<td></td>
+<td></td>
+<td>Nom de la colonne contennant les catégories</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td><code>string</code></td>
+<td></td>
+<td></td>
+<td>Titre de la carte</td>
+</tr>
+<tr>
+<td><code>popup</code></td>
+<td><code>boolean</code></td>
+<td></td>
+<td><code>false</code></td>
+<td>Afficher une popup au clic sur un élement.</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td><code>string</code></td>
+<td></td>
+<td></td>
+<td>Titre du graphique.</td>
+</tr>
+<tr>
+<td><code>paint</code></td>
+<td><code>object</code></td>
+<td></td>
+<td></td>
+<td>Pour définir finement le style de la couche. Voir la  <a href="https://maplibre.org/maplibre-style-spec/layers/#paint">documentation</a> de MapLibre.</td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td><code>string</code></td>
+<td></td>
+<td></td>
+<td>Couleur du symbole (sinon définie à partir de la palette). Sans effet si <code>categoryKey</code> ou  <code>paint</code> sont définis.</td>
+</tr>
+<tr>
+<td><code>xKey</code></td>
+<td><code>number</code></td>
+<td></td>
+<td></td>
+<td>Colonne contenant la coordonnée x (longitude)</td>
+</tr>
+<tr>
+<td><code>yKey</code></td>
+<td><code>number</code></td>
+<td></td>
+<td></td>
+<td>Colonne contenant la coordonnée y (latitude)</td>
+</tr>
+</tbody>
+</table>
+<p>Si le dataset provient d'un flux WFS, la géométrie est automatiquement utilisée. Sinon il faut renseigner les propriétés <em>xKey</em> et <em>yKey</em>.</p>
+<h2 id="exemple">Exemple</h2>
+<pre><code class="language-tsx">import { Dashboard, Dataset, Map, Palette, Producer } from &quot;@geo2france/api-dashboard/dsl&quot;
+&lt;Dashboard debug&gt;
+    &lt;Palette steps={['#D5C3FB','#5E8C5C','#D4EACA','#F19E38','#745017']}/&gt;
     &lt;Dataset 
-          id=&quot;dma_collecte_traitement&quot; 
-          resource=&quot;sinoe-(r)-destination-des-dma-collectes-par-type-de-traitement/lines&quot;
-          url=&quot;https://data.ademe.fr/data-fair/api/v1/datasets&quot;
-          type=&quot;datafair&quot;
-          pageSize={5000}&gt;
+        id='scot'
+        resource=&quot;scot_en_cours&quot;
+        url='https://qgisserver.hautsdefrance.fr/cgi-bin/qgis_mapserv.fcgi?MAP=/var/www/data/qgis/applications/limites_admin.qgz'
+        type='wfs'
+        pageSize={50}
+        meta={{srsname:'EPSG:4326'}}
+        &gt;
+        &lt;Producer url=&quot;https://opendata.hautsdefrance.fr/dataset/ee965118-2416-4d48-b07e-bbc696f002c2&quot;&gt;Région Hauts-de-France&lt;/Producer&gt;
     &lt;/Dataset&gt;
 
-    &lt;Control&gt;
-          &lt;Select name=&quot;annee&quot; options={[2021,2019,2017]} initial_value={2019} arrows={true} /&gt;
-    &lt;/Control&gt;
+    &lt;Map dataset=&quot;scot&quot; categoryKey=&quot;etat_proc&quot; title=&quot;Les SCOT des Hauts-de-France&quot;/&gt;
 
-    &lt;ChartPie 
-        title=&quot;Tonnages de déchets&quot; 
-        dataset='dma_collecte_traitement' 
-        nameKey='L_TYP_REG_DECHET' 
-        dataKey='TONNAGE_DMA' /&gt;
+&lt;/Dashboard&gt;
+</code></pre>
+<pre><code class="language-tsx">import { Dashboard, Dataset, Map, Palette, Producer } from &quot;@geo2france/api-dashboard/dsl&quot;
+&lt;Dashboard debug&gt;
+    &lt;Palette steps={['#D5C3FB','#5E8C5C','#D4EACA','#F19E38','#745017']}/&gt;
+    &lt;Dataset 
+        id=&quot;points_apport&quot;
+        type=&quot;datafair&quot;
+        resource=&quot;donnees-eo-ocab/lines&quot;
+        url=&quot;https://data.pointsapport.ademe.fr/data-fair/api/v1/datasets&quot;
+        pageSize={500}
+    &gt;
+        &lt;Producer url=&quot;https://data.pointsapport.ademe.fr/datasets/donnees-eo-ocab&quot;&gt;OCAB&lt;/Producer&gt;
+    &lt;/Dataset&gt;
 
-  &lt;/Dashboard&gt;
-)
+    &lt;Map dataset=&quot;points_apport&quot;
+         categoryKey=&quot;type_de_point_de_collecte&quot; 
+         title=&quot;Les points de collecte&quot; 
+         xKey=&quot;longitudewgs84&quot; 
+         yKey=&quot;latitudewgs84&quot;/&gt;
+
+&lt;/Dashboard&gt;
 </code></pre>
-<h2 id="palette-graphique">Palette graphique</h2>
-<p>L'ajout d'une palette permet de personnaliser les couleurs utilisées par les graphiques de la page.
-La palette est un gradient de couleur définie à partir de 2 couleurs ou plus.
-Les graphiques utilisent ensuite des couleurs réparties de façon optimale le long de ce gradient.</p>
-<p>La palette s'applique à l'ensemble de la page.</p>
-<pre><code class="language-tsx">&lt;Dasbhoard&gt;
-      &lt;Palette steps={['#95c11f','#ed1c24','#0f4496']} /&gt;
-      {/* ... */}
-&lt;/Dasbboard&gt;
-</code></pre>
-<h2 id="debug">Debug</h2>
-<p>L'ajout de la propriété <code>debug</code> au composant <code>&lt;Dashboard&gt;</code> ajoute un bouton dans le coin supérieur droit, 
-permettant d'afficher différentes informations utiles (jeux de données chargés, contrôles utilisateurs, etc.).</p>
-<p>Idéalement, à retirer dans la version en production.</p>
-<p><img alt="debug.png" src="../debug.png" /></p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../template/" class="btn btn-neutral float-left" title="Mise en place du projet"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../dataset/" class="btn btn-neutral float-right" title="Données">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../dataviz/" class="btn btn-neutral float-left" title="Graphiques (dataviz)"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../controles/" class="btn btn-neutral float-right" title="Contrôles">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -174,10 +241,10 @@ permettant d'afficher différentes informations utiles (jeux de données chargé
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../template/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../dataviz/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../dataset/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../controles/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
