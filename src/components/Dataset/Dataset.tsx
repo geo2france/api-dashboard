@@ -129,7 +129,7 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
             data.data
           );
         if (datasetRegistryContext) {
-           datasetRegistryContext({id:id, resource:resource, data: finalData, isFetching:isFetching, isError:isError, producers:producers});
+           datasetRegistryContext({id:id, resource:resource, data: finalData, isFetching:isFetching, isError:isError, producers:producers, geojson:data?.geojson});
             //Ajouter une info pour distinguer les erreurs du fourniseurs et celles des transformers ?
         }
       }, [resource, data, isFetching, someFetching, children]);
