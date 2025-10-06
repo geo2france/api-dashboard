@@ -7,6 +7,7 @@ import MyLogo from '/img/logo.svg?url';
 import { PageBiodiv } from './pages/page_biodiv';
 import { PacmanPage } from './pages/pacman';
 import { ImPacman } from "react-icons/im";
+import { PageMap } from './pages/page_map';
 
 
 export const config:DashboardConfig = {
@@ -58,6 +59,12 @@ export const config:DashboardConfig = {
           label:"Pacman",
           element:<PacmanPage />,
           icon:<ImPacman />
+        },
+        {
+          path:"map",
+          label:"Carto",
+          element:<PageMap />,
+          icon:<HeatMapOutlined />
         }
     ]
 }
