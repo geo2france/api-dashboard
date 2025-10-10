@@ -4,6 +4,8 @@ import { SimpleRecord } from "../../types";
 import { Icon } from "@iconify/react";
 import { ProducersFooter } from "../Dataset/Producer";
 import { MoreOutlined } from '@ant-design/icons';
+import { ErrorBoundary } from "../Layout/Error";
+
 
 const { useToken } = theme;
 
@@ -69,8 +71,10 @@ export const DSL_ChartBlock:React.FC<IChartBlockProps> = ({children}) => {
             style={{height:'100%'}} 
             extra={has_action && dropdown_toolbox}
             title={config.title}>
-                {children} 
-                <ProducersFooter component={children} />
+                <ErrorBoundary>
+                  {children}
+                  <ProducersFooter component={children} />
+                </ErrorBoundary>
             </Card>
         </ChartBlockContext.Provider>
     )
