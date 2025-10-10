@@ -33,7 +33,7 @@ export const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({children}) => {
         message={ <Icon icon="garden:face-very-sad-stroke-12" fontSize={25} /> }
         description={ 
             <div>
-                <p> Cette visualisation ne peux malheuresement pas s'afficher.</p>
+                <p> Cette visualisation ne peux malheureusement pas s'afficher.</p>
                 <p> Contactez l'administrateur·rice du tableau de bord si le problème persiste.</p>
             </div>}
         type="warning"
