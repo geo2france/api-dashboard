@@ -149,7 +149,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 
     const geom_type = geojson?.features?.[0] && getType(geojson?.features?.[0]);
 
     /** Type de données dans categoryKey (string ou number) */
-    const type_value = categoryKey && typeof (data?.data?.[0][categoryKey])
+    const type_value = categoryKey && typeof (data?.data?.[0]?.[categoryKey])
 
     /** Valeurs distinctes (si type string) */
     const values = (type_value === 'string') && categoryKey && data?.data && from(data?.data).rollup({ a: op.array_agg_distinct(categoryKey) }).get('a',0) || undefined
@@ -210,7 +210,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 
     //devnote : regarder la colonne contenant les valeurs pour proposer une représentation (catégorie ou choroplèthe)
 
     useEffect( () => {
-        if(geojson){
+        if(geojson && geojson.features.length > 0){ // do not fitbound if no features
             const box = bbox(geojson).slice(0,4) as [number, number, number, number]
             map?.fitBounds(box, {padding: 20 })
         }
