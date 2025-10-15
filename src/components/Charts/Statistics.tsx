@@ -11,10 +11,9 @@ const { Text, Paragraph} = Typography;
 type comparwithType = "first" | "previous"
 
 interface annotation_params_type {
-    value: any;
-    evolution: number;
+    value: number ;
     data: SimpleRecord[] | undefined;
-    compare_value: any;
+    compare_value: number ;
 }
 
 interface StatisticsProps {
@@ -89,7 +88,7 @@ export const Statistics: React.FC<StatisticsProps> = ({
     const icon =  typeof icon_input === "string" ? <Icon icon={icon_input} /> : icon_input ;
     const dataset = useDataset(dataset_id);
 
-    const value = dataset?.data?.slice(-1)[0][dataKey] ; // Dernière valeur du dataset
+    const value = dataset?.data?.slice(-1)[0][dataKey] ; // Dernière valeur du dataset. Caster en Number ?
     const compare_value = compareWith === 'previous' ? dataset?.data?.slice(-2)[0][dataKey] : dataset?.data?.slice(0,1)[0][dataKey] ; //Première ou avant dernière
 
     const evolution = relativeEvolution ? 100*((value - compare_value) / compare_value) : value - compare_value ;
@@ -98,7 +97,7 @@ export const Statistics: React.FC<StatisticsProps> = ({
 
     const tooltip =  help && <Tooltip title={help}><QuestionCircleOutlined /></Tooltip>
 
-    const annotation_params:annotation_params_type = {value: value, evolution: evolution, data:dataset?.data, compare_value: compare_value}
+    const annotation_params:annotation_params_type = {value: value || NaN, compare_value: compare_value || NaN, data:dataset?.data || [] }
 
     let subtitle
 

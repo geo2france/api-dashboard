@@ -135,7 +135,7 @@ L'objet reçu en parmètre a les propriétés suivantes :
 
         <Statistics 
           dataset="mondataset" dataKey="prix" unit="€" color="yellow" 
-           annotation={(p) => <span><b>🤡 {p.value} </b> ! Avant c'était plutôt <i>{p.compare_value}</i> ! </span>}
+           annotation={(p) => <span><b>🤡 {p.value.toLocaleString()} </b> ! Avant c'était plutôt <i>{p.compare_value.toLocaleString()}</i> ! </span>}
         />
 
     </StatisticsCollection>
