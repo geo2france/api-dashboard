@@ -96,6 +96,28 @@ Ce composant afficher la **dernière valeur** du dataset, il doit donc être ord
 | `icon`            | `ReactElement | string`              |        | —          | Icône affichée sur la carte (composant ou nom d’icône pour Iconify.js).    |
 | `help`            | `string`                              |        | —          | Texte affiché dans la tooltip d’aide.        |
 | `compareWith`     | `"first" | "previous"`               |        | —          | Comparer la valeur avec la première valeur ou la valeur précédente. |
+| `annotation`        | `ReactNode \| ((param) => ReactNode)` |             | —          | Texte ou élément React affiché comme annotation. Peut être une valeur directe ou une fonction qui retourne un texte ou composant React. Remplace `evolution` si définie. |                                                                     |
+
+#### Annotation et évolution
+
+Si la propriété `annotation` n'est pas définie, c'est l'évolution qui sera affichée sous la valeur.
+Il s'agit de l'évolution par rapport à la premiere valeur ou la valeur précédente, selon la propriété `compareWith`.
+
+Avec la propriété `annotation` il est possible d'afficher ce que vous souhaitez sous la valeur principale.
+`annotation` peut-être :
+
+- un composant (généralement un texte mis en forme),
+- un texte simple,
+- une fonction de callback qui retourne un texte ou un composant. (usage avancé)
+
+Lorsque annotation est une fonction, elle reçoit comme paramètre un objet qui permet d’accéder à différentes informations utiles pour générer dynamiquement l’annotation.
+L'objet reçu en parmètre a les propriétés suivantes :
+
+ - `value`: valeur courante affichée sur la carte
+ - `compare_value` : valeur de comparaison
+ - `data` : tableau complet des données du dataset
+
+
 
 #### Exemple
 
@@ -110,6 +132,11 @@ Ce composant afficher la **dernière valeur** du dataset, il doit donc être ord
 
         <Statistics dataset="capacite_isdnd_region" dataKey="capacite" unit="T" color="purple" 
           icon="pajamas:accessibility" relativeEvolution evolutionSuffix="depuis 2010"/>
+
+        <Statistics 
+          dataset="mondataset" dataKey="prix" unit="€" color="yellow" 
+           annotation={(p) => <span><b>🤡 {p.value} </b> ! Avant c'était plutôt <i>{p.compare_value}</i> ! </span>}
+        />
 
     </StatisticsCollection>
 ```

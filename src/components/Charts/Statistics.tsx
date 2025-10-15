@@ -4,10 +4,18 @@ import { Children, ReactElement } from "react";
 import { useDataset } from "../Dataset/hooks";
 import { Icon } from "@iconify/react";
 import { useBlockConfig } from "../DashboardPage/Block";
+import { SimpleRecord } from "../../types";
 
 const { Text, Paragraph} = Typography;
 
 type comparwithType = "first" | "previous"
+
+interface annotation_params_type {
+    value: any;
+    evolution: number;
+    data: SimpleRecord[] | undefined;
+    compare_value: any;
+}
 
 interface StatisticsProps {
     /** Identifiant du jeu de données */
@@ -42,6 +50,9 @@ interface StatisticsProps {
 
     /** Comparer la valeur avec la précédente ou la première du jeu de données */
     compareWith? : comparwithType
+
+    /** Texte d'annotation (remplace evolution si définie) */
+    annotation?: React.ReactNode | ((param: annotation_params_type) => React.ReactNode)
 }
 
 
@@ -71,7 +82,8 @@ export const Statistics: React.FC<StatisticsProps> = ({
   invertColor = false,
   help,
   compareWith,
-  relativeEvolution = false
+  relativeEvolution = false,
+  annotation
 }) => {
 
     const icon =  typeof icon_input === "string" ? <Icon icon={icon_input} /> : icon_input ;
@@ -85,6 +97,27 @@ export const Statistics: React.FC<StatisticsProps> = ({
     const evolution_is_good = invertColor ? evolution! < 0 : evolution! > 0;
 
     const tooltip =  help && <Tooltip title={help}><QuestionCircleOutlined /></Tooltip>
+
+    const annotation_params:annotation_params_type = {value: value, evolution: evolution, data:dataset?.data, compare_value: compare_value}
+
+    let subtitle
+
+    if (annotation !== undefined){
+      subtitle =  typeof annotation === 'function' ? annotation(annotation_params) : annotation ;
+    }
+    else if (evolution) {
+      subtitle = (
+        <Paragraph style={{marginBottom:"0.5rem"}}>
+          <Text strong type={ evolution_is_good ? "success" : "danger"} style={{fontSize:"120%"}}>
+              { evolution < 0.1 ? '':'+'}
+              { evolution.toLocaleString(undefined,  {maximumFractionDigits: 1}) }
+              &nbsp;{ evolution_unit }
+          </Text>{" "}
+          <Text italic type="secondary">
+              { evolutionSuffix }
+          </Text>
+        </Paragraph>)
+    }
 
   return (
     <Card
@@ -118,16 +151,13 @@ export const Statistics: React.FC<StatisticsProps> = ({
         /> }
       </Flex>
 
-      {evolution && <Paragraph style={{marginBottom:"0.5rem"}}>
-        <Text strong type={ evolution_is_good ? "success" : "danger"} style={{fontSize:"120%"}}>
-            { evolution < 0.1 ? '':'+'}
-            { evolution.toLocaleString(undefined,  {maximumFractionDigits: 1}) }
-            &nbsp;{ evolution_unit }
-        </Text>{" "}
-        <Text italic type="secondary">
-            { evolutionSuffix }
-        </Text>
-      </Paragraph> }
+      { 
+        typeof subtitle == 'string' ?
+                    <Text italic type="secondary">{subtitle}</Text>
+        :
+        <div>{subtitle}</div>
+      }
+
     </Flex>
     </Card>
   );
