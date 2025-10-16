@@ -1,15 +1,15 @@
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import { theme } from 'antd';
 import { EChartsOption } from "echarts"
-import EChartsReact from "echarts-for-react"
+import EChartsReact, { EChartsReactProps } from "echarts-for-react"
 import { usePalette } from "../Palette/Palette"
 import deepMerge from "../../utils/deepmerge"
 
 const { useToken } = theme;
 
 
-interface ChartEchartsProps {
-    option?:EChartsOption,
+interface ChartEchartsProps extends EChartsReactProps {
+    option:EChartsOption,
 }
 
 /*
@@ -19,7 +19,7 @@ interface ChartEchartsProps {
 * devnote : A partir de React 19, ne plus utiliser forwardRef https://react.dev/reference/react/forwardRef
 */
 
-export const ChartEcharts = forwardRef<EChartsReact, ChartEchartsProps>(({ option = {} }, ref) =>  {
+export const ChartEcharts = forwardRef<EChartsReact, ChartEchartsProps>(({ option = {}, ...restProps }, ref) =>  {
     const innerRef = useRef<EChartsReact>(null)
     useImperativeHandle(ref, () => innerRef.current as EChartsReact, []) // Pour exposer le innerref au parent
 
@@ -46,6 +46,7 @@ export const ChartEcharts = forwardRef<EChartsReact, ChartEchartsProps>(({ optio
         <EChartsReact 
             option={ deepMerge({}, default_option, option) } 
             ref={innerRef}
+            {...restProps}
         />
     )
 })
