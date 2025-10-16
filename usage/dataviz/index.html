@@ -61,6 +61,8 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#statistiques">Statistiques</a>
         <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#annotation-et-evolution">Annotation et évolution</a>
+    </li>
     <li class="toctree-l4"><a class="reference internal" href="#exemple_1">Exemple</a>
     </li>
         </ul>
@@ -381,8 +383,32 @@ Ce composant afficher la <strong>dernière valeur</strong> du dataset, il doit d
 <td>—</td>
 <td>Comparer la valeur avec la première valeur ou la valeur précédente.</td>
 </tr>
+<tr>
+<td><code>annotation</code></td>
+<td><code>ReactNode \| ((param) =&gt; ReactNode)</code></td>
+<td></td>
+<td>—</td>
+<td>Texte ou élément React affiché comme annotation. Peut être une valeur directe ou une fonction qui retourne un texte ou composant React. Remplace <code>evolution</code> si définie.</td>
+</tr>
 </tbody>
 </table>
+<h4 id="annotation-et-evolution">Annotation et évolution</h4>
+<p>Si la propriété <code>annotation</code> n'est pas définie, c'est l'évolution qui sera affichée sous la valeur.
+Il s'agit de l'évolution par rapport à la premiere valeur ou la valeur précédente, selon la propriété <code>compareWith</code>.</p>
+<p>Avec la propriété <code>annotation</code> il est possible d'afficher ce que vous souhaitez sous la valeur principale.
+<code>annotation</code> peut-être :</p>
+<ul>
+<li>un composant (généralement un texte mis en forme),</li>
+<li>un texte simple,</li>
+<li>une fonction de callback qui retourne un texte ou un composant. (usage avancé)</li>
+</ul>
+<p>Lorsque annotation est une fonction, elle reçoit comme paramètre un objet qui permet d’accéder à différentes informations utiles pour générer dynamiquement l’annotation.
+L'objet reçu en parmètre a les propriétés suivantes :</p>
+<ul>
+<li><code>value</code>: valeur courante affichée sur la carte</li>
+<li><code>compareValue</code> : valeur de comparaison</li>
+<li><code>data</code> : tableau complet des données du dataset</li>
+</ul>
 <h4 id="exemple_1">Exemple</h4>
 <pre><code class="language-jsx">      &lt;StatisticsCollection title=&quot;Chiffres clés&quot;&gt;
 
@@ -394,6 +420,11 @@ Ce composant afficher la <strong>dernière valeur</strong> du dataset, il doit d
 
         &lt;Statistics dataset=&quot;capacite_isdnd_region&quot; dataKey=&quot;capacite&quot; unit=&quot;T&quot; color=&quot;purple&quot; 
           icon=&quot;pajamas:accessibility&quot; relativeEvolution evolutionSuffix=&quot;depuis 2010&quot;/&gt;
+
+        &lt;Statistics 
+          dataset=&quot;mondataset&quot; dataKey=&quot;prix&quot; unit=&quot;€&quot; color=&quot;yellow&quot; 
+           annotation={(p) =&gt; &lt;span&gt;&lt;b&gt;🤡 {p.value.toLocaleString()} &lt;/b&gt; ! Avant c'était plutôt &lt;i&gt;{p.compareValue.toLocaleString()}&lt;/i&gt; ! &lt;/span&gt;}
+        /&gt;
 
     &lt;/StatisticsCollection&gt;
 </code></pre>
