@@ -114,7 +114,7 @@ Lorsque annotation est une fonction, elle reçoit comme paramètre un objet qui 
 L'objet reçu en parmètre a les propriétés suivantes :
 
  - `value`: valeur courante affichée sur la carte
- - `compare_value` : valeur de comparaison
+ - `compareValue` : valeur de comparaison
  - `data` : tableau complet des données du dataset
 
 
@@ -135,7 +135,7 @@ L'objet reçu en parmètre a les propriétés suivantes :
 
         <Statistics 
           dataset="mondataset" dataKey="prix" unit="€" color="yellow" 
-           annotation={(p) => <span><b>🤡 {p.value.toLocaleString()} </b> ! Avant c'était plutôt <i>{p.compare_value.toLocaleString()}</i> ! </span>}
+           annotation={(p) => <span><b>🤡 {p.value.toLocaleString()} </b> ! Avant c'était plutôt <i>{p.compareValue.toLocaleString()}</i> ! </span>}
         />
 
     </StatisticsCollection>

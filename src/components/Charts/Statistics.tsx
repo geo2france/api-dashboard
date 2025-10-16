@@ -11,9 +11,14 @@ const { Text, Paragraph} = Typography;
 type comparwithType = "first" | "previous"
 
 interface annotation_params_type {
+    /** Valeur principale */
     value: number ;
+
+    /** Jeu de données utilisé */
     data: SimpleRecord[] | undefined;
-    compare_value: number ;
+
+    /** Valeur de comparaison */
+    compareValue: number ;
 }
 
 interface StatisticsProps {
@@ -97,7 +102,7 @@ export const Statistics: React.FC<StatisticsProps> = ({
 
     const tooltip =  help && <Tooltip title={help}><QuestionCircleOutlined /></Tooltip>
 
-    const annotation_params:annotation_params_type = {value: value || NaN, compare_value: compare_value || NaN, data:dataset?.data || [] }
+    const annotation_params:annotation_params_type = {value: value || NaN, compareValue: compare_value || NaN, data:dataset?.data || [] }
 
     let subtitle
 
