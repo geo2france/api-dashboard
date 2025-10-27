@@ -64,8 +64,18 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
           }[join_type] ?? { left: false, right: false };
 
           const otherData = allDatasets?.find((d) => d.id === props.dataset)?.data;
-          if (!otherData || otherData.length < 1) return undefined; // prevent arquero from crash on missed data
-          return from(data).join(from(otherData), props.joinKey, undefined, aq_join_option).objects();
+
+          if (!otherData  || !data ) return undefined; // prevent arquero from crash on missed data
+          
+          //fallback if one of dataset is empty. Build a 1 row table with existing joinKey
+          const [leftKey, rightKey] = Array.isArray(props.joinKey) // joinKey can be a string or un string[]
+              ? props.joinKey
+              : [props.joinKey, props.joinKey];
+
+          const leftTable = data.length >= 1 ? data : [{ [leftKey]: null }]; 
+          const rightTable = otherData.length >= 1 ? otherData : [{ [rightKey]: null }]; 
+
+          return from(leftTable).join(from(rightTable), props.joinKey, undefined, aq_join_option).objects();
         };
         return funct
       } else {
