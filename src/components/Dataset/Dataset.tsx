@@ -64,7 +64,7 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
           }[join_type] ?? { left: false, right: false };
 
           const otherData = allDatasets?.find((d) => d.id === props.dataset)?.data;
-          if (!otherData) return undefined; // ou [] ou data selon la logique souhaitée
+          if (!otherData || otherData.length < 1) return undefined; // prevent arquero from crash on missed data
           return from(data).join(from(otherData), props.joinKey, undefined, aq_join_option).objects();
         };
         return funct
