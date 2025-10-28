@@ -112,6 +112,7 @@ type dataset = {
     isError: boolean;
     producers?:any[];
     geojson?:any
+    dataHash?:number;
 }
 
 
