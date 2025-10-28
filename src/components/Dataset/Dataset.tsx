@@ -4,12 +4,13 @@ import { CrudFilters,DataProvider } from "../../data_providers/types"
 import { ControlContext, DatasetRegistryContext } from "../DashboardPage/Page"
 import { Producer, ProducerType } from "./Producer"
 import React from "react"
-import { Filter, Transform, useAllDatasets } from "../../dsl"
+import { Filter, Transform, useAllDatasets, useDatasets } from "../../dsl"
 import alasql from "alasql"
 import { DataProviderContext, getProviderFromType, ProviderType } from "./Provider"
 import { Join, joinTypeType } from "./Join"
 import { from } from "arquero"
 import { JoinOptions } from "arquero/dist/types/table/types"
+import hashCode from "../../utils/hash_data"
 
 
 interface IDatasetProps {
@@ -64,6 +65,7 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
           }[join_type] ?? { left: false, right: false };
 
           const otherData = allDatasets?.find((d) => d.id === props.dataset)?.data;
+           // Return undefinied if otherData is Fetching ?
 
           if (!otherData  || !data ) return undefined; // prevent arquero from crash on missed data
           
@@ -84,8 +86,8 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
     };
 
     const datasetRegistryContext = useContext(DatasetRegistryContext)
+
     const allDatasets = useAllDatasets()
-    const someFetching = !!allDatasets?.some(d => d.isFetching);
 
     const controlContext = useContext(ControlContext)
     const controls = controlContext?.values ;
@@ -112,7 +114,9 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
         })
       }) 
 
-    const {data, isFetching, isError} = useApi({dataProvider:provider, resource:resource, filters: filters, pagination:{pageSize:pageSize}, meta:meta})
+    const {data, isFetching, isError } = useApi({dataProvider:provider, resource:resource, filters: filters, pagination:{pageSize:pageSize}, meta:meta})
+
+    const dep_dataset_id:string[] = [] // Dependencies
 
     const transformers:Function[] = []
     /* Récuperer les fonctions transformers */
@@ -121,6 +125,7 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
     .filter((c) => typeof c.type!='string' && (c.type.name == Transform.name || c.type.name == Join.name) ).forEach(
       (c) => {
         transformers.push( getTransformerFn(c) )
+        if (typeof c.type!='string' && c.type.name == Join.name) dep_dataset_id.push(c.props.dataset) // Add joint dataset in dep list
       }
     )
 
@@ -132,6 +137,11 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
         producers.push({nom : c.props.children, url: c.props.url })
       }
     );
+    
+    const depDataset = useDatasets(dep_dataset_id)
+    const depDataHash = depDataset?.map(d=>d?.dataHash) //Build hash array from data
+
+    const someDepsAreFetching = depDataset?.some(d => d?.isFetching);
 
     useEffect(() => { //Appliquer le(s) transformer(s) et enregistrer le dataset dans le context de la page
         const finalData = data?.data && transformers.reduce(
@@ -139,10 +149,19 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
             data.data
           );
         if (datasetRegistryContext) {
-           datasetRegistryContext({id:id, resource:resource, data: finalData, isFetching:isFetching, isError:isError, producers:producers, geojson:data?.geojson});
+           datasetRegistryContext({
+             id: id,
+             resource: resource,
+             data: finalData,
+             isFetching: !!isFetching || !!someDepsAreFetching,
+             isError: isError,
+             producers: producers,
+             geojson: data?.geojson,
+             dataHash: hashCode(finalData)
+           });
             //Ajouter une info pour distinguer les erreurs du fourniseurs et celles des transformers ?
         }
-      }, [resource, data, isFetching, someFetching, children]);
+      }, [resource, data, (!!isFetching || !!someDepsAreFetching), hashCode(depDataHash), children]);
 
 
     return (
@@ -151,5 +170,4 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
             </>
     )
 }
-
 
