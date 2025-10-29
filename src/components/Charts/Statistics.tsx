@@ -17,6 +17,9 @@ interface ICallbackParams {
     /** Jeu de données utilisé */
     data: SimpleRecord[] | undefined;
 
+    /** Ligne courante (pour accéder aux autres champs) */
+    row: SimpleRecord | undefined;
+
     /** Valeur de comparaison */
     compareValue: number ;
 }
@@ -97,7 +100,8 @@ export const Statistics: React.FC<StatisticsProps> = ({
     const icon =  typeof icon_input === "string" ? <Icon icon={icon_input} /> : icon_input ;
     const dataset = useDataset(dataset_id);
 
-    const value = dataset?.data?.slice(-1)[0][dataKey] ; // Dernière valeur du dataset. Caster en Number ?
+    const row = dataset?.data?.slice(-1)[0]
+    const value = row?.[dataKey] ; // Dernière valeur du dataset. Caster en Number ?
     const compare_value = compareWith === 'previous' ? dataset?.data?.slice(-2)[0][dataKey] : dataset?.data?.slice(0,1)[0][dataKey] ; //Première ou avant dernière
 
     const evolution = relativeEvolution ? 100*((value - compare_value) / compare_value) : value - compare_value ;
@@ -106,7 +110,7 @@ export const Statistics: React.FC<StatisticsProps> = ({
 
     const tooltip =  help && <Tooltip title={help}><QuestionCircleOutlined /></Tooltip>
 
-    const CallbackParams:ICallbackParams = {value: value || NaN, compareValue: compare_value || NaN, data:dataset?.data || [] }
+    const CallbackParams:ICallbackParams = {value: value || NaN, compareValue: compare_value || NaN, data:dataset?.data || [], row: row }
 
     let subtitle
 
