@@ -10,7 +10,7 @@ const { Text, Paragraph} = Typography;
 
 type comparwithType = "first" | "previous"
 
-interface annotation_params_type {
+interface ICallbackParams {
     /** Valeur principale */
     value: number ;
 
@@ -56,7 +56,10 @@ interface StatisticsProps {
     compareWith? : comparwithType
 
     /** Texte d'annotation (remplace evolution si définie) */
-    annotation?: React.ReactNode | ((param: annotation_params_type) => React.ReactNode)
+    annotation?: React.ReactNode | ((param: ICallbackParams) => React.ReactNode)
+
+    /** Fonction a appliquer avant rendu */
+    valueFormatter?: ((param: ICallbackParams) => React.ReactNode)
 }
 
 
@@ -87,6 +90,7 @@ export const Statistics: React.FC<StatisticsProps> = ({
   help,
   compareWith,
   relativeEvolution = false,
+  valueFormatter = (param) => (param.value.toLocaleString()),
   annotation
 }) => {
 
@@ -102,12 +106,12 @@ export const Statistics: React.FC<StatisticsProps> = ({
 
     const tooltip =  help && <Tooltip title={help}><QuestionCircleOutlined /></Tooltip>
 
-    const annotation_params:annotation_params_type = {value: value || NaN, compareValue: compare_value || NaN, data:dataset?.data || [] }
+    const CallbackParams:ICallbackParams = {value: value || NaN, compareValue: compare_value || NaN, data:dataset?.data || [] }
 
     let subtitle
 
     if (annotation !== undefined){
-      subtitle =  typeof annotation === 'function' ? annotation(annotation_params) : annotation ;
+      subtitle =  typeof annotation === 'function' ? annotation(CallbackParams) : annotation ;
     }
     else if (evolution) {
       subtitle = (
@@ -147,7 +151,7 @@ export const Statistics: React.FC<StatisticsProps> = ({
     >
     <Flex vertical>
       <Flex justify="space-between" align="center">
-        <Text style={{fontSize:"150%", paddingTop:8, paddingBottom:8, paddingLeft:0}}>{value?.toLocaleString()} {unit}</Text>
+        <Text style={{fontSize:"150%", paddingTop:8, paddingBottom:8, paddingLeft:0}}>{valueFormatter(CallbackParams)} {unit}</Text>
         {icon && <Avatar
             size={32+8}
             icon={icon}
