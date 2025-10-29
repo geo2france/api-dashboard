@@ -96,7 +96,8 @@ Ce composant afficher la **dernière valeur** du dataset, il doit donc être ord
 | `icon`            | `ReactElement | string`              |        | —          | Icône affichée sur la carte (composant ou nom d’icône pour Iconify.js).    |
 | `help`            | `string`                              |        | —          | Texte affiché dans la tooltip d’aide.        |
 | `compareWith`     | `"first" | "previous"`               |        | —          | Comparer la valeur avec la première valeur ou la valeur précédente. |
-| `annotation`        | `ReactNode \| ((param) => ReactNode)` |             | —          | Texte ou élément React affiché comme annotation. Peut être une valeur directe ou une fonction qui retourne un texte ou composant React. Remplace `evolution` si définie. |                                                                     |
+| `valueFormatter`  | `((param) => ReactNode)` |             | —          | Fonction qui retourne un texte ou composant React. Il permet de formater et/ou modifier la valeur à afficher |                                                                     |
+| `annotation`        | `ReactNode \| ((param) => ReactNode)` |             | —          | Texte ou élément React affiché comme annotation. Peut être une valeur directe ou une fonction qui retourne un texte ou composant React. Remplace l'affichage de l'évolution si définie. |                                                                     |
 
 #### Annotation et évolution
 
@@ -116,6 +117,7 @@ L'objet reçu en parmètre a les propriétés suivantes :
  - `value`: valeur courante affichée sur la carte
  - `compareValue` : valeur de comparaison
  - `data` : tableau complet des données du dataset
+ - `row` : ligne de données courrantes (permet notamment d'accéder aux autres valeur de la ligne de dataset)
 
 
 
@@ -124,7 +126,7 @@ L'objet reçu en parmètre a les propriétés suivantes :
 ```jsx
       <StatisticsCollection title="Chiffres clés">
 
-        <Statistics dataset="capacite_isdnd_region" dataKey="capacite" unit="T" color="orange" 
+        <Statistics dataset="capacite_isdnd_region" dataKey="capacite" unit="t" color="orange" 
           icon="material-symbols-light:1x-mobiledata-badge-sharp" compare="first" invertColor relativeEvolution evolutionSuffix="depuis 2010"/>
 
         <Statistics dataset="capacite_isdnd_region" dataKey="capacite" unit="🎃" color="green" 
@@ -136,6 +138,12 @@ L'objet reçu en parmètre a les propriétés suivantes :
         <Statistics 
           dataset="mondataset" dataKey="prix" unit="€" color="yellow" 
            annotation={(p) => <span><b>🤡 {p.value.toLocaleString()} </b> ! Avant c'était plutôt <i>{p.compareValue.toLocaleString()}</i> ! </span>}
+        />
+
+        <Statistics 
+          dataset="mondataset" dataKey="valorisation_total" unit="t" color="blue"
+          valueFormatter={ (p) => p.row?.valo_orga + p.row?.valo_matiere }
+          annotation={(p) => `dont ${p.row.valo_orga} t de valorisation organique`  }
         />
 
     </StatisticsCollection>
