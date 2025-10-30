@@ -1,4 +1,4 @@
-import { Button, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps } from "antd";
+import { Button, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps, Tabs } from "antd";
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
 import React, { isValidElement, ReactElement, useState, createContext, } from "react";
 import { Helmet } from "react-helmet-async";
@@ -6,8 +6,8 @@ import { useSearchParamsState } from "../../utils/useSearchParamsState";
 import Control, { DSL_Control } from "../Control/Control";
 import { SimpleRecord } from "../../types";
 import { Dataset, Debug, Provider } from "../../dsl";
-import { DSL_ChartBlock } from "./Block";
 import { DEFAULT_PALETTE, Palette, PaletteContext, PaletteType } from "../Palette/Palette";
+import { Section, SectionProps } from "./Section";
 
 const { Header } = Layout;
 
@@ -153,12 +153,15 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
 
     const logicalComponents:string[] = [Dataset.name, Provider.name, Palette.name, Debug.name]; //Composant logiques, a ne pas mettre dans la grid
 
-    const getComponentKind = (c:ReactElement) : "logical" | "control" | "other" => {
+    const getComponentKind = (c:ReactElement) : "logical" | "control" | "other" | "section" => {
         if  (typeof(c.type) != 'string' &&  logicalComponents.includes(c.type.name)) {
             return "logical"
         }
         else if (typeof(c.type) != 'string' &&  c.type.name == DSL_Control.name){
             return "control"
+        }
+        else if (typeof(c.type) != 'string' &&  c.type.name == Section.name){
+            return "section"
         }
         else {
             return "other"
@@ -168,10 +171,27 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
     const visible_components = childrenArray.filter((c) => c && getComponentKind(c)=='other');
     const logic_components = childrenArray.filter((c) => getComponentKind(c) == 'logical');
     const control_components = childrenArray.filter((c) => getComponentKind(c) == 'control');
+    const section_components = childrenArray.filter((c) => getComponentKind(c) == 'section') as React.ReactElement<SectionProps>[];
 
     if (debug && !logic_components.some((c) => typeof c.type !== "string" && c.type.name === Debug.name) ){
         logic_components.push(<Debug key="debug_property"/>);
     }
+    console.log(visible_components)
+        console.log('control', control_components)
+
+    const items = section_components.map((s) => (
+        {
+            key: s.props.title, 
+            label: s.props.title, 
+            children: s
+        }
+    ))
+
+    if (visible_components.length > 0) {items.push({
+        key:"99 - Autres", 
+        label: 'Autres',
+        children:<Section title='Autres'>{visible_components}</Section>
+    })}
 
     return (
     <>
@@ -193,16 +213,11 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
                     }}>
                         {control_components}
                     </Header>}
-
-                    <Row gutter={[8,8]} style={{ margin: 16 }}>
-                        {  visible_components.map(
-                        (component, idx) => 
-                                <Col xl={24/columns} xs={24} key={idx}>
-                                    <DSL_ChartBlock>{component}</DSL_ChartBlock>
-                                </Col>
-                        )
-                        }
-                    </Row>
+                    { items.length > 1 ?
+                        <Tabs defaultActiveKey="1" items={items} type="card" />
+                        :
+                        items?.[0].children //Show content without tabs if only one
+                    }
                 {logic_components}
                 </PaletteContext.Provider>
             </ DatasetContext.Provider>
