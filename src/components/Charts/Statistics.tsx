@@ -10,12 +10,15 @@ const { Text, Paragraph} = Typography;
 
 type comparwithType = "first" | "previous"
 
-interface annotation_params_type {
+interface ICallbackParams {
     /** Valeur principale */
     value: number ;
 
     /** Jeu de données utilisé */
     data: SimpleRecord[] | undefined;
+
+    /** Ligne courante (pour accéder aux autres champs) */
+    row: SimpleRecord | undefined;
 
     /** Valeur de comparaison */
     compareValue: number ;
@@ -56,7 +59,10 @@ interface StatisticsProps {
     compareWith? : comparwithType
 
     /** Texte d'annotation (remplace evolution si définie) */
-    annotation?: React.ReactNode | ((param: annotation_params_type) => React.ReactNode)
+    annotation?: React.ReactNode | ((param: ICallbackParams) => React.ReactNode)
+
+    /** Fonction a appliquer avant rendu */
+    valueFormatter?: ((param: ICallbackParams) => React.ReactNode)
 }
 
 
@@ -87,13 +93,15 @@ export const Statistics: React.FC<StatisticsProps> = ({
   help,
   compareWith,
   relativeEvolution = false,
+  valueFormatter = (param) => (param.value.toLocaleString()),
   annotation
 }) => {
 
     const icon =  typeof icon_input === "string" ? <Icon icon={icon_input} /> : icon_input ;
     const dataset = useDataset(dataset_id);
 
-    const value = dataset?.data?.slice(-1)[0][dataKey] ; // Dernière valeur du dataset. Caster en Number ?
+    const row = dataset?.data?.slice(-1)[0]
+    const value = row?.[dataKey] ; // Dernière valeur du dataset. Caster en Number ?
     const compare_value = compareWith === 'previous' ? dataset?.data?.slice(-2)[0][dataKey] : dataset?.data?.slice(0,1)[0][dataKey] ; //Première ou avant dernière
 
     const evolution = relativeEvolution ? 100*((value - compare_value) / compare_value) : value - compare_value ;
@@ -102,12 +110,12 @@ export const Statistics: React.FC<StatisticsProps> = ({
 
     const tooltip =  help && <Tooltip title={help}><QuestionCircleOutlined /></Tooltip>
 
-    const annotation_params:annotation_params_type = {value: value || NaN, compareValue: compare_value || NaN, data:dataset?.data || [] }
+    const CallbackParams:ICallbackParams = {value: value || NaN, compareValue: compare_value || NaN, data:dataset?.data || [], row: row }
 
     let subtitle
 
     if (annotation !== undefined){
-      subtitle =  typeof annotation === 'function' ? annotation(annotation_params) : annotation ;
+      subtitle =  typeof annotation === 'function' ? annotation(CallbackParams) : annotation ;
     }
     else if (evolution) {
       subtitle = (
@@ -147,7 +155,7 @@ export const Statistics: React.FC<StatisticsProps> = ({
     >
     <Flex vertical>
       <Flex justify="space-between" align="center">
-        <Text style={{fontSize:"150%", paddingTop:8, paddingBottom:8, paddingLeft:0}}>{value?.toLocaleString()} {unit}</Text>
+        <Text style={{fontSize:"150%", paddingTop:8, paddingBottom:8, paddingLeft:0}}>{valueFormatter(CallbackParams)} {unit}</Text>
         {icon && <Avatar
             size={32+8}
             icon={icon}
