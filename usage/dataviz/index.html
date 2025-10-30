@@ -384,11 +384,18 @@ Ce composant afficher la <strong>dernière valeur</strong> du dataset, il doit d
 <td>Comparer la valeur avec la première valeur ou la valeur précédente.</td>
 </tr>
 <tr>
+<td><code>valueFormatter</code></td>
+<td><code>((param) =&gt; ReactNode)</code></td>
+<td></td>
+<td>—</td>
+<td>Fonction qui retourne un texte ou composant React. Il permet de formater et/ou modifier la valeur à afficher</td>
+</tr>
+<tr>
 <td><code>annotation</code></td>
 <td><code>ReactNode \| ((param) =&gt; ReactNode)</code></td>
 <td></td>
 <td>—</td>
-<td>Texte ou élément React affiché comme annotation. Peut être une valeur directe ou une fonction qui retourne un texte ou composant React. Remplace <code>evolution</code> si définie.</td>
+<td>Texte ou élément React affiché comme annotation. Peut être une valeur directe ou une fonction qui retourne un texte ou composant React. Remplace l'affichage de l'évolution si définie.</td>
 </tr>
 </tbody>
 </table>
@@ -408,11 +415,12 @@ L'objet reçu en parmètre a les propriétés suivantes :</p>
 <li><code>value</code>: valeur courante affichée sur la carte</li>
 <li><code>compareValue</code> : valeur de comparaison</li>
 <li><code>data</code> : tableau complet des données du dataset</li>
+<li><code>row</code> : ligne de données courrantes (permet notamment d'accéder aux autres valeur de la ligne de dataset)</li>
 </ul>
 <h4 id="exemple_1">Exemple</h4>
 <pre><code class="language-jsx">      &lt;StatisticsCollection title=&quot;Chiffres clés&quot;&gt;
 
-        &lt;Statistics dataset=&quot;capacite_isdnd_region&quot; dataKey=&quot;capacite&quot; unit=&quot;T&quot; color=&quot;orange&quot; 
+        &lt;Statistics dataset=&quot;capacite_isdnd_region&quot; dataKey=&quot;capacite&quot; unit=&quot;t&quot; color=&quot;orange&quot; 
           icon=&quot;material-symbols-light:1x-mobiledata-badge-sharp&quot; compare=&quot;first&quot; invertColor relativeEvolution evolutionSuffix=&quot;depuis 2010&quot;/&gt;
 
         &lt;Statistics dataset=&quot;capacite_isdnd_region&quot; dataKey=&quot;capacite&quot; unit=&quot;🎃&quot; color=&quot;green&quot; 
@@ -424,6 +432,12 @@ L'objet reçu en parmètre a les propriétés suivantes :</p>
         &lt;Statistics 
           dataset=&quot;mondataset&quot; dataKey=&quot;prix&quot; unit=&quot;€&quot; color=&quot;yellow&quot; 
            annotation={(p) =&gt; &lt;span&gt;&lt;b&gt;🤡 {p.value.toLocaleString()} &lt;/b&gt; ! Avant c'était plutôt &lt;i&gt;{p.compareValue.toLocaleString()}&lt;/i&gt; ! &lt;/span&gt;}
+        /&gt;
+
+        &lt;Statistics 
+          dataset=&quot;mondataset&quot; dataKey=&quot;valorisation_total&quot; unit=&quot;t&quot; color=&quot;blue&quot;
+          valueFormatter={ (p) =&gt; p.row?.valo_orga + p.row?.valo_matiere }
+          annotation={(p) =&gt; `dont ${p.row.valo_orga} t de valorisation organique`  }
         /&gt;
 
     &lt;/StatisticsCollection&gt;
