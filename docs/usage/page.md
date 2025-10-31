@@ -39,6 +39,31 @@ export const MaPremierePage = () => (
   </Dashboard>
 )
 ```
+
+## Sections
+
+Les éléments visuels (graphiques et cartes) peuvent être regroupés en `<Section>`. 
+L'ajout d'au moins deux sections ajoutera également une barre de navigation.
+
+Les `<Section>` ne doivent contenir que des éléments visuels pas de `<Dataset>` ou `<Control>` 
+car ceux-ci sont communs à toute la page.
+![sections](screenshot_tabbar.png)
+
+```tsx
+<Dashboard>
+
+      {/* Dataset, contrôles, palette*/}
+
+      <Section title="Import / Export" icon="mdi:exchange">
+            {/* Graphiques et carto*/}
+      </Section>
+      
+      <Section title="Section 2">
+            {/* Graphiques et carto*/}
+      </Section>
+</Dashboard>
+```
+
 ## Palette graphique
 
 L'ajout d'une palette permet de personnaliser les couleurs utilisées par les graphiques de la page.
