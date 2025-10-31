@@ -11,9 +11,8 @@ export interface SectionProps {
 export const Section: React.FC<SectionProps> = ({ children }) => {
   const columns = 2;
   const childrenArray = React.Children.toArray(children).filter(isValidElement);
-
   return (
-    <Row gutter={[8, 8]} style={{ margin: 16 }}>
+    <Row gutter={[8, 8]} style={{ margin: 0 }}>
       {childrenArray.map((component, idx) => (
         <Col xl={24 / columns} xs={24} key={idx}>
           <DSL_ChartBlock>{component}</DSL_ChartBlock>

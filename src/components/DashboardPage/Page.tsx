@@ -1,4 +1,4 @@
-import { Button, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps, Tabs } from "antd";
+import { Button, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps, Tabs, theme } from "antd";
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
 import React, { isValidElement, ReactElement, useState, createContext, } from "react";
 import { Helmet } from "react-helmet-async";
@@ -11,6 +11,7 @@ import { Section, SectionProps } from "./Section";
 
 const { Header } = Layout;
 
+const { useToken } = theme;
 
 type Section =  {
     key: string;
@@ -132,6 +133,9 @@ interface IDSLDashboardPageProps {
     debug?: boolean
 }
 export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tableau de bord', columns=2, children, debug=false}) => {
+
+    const { token } = useToken();
+
     const [datasets, setdatasets] = useState<Record<string, dataset>>({});
     const [palette, setPalette] = useState<PaletteType>(DEFAULT_PALETTE);
  
@@ -176,8 +180,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
     if (debug && !logic_components.some((c) => typeof c.type !== "string" && c.type.name === Debug.name) ){
         logic_components.push(<Debug key="debug_property"/>);
     }
-    console.log(visible_components)
-        console.log('control', control_components)
+
 
     const items = section_components.map((s) => (
         {
@@ -214,9 +217,14 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
                         {control_components}
                     </Header>}
                     { items.length > 1 ?
-                        <Tabs defaultActiveKey="1" items={items} type="card" />
+                        <Tabs defaultActiveKey="1" items={items} centered  
+                            tabBarStyle={{margin:6, 
+                                padding:4, 
+                                background:token.colorBgContainer,
+                                borderRadius:token.borderRadiusLG}} 
+                            style={{margin:4}} />
                         :
-                        items?.[0].children //Show content without tabs if only one
+                        <div style={{margin:4}}> {items?.[0].children} </div>//Show content without tabs if only one
                     }
                 {logic_components}
                 </PaletteContext.Provider>
