@@ -192,7 +192,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
 
     if (visible_components.length > 0) {items.push({
         key:"99 - Autres", 
-        label: 'Autres',
+        label: '-',
         children:<Section title='Autres'>{visible_components}</Section>
     })}
 
