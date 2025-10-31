@@ -45,6 +45,8 @@
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">Page</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#sections">Sections</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#palette-graphique">Palette graphique</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#debug">Debug</a>
@@ -130,6 +132,25 @@ export const MaPremierePage = () =&gt; (
 
   &lt;/Dashboard&gt;
 )
+</code></pre>
+<h2 id="sections">Sections</h2>
+<p>Les éléments visuels (graphiques et cartes) peuvent être regroupés en <code>&lt;Section&gt;</code>. 
+L'ajout d'au moins deux sections ajoutera également une barre de navigation.</p>
+<p>Les <code>&lt;Section&gt;</code> ne doivent contenir que des éléments visuels pas de <code>&lt;Dataset&gt;</code> ou <code>&lt;Control&gt;</code> 
+car ceux-ci sont communs à toute la page.
+<img alt="sections" src="../screenshot_tabbar.png" /></p>
+<pre><code class="language-tsx">&lt;Dashboard&gt;
+
+      {/* Dataset, contrôles, palette*/}
+
+      &lt;Section title=&quot;Import / Export&quot; icon=&quot;mdi:exchange&quot;&gt;
+            {/* Graphiques et carto*/}
+      &lt;/Section&gt;
+
+      &lt;Section title=&quot;Section 2&quot;&gt;
+            {/* Graphiques et carto*/}
+      &lt;/Section&gt;
+&lt;/Dashboard&gt;
 </code></pre>
 <h2 id="palette-graphique">Palette graphique</h2>
 <p>L'ajout d'une palette permet de personnaliser les couleurs utilisées par les graphiques de la page.
