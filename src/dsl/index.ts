@@ -19,6 +19,7 @@ import { ChartEcharts } from "../components/Charts/ChartEcharts";
 import { useBlockConfig } from "../components/DashboardPage/Block";
 import { Statistics, StatisticsCollection } from "../components/Charts/Statistics";
 import { MapLayer, Map } from "../components/Map/Map";
+import { Section } from "../components/DashboardPage/Section";
 
 export {
     Dashboard,
@@ -27,6 +28,7 @@ export {
     Transform,
     Join,
     Filter,
+    Section,
     DataPreview,
     ChartEcharts,
     ChartPie,
