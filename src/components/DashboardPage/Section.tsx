@@ -6,6 +6,7 @@ import { DSL_ChartBlock } from "./Block";
 export interface SectionProps {
     title: string
     children?: React.ReactElement | React.ReactElement[]
+    icon?: React.ReactElement | string
 }
 
 export const Section: React.FC<SectionProps> = ({ children }) => {

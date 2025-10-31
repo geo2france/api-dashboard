@@ -1,4 +1,5 @@
 import { Button, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps, Tabs, theme } from "antd";
+import type { TabsProps } from 'antd';
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
 import React, { isValidElement, ReactElement, useState, createContext, } from "react";
 import { Helmet } from "react-helmet-async";
@@ -8,6 +9,7 @@ import { SimpleRecord } from "../../types";
 import { Dataset, Debug, Provider } from "../../dsl";
 import { DEFAULT_PALETTE, Palette, PaletteContext, PaletteType } from "../Palette/Palette";
 import { Section, SectionProps } from "./Section";
+import { Icon } from "@iconify/react";
 
 const { Header } = Layout;
 
@@ -182,11 +184,12 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
     }
 
 
-    const items = section_components.map((s) => (
+    const items:TabsProps['items'] = section_components.map((s) => (
         {
             key: s.props.title, 
             label: s.props.title, 
-            children: s
+            children: s,
+            icon: typeof(s.props.icon) === 'string' ? (<Icon icon={s.props.icon} fontSize={18} style={{marginInlineEnd:-6}}/>) : s.props.icon,
         }
     ))
 
