@@ -68,7 +68,7 @@ export const DSL_ChartBlock:React.FC<IChartBlockProps> = ({children}) => {
     return (
         <ChartBlockContext.Provider value={{config:config, setConfig:(e) => setConfig(e)}}>
             <Card 
-            style={{height:'100%'}} 
+            style={{height:'100%' }} 
             extra={has_action && dropdown_toolbox}
             title={config.title}>
                 <ErrorBoundary>
