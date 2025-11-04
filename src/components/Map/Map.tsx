@@ -79,7 +79,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey
        setClickedFeature({...evt.features[0], ...{lngLat:evt.lngLat}})
     }
 
-    const callbackParams:popupFormatterParam = {row: clickedFeature?.properties, value:categoryKey ? clickedFeature?.properties[categoryKey] : undefined }
+    const callbackParams:popupFormatterParam = {row: clickedFeature?.properties, value:categoryKey ? clickedFeature?.properties?.[categoryKey] : undefined }
 
     const popupFormatter = popupFormatterUser || ((p:popupFormatterParam) => categoryKey ? p.row?.[categoryKey] : undefined)
 
