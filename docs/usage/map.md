@@ -16,7 +16,7 @@
 | `xKey`     | `number`        |        |           | Colonne contenant la coordonnée x (longitude)  |
 | `yKey`     | `number`        |        |           | Colonne contenant la coordonnée y (latitude)  |
 | `popup`     | `bool`        |        |           | Afficher une popup au clique sur une entité |
-| `popupFormatter`   | `function`    |        |    | Personnaliser le contenu de la popup (exemple : `(p) =>  <span>Valeur principale : {p.value}, autre valeur {p.row.area_code}</span>` )|
+| `popupFormatter`   | `function`    |        |    | Personnaliser le contenu de la popup (exemple : `(p) =>  <span>Code : <b>{p.area_code}</b>, Nom {p.name}</span>` )|
 
 Si le dataset provient d'un flux WFS, la géométrie est automatiquement utilisée. Sinon il faut renseigner les propriétés _xKey_ et _yKey_.
 
