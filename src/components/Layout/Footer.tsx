@@ -4,7 +4,6 @@ import { CSSProperties, useContext, useState } from "react";
 import { UpOutlined, DownOutlined } from "@ant-design/icons";
 import { Partner } from "../../types";
 import { AppContext } from "./DashboardApp";
-import deepMerge from "../../utils/deepmerge"
 
 const { Text } = Typography;
 
@@ -13,7 +12,7 @@ interface DbFooterProps {
     style?:CSSProperties;
 }
 
-export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands, style}) => {
+export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands, style:user_style}) => {
   const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 768 ? true : false);
 
   const toggleCollapse = () => {
@@ -27,26 +26,24 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands, style}) => {
     marginRight: "20px",
   };
 
-  // Style par défaut du Footer, peut être surchargé par l'utilisateur
-  const default_footer_style: CSSProperties = {
-    textAlign: "center",
-    color: "#fff",
-    backgroundColor: "#fff",
-    bottom: "0",
-    position: "sticky",
-    right: "0",
-    width: "100%",
-    padding:2,
-    height: isCollapsed ? "40px" : "80px",
-    transition: "height 0.5s ease-in-out",
-    overflow: "hidden",
-    borderTop: "1px solid #ccc",
-    zIndex: 600, // maplibre top zIndex if 500
-  };
 
   return (
     <Layout.Footer
-      style={deepMerge(default_footer_style, style || {})}
+      style={{
+        textAlign: "center",
+        color: "#fff", 
+        backgroundColor: "#fff", //TODO utiliser token antdesign
+        bottom: "0",
+        position: "sticky",
+        right: "0",
+        width: "100%",
+        padding:0,
+        overflow:"auto",
+        height: isCollapsed ? "40px" : "80px",
+        transition: "height 0.5s ease-in-out",
+        borderTop: "1px solid #ccc", //TODO utiliser token antdesign
+        zIndex: 600, // maplibre top zIndex if 500
+  }}
     >
       {/* Texte affiché uniquement lorsque le footer est rétracté */}
       {isCollapsed && (
@@ -54,12 +51,14 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands, style}) => {
       )}
 
       {/* Logos et contenu du footer affichés lorsque déplié */}
-      <div style={{ display: isCollapsed ? "none" : "block", padding: "10px 0"}}>
-        {brands?.map((p:Partner) => (
-          <a href={p.url} key={p.name}>
-            <img style={style_img} src={p.logo} alt={p.name} />
-          </a>
-        ))}
+      <div style={{ display: isCollapsed ? "none" : "block", padding: 0}}>
+        <div style={ { padding:"4px 0", ...user_style} }>
+          {brands?.map((p:Partner) => (
+            <a href={p.url} key={p.name}>
+              <img style={style_img} src={p.logo} alt={p.name} />
+            </a>
+          ))}
+        </div>
       </div>
 
       {/* Bouton carré de contrôle pour afficher ou cacher le footer */}
