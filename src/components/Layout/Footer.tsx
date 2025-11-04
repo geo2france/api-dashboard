@@ -4,14 +4,16 @@ import { CSSProperties, useContext, useState } from "react";
 import { UpOutlined, DownOutlined } from "@ant-design/icons";
 import { Partner } from "../../types";
 import { AppContext } from "./DashboardApp";
+import deepMerge from "../../utils/deepmerge"
 
 const { Text } = Typography;
 
 interface DbFooterProps {
     brands?: Partner[];
+    style?:CSSProperties;
 }
 
-export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
+export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands, style}) => {
   const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 768 ? true : false);
 
   const toggleCollapse = () => {
@@ -25,23 +27,26 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
     marginRight: "20px",
   };
 
+  // Style par défaut du Footer, peut être surchargé par l'utilisateur
+  const default_footer_style: CSSProperties = {
+    textAlign: "center",
+    color: "#fff",
+    backgroundColor: "#fff",
+    bottom: "0",
+    position: "sticky",
+    right: "0",
+    width: "100%",
+    padding:2,
+    height: isCollapsed ? "40px" : "80px",
+    transition: "height 0.5s ease-in-out",
+    overflow: "hidden",
+    borderTop: "1px solid #ccc",
+    zIndex: 600, // maplibre top zIndex if 500
+  };
+
   return (
     <Layout.Footer
-      style={{
-        textAlign: "center",
-        color: "#fff",
-        backgroundColor: "#fff",
-        bottom: "0",
-        position: "sticky",
-        right: "0",
-        width: "100%",
-        padding:2,
-        height: isCollapsed ? "40px" : "80px", 
-        transition: "height 0.5s ease-in-out",
-        overflow: "hidden",
-        borderTop: "1px solid #ccc", 
-        zIndex: 600, // maplibre top zIndex if 500
-      }}
+      style={deepMerge(default_footer_style, style || {})}
     >
       {/* Texte affiché uniquement lorsque le footer est rétracté */}
       {isCollapsed && (

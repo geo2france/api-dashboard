@@ -7,7 +7,7 @@ import DashboardSider from "./Sider";
 import { Content } from "antd/es/layout/layout";
 import { ErrorComponent } from "./Error";
 import { DasbhoardFooter } from "./Footer";
-import { createContext, useState } from "react";
+import { CSSProperties, createContext, useState } from "react";
 import { ControlContext } from "../DashboardPage/Page";
 import { HelmetProvider } from "react-helmet-async";
 
@@ -50,10 +50,11 @@ export interface DashboardConfig {
   theme?: ThemeConfig;
   logo: string;
   brands?: Partner[];
+  footer_style?:CSSProperties;
 }
 
 
-const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, title, subtitle}) => {
+const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, footer_style, title, subtitle}) => {
 
     const context_values = { title, subtitle, logo };
     
@@ -82,7 +83,7 @@ const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, t
                                       <Content style={{width:"100%"}}>
                                           <Outlet />
                                       </Content>
-                                      <DasbhoardFooter brands={brands} />
+                                      <DasbhoardFooter brands={brands} style={footer_style} />
                                       </Layout> 
                                   </Layout>
                           }
