@@ -112,7 +112,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey
                 <Popup longitude={clickedFeature.lngLat.lng} 
                         latitude={clickedFeature.lngLat.lat} 
                         onClose={() => {setClickedFeature(null)} }>
-                    <div>{ popupFormatter(callbackParams) || clickedFeature.properties[categoryKey] }</div>
+                    <div>{ popupFormatter(callbackParams) || clickedFeature?.properties[categoryKey] }</div>
                 </Popup> 
             }
 
