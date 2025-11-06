@@ -32,10 +32,6 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
     margin: "auto"
   };
 
-  function maxLimit (n:number, maxN:number) {
-    return n > maxN ? maxN : n
-  }
-
   const nbBrands = brands?.length || 0
 
   return (
@@ -67,20 +63,20 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
         <Slider
           // Défilement auto si plus de logos que la lagreur de l'écran ne peut en afficher
           autoplay={nbBrands > 4}
-          slidesToShow={maxLimit(nbBrands, 4)}
+          slidesToShow={Math.min(nbBrands, 4)}
           responsive={[
             {
               breakpoint: 1024,
               settings: {
                 autoplay: nbBrands > 3,
-                slidesToShow: maxLimit(nbBrands, 3)
+                slidesToShow: Math.min(nbBrands, 3)
               }
             },
             {
               breakpoint: 600,
               settings: {
                 autoplay: nbBrands > 2,
-                slidesToShow: maxLimit(nbBrands, 2)
+                slidesToShow: Math.min(nbBrands, 2)
               }
             },
             {
