@@ -1,11 +1,17 @@
 import { Button, Layout, Typography } from "antd";
 import { CSSProperties, useContext, useState } from "react";
+import Slider from "@ant-design/react-slick";
 
 import { UpOutlined, DownOutlined } from "@ant-design/icons";
 import { Partner } from "../../types";
 import { AppContext } from "./DashboardApp";
 
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 const { Text } = Typography;
+
+
 
 interface DbFooterProps {
     brands?: Partner[];
@@ -22,7 +28,8 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
 
   const style_img: CSSProperties = {
     maxHeight: "60px",
-    marginRight: "20px",
+    maxWidth: "100%",
+    margin: "auto"
   };
 
   return (
@@ -50,12 +57,36 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
       )}
 
       {/* Logos et contenu du footer affichés lorsque déplié */}
-      <div style={{ display: isCollapsed ? "none" : "block", padding: "10px 0"}}>
-        {brands?.map((p:Partner) => (
-          <a href={p.url} key={p.name}>
-            <img style={style_img} src={p.logo} alt={p.name} />
-          </a>
-        ))}
+      <div style={{display: isCollapsed ? "none" : "block", padding: "0px 0"}}>
+        <Slider
+          infinite={true}
+          arrows={false} // affichées en dehors du footer et blanc sur blanc
+          slidesToShow={4}
+          slidesToScroll={1}
+          responsive={[
+            {
+              breakpoint: 1024,
+              settings: {slidesToShow: 3}
+            },
+            {
+              breakpoint: 600,
+              settings: {slidesToShow: 2}
+            },
+            {
+              breakpoint: 480,
+              settings: {slidesToShow: 1}
+            }
+          ]}
+          autoplay={true}
+          autoplaySpeed={3000}
+          speed={1000}
+        >
+          {brands?.map((p:Partner) => (
+            <a href={p.url} key={p.name}>
+              <img style={style_img} src={p.logo} alt={p.name} />
+            </a>
+          ))}
+        </Slider>
       </div>
 
       {/* Bouton carré de contrôle pour afficher ou cacher le footer */}
