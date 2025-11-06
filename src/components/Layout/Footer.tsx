@@ -32,6 +32,12 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
     margin: "auto"
   };
 
+  function maxLimit (n:number, maxN:number) {
+    return n > maxN ? maxN : n
+  }
+
+  const nbBrands = brands?.length || 0
+
   return (
     <Layout.Footer
       style={{
@@ -59,25 +65,32 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
       {/* Logos et contenu du footer affichés lorsque déplié */}
       <div style={{display: isCollapsed ? "none" : "block", padding: "0px 0"}}>
         <Slider
-          infinite={true}
-          arrows={false} // affichées en dehors du footer et blanc sur blanc
-          slidesToShow={4}
-          slidesToScroll={1}
+          // Défilement auto si plus de logos que la lagreur de l'écran ne peut en afficher
+          autoplay={nbBrands > 4}
+          slidesToShow={maxLimit(nbBrands, 4)}
           responsive={[
             {
               breakpoint: 1024,
-              settings: {slidesToShow: 3}
+              settings: {
+                autoplay: nbBrands > 3,
+                slidesToShow: maxLimit(nbBrands, 3)
+              }
             },
             {
               breakpoint: 600,
-              settings: {slidesToShow: 2}
+              settings: {
+                autoplay: nbBrands > 2,
+                slidesToShow: maxLimit(nbBrands, 2)
+              }
             },
             {
               breakpoint: 480,
               settings: {slidesToShow: 1}
             }
           ]}
-          autoplay={true}
+          slidesToScroll={1}
+          infinite={true}
+          arrows={false} // affichées en dehors du footer et blanc sur blanc
           autoplaySpeed={3000}
           speed={1000}
         >
