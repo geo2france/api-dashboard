@@ -44,7 +44,7 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
         position: "sticky",
         right: "0",
         width: "100%",
-        padding: 10,
+        padding: 2,
         height: "auto",
         minHeight: "40px",
         transition: "height 0.5s ease-in-out",
@@ -59,7 +59,7 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
       )}
 
       {/* Logos et contenu du footer affichés lorsque déplié */}
-      <div style={{display: isCollapsed ? "none" : "block", padding: "0px 0"}}>
+      <div style={{display: isCollapsed ? "none" : "block", padding: "10px 0"}}>
         <Slider
           // Défilement auto si plus de logos que la lagreur de l'écran ne peut en afficher
           autoplay={nbBrands > 4}
