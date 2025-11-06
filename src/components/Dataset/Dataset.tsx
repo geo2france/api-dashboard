@@ -77,7 +77,7 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
           const leftTable = data.length >= 1 ? data : [{ [leftKey]: null }]; 
           const rightTable = otherData.length >= 1 ? otherData : [{ [rightKey]: null }]; 
 
-          return from(leftTable).join(from(rightTable), props.joinKey, undefined, aq_join_option).objects();
+          return from(leftTable).join(from(rightTable), props.joinKey, undefined, {suffix: ['', '_2'], ...aq_join_option}).objects();
         };
         return funct
       } else {
