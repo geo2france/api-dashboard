@@ -42,7 +42,7 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
         position: "sticky",
         right: "0",
         width: "100%",
-        padding:2,
+        padding: 10,
         height: "auto",
         minHeight: "40px",
         transition: "height 0.5s ease-in-out",
