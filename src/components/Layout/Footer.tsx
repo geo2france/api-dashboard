@@ -15,9 +15,10 @@ const { Text } = Typography;
 
 interface DbFooterProps {
     brands?: Partner[];
+    slider?: boolean;
 }
 
-export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
+export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands, slider=true}) => {
   const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 768 ? true : false);
 
   const toggleCollapse = () => {
@@ -26,13 +27,27 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
 
   const app_context = useContext(AppContext)
 
-  const style_img: CSSProperties = {
+  // Style avec slider (l'image occupe tout le bloc défilé)
+  const style_img: CSSProperties = slider ? {
     maxHeight: "60px",
     maxWidth: "100%",
     margin: "auto"
+  }
+  // Style sans slider
+  : {
+    maxHeight: "60px",
+    marginRight: "20px",
   };
 
   const nbBrands = brands?.length || 0
+
+  // Contenu du footer = logos des partenaires
+  // TODO : doit pouvoir être surchargé par l'utilisateur
+  const footerContent = brands?.map((p:Partner) => (
+    <a href={p.url} key={p.name}>
+      <img style={style_img} src={p.logo} alt={p.name} />
+    </a>
+  ))
 
   return (
     <Layout.Footer
@@ -60,42 +75,44 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands}) => {
 
       {/* Logos et contenu du footer affichés lorsque déplié */}
       <div style={{display: isCollapsed ? "none" : "block", padding: "10px 0"}}>
-        <Slider
-          // Défilement auto si plus de logos que la lagreur de l'écran ne peut en afficher
-          autoplay={nbBrands > 4}
-          slidesToShow={Math.min(nbBrands, 4)}
-          responsive={[
-            {
-              breakpoint: 1024,
-              settings: {
-                autoplay: nbBrands > 3,
-                slidesToShow: Math.min(nbBrands, 3)
-              }
-            },
-            {
-              breakpoint: 600,
-              settings: {
-                autoplay: nbBrands > 2,
-                slidesToShow: Math.min(nbBrands, 2)
-              }
-            },
-            {
-              breakpoint: 480,
-              settings: {slidesToShow: 1}
-            }
-          ]}
-          slidesToScroll={1}
-          infinite={true}
-          arrows={false} // affichées en dehors du footer et blanc sur blanc
-          autoplaySpeed={3000}
-          speed={1000}
-        >
-          {brands?.map((p:Partner) => (
-            <a href={p.url} key={p.name}>
-              <img style={style_img} src={p.logo} alt={p.name} />
-            </a>
-          ))}
-        </Slider>
+        {
+          slider
+          // Logos avec défilement (choix par défaut)
+          ? <Slider
+              // Défilement auto si plus de logos que la lagreur de l'écran ne peut en afficher
+              autoplay={nbBrands > 4}
+              slidesToShow={Math.min(nbBrands, 4)}
+              responsive={[
+                {
+                  breakpoint: 1024,
+                  settings: {
+                    autoplay: nbBrands > 3,
+                    slidesToShow: Math.min(nbBrands, 3)
+                  }
+                },
+                {
+                  breakpoint: 600,
+                  settings: {
+                    autoplay: nbBrands > 2,
+                    slidesToShow: Math.min(nbBrands, 2)
+                  }
+                },
+                {
+                  breakpoint: 480,
+                  settings: {slidesToShow: 1}
+                }
+              ]}
+              slidesToScroll={1}
+              infinite={true}
+              arrows={false} // affichées en dehors du footer et blanc sur blanc
+              autoplaySpeed={3000}
+              speed={1000}
+            >
+              {footerContent}
+            </Slider>
+          // Défilement désactivé
+          : footerContent
+        }
       </div>
 
       {/* Bouton carré de contrôle pour afficher ou cacher le footer */}
