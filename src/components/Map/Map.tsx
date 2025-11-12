@@ -54,6 +54,7 @@ const build_geojson = (params: {
     return features_collection
 }
 
+
 /**
  * Une carto simple avec un layer
  * 
@@ -63,11 +64,17 @@ interface MapProps extends MapLayerProps {
   /** Afficher une popup après un click sur la carte */
   popup?: boolean;
 
+  /** Fonction callback permettant de définir le contenu de la popup */
+  popupFormatter?: ((param: SimpleRecord) => React.ReactNode);
+
   /** Titre du graphique */
   title?: string;
 }
 
-export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey, popup = false, title, xKey, yKey}) => {
+
+export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey, 
+    popup = false, popupFormatter:popupFormatterUser, 
+    title, xKey, yKey}) => {
     const mapRef = useRef<MapRef>(null);
     const [clickedFeature, setClickedFeature] = useState<any>(undefined);
 
@@ -76,6 +83,10 @@ export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey
     const onClickMap = (evt:any) => {
        setClickedFeature({...evt.features[0], ...{lngLat:evt.lngLat}})
     }
+
+    const current_row = clickedFeature?.properties
+
+    const popupFormatter = popupFormatterUser || ((row:SimpleRecord) => categoryKey ? row?.[categoryKey] : undefined)
 
     const onMouseMoveMap = (evt:any) => {
         if (!mapRef.current) {
@@ -106,7 +117,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey
                 <Popup longitude={clickedFeature.lngLat.lng} 
                         latitude={clickedFeature.lngLat.lat} 
                         onClose={() => {setClickedFeature(null)} }>
-                    <div> {clickedFeature.properties[categoryKey]} </div> {/** Afficher toutes les props ? */}
+                    <div>{ popupFormatter(current_row) || clickedFeature?.properties[categoryKey] }</div>
                 </Popup> 
             }
 
