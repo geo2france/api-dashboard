@@ -50,11 +50,11 @@ export interface DashboardConfig {
   theme?: ThemeConfig;
   logo: string;
   brands?: Partner[];
-  slider?: boolean;
+  footerSlider?: boolean;
 }
 
 
-const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, slider, title, subtitle}) => {
+const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, footerSlider, title, subtitle}) => {
 
     const context_values = { title, subtitle, logo };
     
@@ -83,7 +83,7 @@ const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, s
                                       <Content style={{width:"100%"}}>
                                           <Outlet />
                                       </Content>
-                                      <DasbhoardFooter brands={brands} slider={slider} />
+                                      <DasbhoardFooter brands={brands} slider={footerSlider} />
                                       </Layout> 
                                   </Layout>
                           }
