@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react"
 import { useDataset } from '../Dataset/hooks';
 import bbox from '@turf/bbox';
 import { getType} from '@turf/invariant'
-import { featureCollection, point } from '@turf/helpers'
+import { feature, featureCollection, point } from '@turf/helpers'
 import { AnyPaint, CirclePaint, Expression, FillPaint, LinePaint } from 'mapbox-gl';
 import React from 'react';
 import { usePalette } from '../Palette/Palette';
@@ -31,16 +31,26 @@ export const map_locale = {
 /** Construire un geojson a partir d'un tableau de données*/
 const build_geojson = (params: {
   data: SimpleRecord[];   // dataset contient un tableau d'enregistrements
-  xKey: string 
-  yKey: string;
-}): FeatureCollection => {
+  xKey?: string ;
+  yKey?: string;
+  geomKey?: string;
+}): FeatureCollection | undefined => {
 
-    const { data, xKey, yKey } = params;
-    const features_collection = featureCollection( data.map((e:SimpleRecord) => {
-        const [x, y] = [ parseNumber(e[xKey] ), parseNumber(e[yKey] ) ]
-        return point([x, y],  {...e}  ) 
-    }) )
-
+    const { data, xKey, yKey, geomKey } = params;
+    let features_collection
+    if (xKey && yKey){ // Construction à partir des champs x et Y
+        features_collection = featureCollection( data.map((e:SimpleRecord) => {
+            const [x, y] = [ parseNumber(e[xKey] ), parseNumber(e[yKey] ) ]
+            return point([x, y],  {...e}  ) 
+        }) )
+    }else if(geomKey){ // Construction à partir de la GeomGeoJSON
+        features_collection = featureCollection( data.map((e:SimpleRecord) => {
+            return feature(e[geomKey],  {...e}  ) 
+        }) )
+    }else{
+        features_collection = undefined
+    }
+    console.log(geomKey, features_collection )
     return features_collection
 }
 
@@ -126,6 +136,9 @@ interface MapLayerProps {
 
     /** Colonne contenant la coordonnées y / latitude */
     yKey?: string
+
+     /** Colonne contenant la geométrie au format GeoJSON(4326). Par défaut détection automatique ("geom" ou "geometry") */
+    geomKey?: string
 }
 
 
@@ -136,15 +149,20 @@ interface MapLayerProps {
  * @param { MapLayerProps } props 
  * @returns { ReactElement }
  */
-export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 'red', type='circle', paint, xKey, yKey}) => {
+export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 'red', type='circle', paint, xKey, yKey, geomKey:geomKey_input}) => {
     const {current: map} = useMap();
     const data = useDataset(dataset)
     // src (lib proj4 pour convertir)
 
+    const keys = data?.data?.[0] ? Object.keys(data?.data?.[0]) : undefined
+
+    const geomKey = [geomKey_input,"geom","geometry"].find(c => c && keys?.includes(c))
+
+    console.log(data?.id, data?.data, geomKey)
     // Si x et y sont definie, on construit le geojson
     const geojson = xKey && yKey && data?.data ? 
         build_geojson({data:data.data, xKey:xKey, yKey:yKey})
-        : data?.geojson // Sinon on utilise le geojson (fournisseur wfs)
+        :  data?.data && build_geojson({data:data?.data, geomKey:geomKey})
 
     const geom_type = geojson?.features?.[0] && getType(geojson?.features?.[0]);
 
