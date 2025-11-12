@@ -1,6 +1,6 @@
 {
   "name": "@geo2france/api-dashboard",
-  "version": "1.13.0",
+  "version": "1.14.0",
   "private": false,
   "description": "Build dashboards with JSX/TSX",
   "main": "dist/index.js",
