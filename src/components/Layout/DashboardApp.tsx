@@ -44,12 +44,39 @@ interface AppContextProps {
 export const AppContext = createContext<AppContextProps>({});  
 
 export interface DashboardConfig {
+  /**
+  * Titre principal du tableau de bord (affiché dans le header ou le titre de page).
+  */
   title?: string;
+
+  /**
+   * Sous-titre du tableau de bord (optionnel, peut être affiché sous le titre principal).
+  */
   subtitle?: string;
+
+  /**
+   * Liste des routes de l'application (chaque route correspond à une page du tableau de bord).
+  */
   routes: RouteConfig[];
+
+  /**
+   * Configuration du thème Ant Design (permet de personnaliser les couleurs, la typographie, etc.).
+  */
   theme?: ThemeConfig;
+
+  /**
+   * URL ou chemin du logo à afficher dans le tableau de bord.
+  */
   logo: string;
+
+  /**
+   * Liste optionnelle de partenaires ou marques à afficher dans le footer ou ailleurs.
+  */
   brands?: Partner[];
+
+  /**
+   * Active ou désactive le mode “slider” dans le pied de page (faire défiler les logos de partenaires).
+  */
   footerSlider?: boolean;
 }
 
