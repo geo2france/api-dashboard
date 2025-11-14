@@ -8,7 +8,7 @@ import { getType} from '@turf/invariant'
 import { feature, featureCollection, point } from '@turf/helpers'
 import { AnyPaint, CirclePaint, Expression, FillPaint, LinePaint } from 'mapbox-gl';
 import React from 'react';
-import { usePalette } from '../Palette/Palette';
+import { usePalette, usePaletteLabels } from '../Palette/Palette';
 import { from, op } from 'arquero';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { LegendControl, LegendItem } from '../MapLegend/MapLegend';
@@ -185,11 +185,11 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 
 
     /** Couleurs de la palette */
     const colors = usePalette({nColors:Array.isArray(values) ? values?.length : 1})
-
+    const colors_labels = usePaletteLabels()
 
     const match = Array.isArray(values) ? values?.map((v, i) => ({
         val: v,
-        color: colors?.[i],
+        color: colors_labels.find( i => i.label.toLowerCase() == v.toLowerCase() )?.color ?? colors?.[i],
     })) : undefined ;
 
     /** Expression mapLibre qui permet de mapper les valeurs et les couleurs de la palette */

@@ -12,7 +12,7 @@ import { DSL_Control as Control, useAllControls, useControl } from "../component
 import { Radio } from "../components/Control/Radio"
 import { Select } from "../components/Control/Select"
 import { Input } from "antd";
-import { Palette, usePalette, PalettePreview } from "../components/Palette/Palette";
+import { Palette, usePalette, PalettePreview, usePaletteLabels } from "../components/Palette/Palette";
 import { Debug } from "../components/Debug/Debug";
 import { Join } from "../components/Dataset/Join";
 import { ChartEcharts } from "../components/Charts/ChartEcharts";
@@ -48,6 +48,7 @@ export {
     Input,
     Palette,
     usePalette,
+    usePaletteLabels,
     PalettePreview,
     Debug,
     Map,
