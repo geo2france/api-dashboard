@@ -68,11 +68,15 @@ export const Palette:React.FC<PaletteType> = ({ steps, mode, labels }) => {
 
 export const PalettePreview:React.FC = ({}) => {
     const colors = usePalette({nColors:10}) || []
+    const colors_labels = usePaletteLabels()
+
     return (
         <>
             {colors.map((color) => (
                 <Tag key={color} color={color}>{color}</Tag>
             ))}
+            <br/>
+            Labels : {colors_labels.map( e => <Tag key={e.label} color={e.color}>{e.label}</Tag>)}
         </>
     )
 }
