@@ -10,6 +10,12 @@ type PaletteModeType = 'rgb' | 'hsl' | 'lab' | 'lrgb' | 'lch'
 export interface PaletteType {
     steps?:string[]
     mode?:PaletteModeType
+
+    /**
+    * Mapping optionnel de libellés vers des couleurs. 
+    * Exemple : `labels={{'oui':'#0f0', 'non':'#f00'}}
+    * */
+    labels?: Record<string, string>
 }
 
 type PaletteContextType = {
@@ -29,12 +35,27 @@ export const usePalette = ({nColors}:UsePaletteProps) => {
     return palette_info?.steps && chroma.scale(palette_info.steps).mode(palette_info.mode || 'hsl').colors(nColors)
 }
 
+/**
+ * Normalise les labels de la palette en tableau `{ label, color }`.
+ * Retourne un tableau vide si aucun label n’est défini.
+ */
+export const usePaletteLabels = () => {
+    const palette_context = useContext(PaletteContext);
+    const palette_info = palette_context?.palette
+
+    return Object.keys(palette_info?.labels || {}).map( key =>
+        ({
+            label:key,
+            color:palette_info?.labels?.[key]
+        })
+    )
+}
 /*
 * Composant permettant à l'utilisateur de définir une palette pour sa page
 */
-export const Palette:React.FC<PaletteType> = ({ steps, mode }) => {
+export const Palette:React.FC<PaletteType> = ({ steps, mode, labels }) => {
 
-    const palette:PaletteType = {steps, mode}
+    const palette:PaletteType = {steps, mode, labels}
 
     const palette_context = useContext(PaletteContext);
 
