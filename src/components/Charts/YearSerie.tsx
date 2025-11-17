@@ -7,7 +7,7 @@ import { from, op } from "arquero"
 import { useDataset } from "../Dataset/hooks"
 import { SimpleRecord } from "../../types"
 import { EChartsOption, SeriesOption } from "echarts"
-import { usePalette } from "../Palette/Palette"
+import { usePalette, usePaletteLabels } from "../Palette/Palette"
 import { ChartEcharts } from "./ChartEcharts"
 import { useBlockConfig } from "../DashboardPage/Block"
 
@@ -55,6 +55,7 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
     }
 
     const COLORS = usePalette({nColors:distinct_cat?.length}) || []
+    const colors_labels = usePaletteLabels() 
 
     const series = distinct_cat.map((cat, idx) => (
         {
@@ -63,7 +64,7 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
             data :categoryKey ? chart_data?.filter((row:SimpleRecord) => row[categoryKey] === cat).map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey] || 0 ]))
                               : chart_data?.map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey] || 0 ])),
             itemStyle:{
-                color:COLORS && COLORS[idx % COLORS.length],
+                color:colors_labels.find( i => i.label.toLowerCase() === cat.toLowerCase())?.color ?? (COLORS && COLORS[idx % COLORS.length]),
            },
            stack: stack ? 'total' : undefined,
            areaStyle : chart_type === 'area' ? {} : undefined,
