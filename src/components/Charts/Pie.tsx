@@ -51,7 +51,7 @@ export const ChartPie:React.FC<IChartPieProps> = ({dataset:dataset_id, nameKey, 
         color:usePalette({nColors:chart_data?.length}),
         itemStyle:{
           /* Use label's color if any, otherwise fallback to Echarts calculated color */
-          color:(p) => { console.log(p.color, p); return colors_labels.find( i => i.label.toLowerCase() === p.name.toLowerCase())?.color ?? colors?.[p.dataIndex] ?? '#000' }
+          color:(p) => colors_labels.find( i => i.label.toLowerCase() === p.name.toLowerCase())?.color ?? colors?.[p.dataIndex] ?? '#000'
         }, 
         data:chart_data,
         radius : donut ? ['40%','75%'] : [0, '75%'],
