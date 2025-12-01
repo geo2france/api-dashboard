@@ -7,8 +7,8 @@ import DashboardSider from "./Sider";
 import { Content } from "antd/es/layout/layout";
 import { ErrorComponent } from "./Error";
 import { DasbhoardFooter } from "./Footer";
-import { createContext, useState } from "react";
-import { ControlContext } from "../DashboardPage/Page";
+import { createContext, useCallback, useState } from "react";
+import { ControlContext, dataset, DatasetContext, DatasetRegistryContext } from "../DashboardPage/Page";
 import { HelmetProvider } from "react-helmet-async";
 
 //import '../../index.css' //TODO a intégrer en jsx
@@ -84,7 +84,6 @@ export interface DashboardConfig {
 const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, footerSlider, title, subtitle}) => {
 
     const context_values = { title, subtitle, logo };
-    
     /* CONTROLS */
     const [controls, setControles] = useState<Record<string, any>>({});
     const pushControl = (c: Record<string, any>) => {
@@ -94,12 +93,26 @@ const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, f
         }));
     }
 
+    /* DATASET */
+    const [datasets, setdatasets] = useState<Record<string, dataset>>({});
+    const pushDataset = useCallback((d: dataset) => {
+      setdatasets(prev => {
+        const existing = prev[d.id];
+        if (existing && existing.dataHash === d.dataHash) { // Eviter les rerender si les données n'ont pas changé
+          return prev; 
+        }
+        return { ...prev, [d.id]: d };
+      });
+    }, []);
+
     return (
         <QueryClientProvider client={queryClient}>
           <ConfigProvider theme={theme || default_theme /* Merger plutôt ?*/}>
           <HelmetProvider>
           <AppContext.Provider value={ context_values }>
-            <ControlContext.Provider value={{ values:controls, pushValue:pushControl  }}>
+            <DatasetRegistryContext.Provider value={ pushDataset } >
+            <DatasetContext.Provider value={ datasets }>
+            <ControlContext.Provider value={{ values:controls, pushValue:pushControl }}>
               <HashRouter>
                   <Routes>
                     <Route
@@ -121,6 +134,8 @@ const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, f
                   </Routes>
               </HashRouter>
             </ControlContext.Provider>
+            </DatasetContext.Provider>
+            </DatasetRegistryContext.Provider>
           </AppContext.Provider>
           </HelmetProvider>
           </ConfigProvider>

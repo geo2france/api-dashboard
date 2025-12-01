@@ -1,7 +1,7 @@
 import { Button, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps, Tabs, theme } from "antd";
 import type { TabsProps } from 'antd';
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
-import React, { isValidElement, ReactElement, useState, createContext, } from "react";
+import React, { isValidElement, ReactElement, useState, createContext } from "react";
 import { Helmet } from "react-helmet-async";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
 import Control, { DSL_Control } from "../Control/Control";
@@ -107,7 +107,7 @@ export default DashboardPage;
 
 
 
-type dataset = {
+export type dataset = {
     id: string;
     resource: string;
     data?: SimpleRecord[];
@@ -134,24 +134,22 @@ interface IDSLDashboardPageProps {
     columns?: number
     debug?: boolean
 }
+
+      
+
+
+
 export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tableau de bord', columns=2, children, debug=false}) => {
 
     const { token } = useToken();
 
-    const [datasets, setdatasets] = useState<Record<string, dataset>>({});
     const [palette, setPalette] = useState<PaletteType>(DEFAULT_PALETTE);
  
+    
     //const allDatasetLoaded = Object.values(datasets).every(d => !d.isFetching);
     //const isDatasetError = Object.values(datasets).some(d => d.isError);
 
 
-    // Ajouter ou mettre à jour un dataset
-    const pushDataset = (d: dataset) => {
-        setdatasets(prev => ({
-          ...prev, 
-          [d.id]: d
-        }));
-    };
 
     
 
@@ -204,8 +202,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
         <Helmet>
             <title>{name}</title>
         </Helmet>
-        <DatasetRegistryContext.Provider value={ pushDataset }>
-            <DatasetContext.Provider value={ datasets }>
+
                 <PaletteContext.Provider value={{ palette, setPalette }}>
                     { control_components.length > 0 && <Header
                     style={{
@@ -231,7 +228,5 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
                     }
                 {logic_components}
                 </PaletteContext.Provider>
-            </ DatasetContext.Provider>
-        </DatasetRegistryContext.Provider>
     </>
 )}
