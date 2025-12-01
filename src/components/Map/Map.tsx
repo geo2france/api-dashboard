@@ -50,7 +50,6 @@ const build_geojson = (params: {
     }else{
         features_collection = undefined
     }
-    console.log(geomKey, features_collection )
     return features_collection
 }
 
