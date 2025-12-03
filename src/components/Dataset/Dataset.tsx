@@ -149,7 +149,7 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
             data.data
           );
         if (datasetRegistryContext) {
-           datasetRegistryContext({
+           datasetRegistryContext.register({
              id: id,
              resource: resource,
              data: finalData,

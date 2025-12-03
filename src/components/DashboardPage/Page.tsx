@@ -1,7 +1,7 @@
 import { Button, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps, Tabs, theme } from "antd";
 import type { TabsProps } from 'antd';
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
-import React, { isValidElement, ReactElement, useState, createContext } from "react";
+import React, { isValidElement, ReactElement, useState, createContext, useEffect, useContext } from "react";
 import { Helmet } from "react-helmet-async";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
 import Control, { DSL_Control } from "../Control/Control";
@@ -124,9 +124,21 @@ type ControlContextType = {
     pushValue: (control: { name: string; value: any }) => void;
 }
 
-export const DatasetContext = createContext<Record<string, dataset>>({});
-export const DatasetRegistryContext = createContext<(dataset: dataset) => void>(()=>{}); // A modifier, utiliser un seul context
-export const ControlContext = createContext<ControlContextType | undefined>(undefined);
+export const DatasetContext = createContext<Record<string, dataset>>({}); //TODO a supprimer, utiliser le get du DatasetRegistryContext
+
+
+interface DatasetRegistryContextValue {
+  register: (dataset: dataset) => void;
+  clear: ()=> void;
+  //get: (name: string) => Dataset | undefined;
+}
+export const DatasetRegistryContext = createContext<DatasetRegistryContextValue>({
+  register: () => {},
+  clear: () => {},
+  //get: () => undefined,
+});
+
+export const ControlContext = createContext<ControlContextType | undefined>(undefined); 
 
 interface IDSLDashboardPageProps {
     children : React.ReactNode // TODO, lister les type possible ?React.ReactElement<typeof DashboardElement>[];
@@ -145,7 +157,13 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
 
     const [palette, setPalette] = useState<PaletteType>(DEFAULT_PALETTE);
  
-    
+    const datasetRegistry = useContext(DatasetRegistryContext)
+    useEffect(() => {
+        return () => { 
+            datasetRegistry.clear() // cleanup dataset registry
+        }
+    }, []);
+
     //const allDatasetLoaded = Object.values(datasets).every(d => !d.isFetching);
     //const isDatasetError = Object.values(datasets).some(d => d.isError);
 
@@ -230,3 +248,4 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
                 </PaletteContext.Provider>
     </>
 )}
+

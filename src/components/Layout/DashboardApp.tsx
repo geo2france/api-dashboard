@@ -105,12 +105,16 @@ const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, f
       });
     }, []);
 
+    const clearDatasets = useCallback(() => {
+      setdatasets({});
+    }, []);
+
     return (
         <QueryClientProvider client={queryClient}>
           <ConfigProvider theme={theme || default_theme /* Merger plutôt ?*/}>
           <HelmetProvider>
           <AppContext.Provider value={ context_values }>
-            <DatasetRegistryContext.Provider value={ pushDataset } >
+            <DatasetRegistryContext.Provider value={ {register: pushDataset, clear: clearDatasets} } >
             <DatasetContext.Provider value={ datasets }>
             <ControlContext.Provider value={{ values:controls, pushValue:pushControl }}>
               <HashRouter>
