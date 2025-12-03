@@ -1,15 +1,15 @@
 import { Button, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps, Tabs, theme } from "antd";
 import type { TabsProps } from 'antd';
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
-import React, { isValidElement, ReactElement, useState, createContext, useEffect, useContext } from "react";
+import React, { isValidElement, ReactElement, useState, createContext, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
 import Control, { DSL_Control } from "../Control/Control";
-import { dataset } from "../Dataset/Dataset"
 import { Dataset, Debug, Provider } from "../../dsl";
 import { DEFAULT_PALETTE, Palette, PaletteContext, PaletteType } from "../Palette/Palette";
 import { Section, SectionProps } from "./Section";
 import { Icon } from "@iconify/react";
+import { useDatasetRegistry } from "../Dataset/hooks";
 
 const { Header } = Layout;
 
@@ -111,18 +111,7 @@ type ControlContextType = {
 }
 
 
-interface DatasetRegistryContextValue {
-  register: (dataset: dataset) => void;
-  clear: ()=> void;
-  get: (name: string) => dataset | undefined;
-  getAll: () => Record<string, dataset>;
-}
-export const DatasetRegistryContext = createContext<DatasetRegistryContextValue>({
-  register: () => {},
-  clear: () => {},
-  get: () => undefined,
-  getAll: () => ({}),
-});
+
 
 export const ControlContext = createContext<ControlContextType | undefined>(undefined); 
 
@@ -143,7 +132,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
 
     const [palette, setPalette] = useState<PaletteType>(DEFAULT_PALETTE);
  
-    const datasetRegistry = useContext(DatasetRegistryContext)
+    const datasetRegistry = useDatasetRegistry()
     useEffect(() => {
         return () => { // Page cleanup
             datasetRegistry.clear() 

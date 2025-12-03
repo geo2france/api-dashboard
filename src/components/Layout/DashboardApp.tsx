@@ -8,9 +8,10 @@ import { Content } from "antd/es/layout/layout";
 import { ErrorComponent } from "./Error";
 import { DasbhoardFooter } from "./Footer";
 import { createContext, useState } from "react";
-import { ControlContext, DatasetRegistryContext } from "../DashboardPage/Page";
+import { ControlContext } from "../DashboardPage/Page";
 import { HelmetProvider } from "react-helmet-async";
 import { useDatasetRegistry } from "../Dataset/hooks";
+import { DatasetRegistryContext } from "../Dataset/context";
 
 //import '../../index.css' //TODO a intégrer en jsx
 

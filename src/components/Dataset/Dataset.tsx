@@ -1,7 +1,7 @@
 import { useContext, useEffect, ReactNode, ReactElement } from "react"
 import { SimpleRecord, useApi } from "../.."
 import { CrudFilters,DataProvider } from "../../data_providers/types"
-import { ControlContext, DatasetRegistryContext } from "../DashboardPage/Page"
+import { ControlContext } from "../DashboardPage/Page"
 import { Producer, ProducerType } from "./Producer"
 import React from "react"
 import { Filter, Transform, useAllDatasets, useDatasets } from "../../dsl"
@@ -11,6 +11,7 @@ import { Join, joinTypeType } from "./Join"
 import { from } from "arquero"
 import { JoinOptions } from "arquero/dist/types/table/types"
 import hashCode from "../../utils/hash_data"
+import { DatasetRegistryContext } from "./context"
 
 
 interface IDatasetProps {

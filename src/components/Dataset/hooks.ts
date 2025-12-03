@@ -1,6 +1,6 @@
 import { useCallback, useContext, useState } from "react"
-import { DatasetRegistryContext } from "../DashboardPage/Page"
 import { dataset } from "./Dataset";
+import { DatasetRegistryContext } from "./context";
 
 // 🔹 Hook pour récupérer un dataset unique
 export const useDataset = (dataset_id? : string) => {
