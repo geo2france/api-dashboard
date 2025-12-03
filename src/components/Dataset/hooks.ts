@@ -1,28 +1,27 @@
 import { useContext } from "react"
-import { DatasetContext } from "../DashboardPage/Page"
+import { DatasetRegistryContext } from "../DashboardPage/Page"
 
-
+// 🔹 Hook pour récupérer un dataset unique
 export const useDataset = (dataset_id? : string) => {
-    const datasetContext = useContext(DatasetContext)
+    const datasetRegistry = useContext(DatasetRegistryContext)
     if (dataset_id) {
-        return datasetContext[dataset_id];
+        return datasetRegistry.get(dataset_id);
       }
-    
-    // Retourne le premier dataset si pas d'id
-    const firstKey = Object.keys(datasetContext)[0];
-    return firstKey ? datasetContext[firstKey] : undefined;
 }
 
+
+// 🔹 Hook pour récupérer tous les datasets sous forme de tableau
+export const useAllDatasets = () => {
+  const datasetRegistry = useContext(DatasetRegistryContext)
+  return  Object.values(datasetRegistry.getAll())
+}
+
+// 🔹 Hook pour filtrer plusieurs datasets par id
 export const useDatasets = (dataset_ids? : string[]) => {
-  const datasetContext = useContext(DatasetContext)
+  const datasets = useAllDatasets()
 
   return (
-    dataset_ids?.map( (dataset_id) =>  datasetContext[dataset_id] )
+    datasets.filter( d => dataset_ids?.includes(d.id))
   )
 
-}
-
-export const useAllDatasets = () => {
-  const datasetContext = useContext(DatasetContext)
-  return useDatasets(Object.keys(datasetContext))
 }

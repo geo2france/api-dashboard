@@ -130,12 +130,14 @@ export const DatasetContext = createContext<Record<string, dataset>>({}); //TODO
 interface DatasetRegistryContextValue {
   register: (dataset: dataset) => void;
   clear: ()=> void;
-  //get: (name: string) => Dataset | undefined;
+  get: (name: string) => dataset | undefined;
+  getAll: () => Record<string, dataset>;
 }
 export const DatasetRegistryContext = createContext<DatasetRegistryContextValue>({
   register: () => {},
   clear: () => {},
-  //get: () => undefined,
+  get: () => undefined,
+  getAll: () => ({}),
 });
 
 export const ControlContext = createContext<ControlContextType | undefined>(undefined); 
@@ -159,8 +161,8 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
  
     const datasetRegistry = useContext(DatasetRegistryContext)
     useEffect(() => {
-        return () => { 
-            datasetRegistry.clear() // cleanup dataset registry
+        return () => { // Page cleanup
+            datasetRegistry.clear() 
         }
     }, []);
 
