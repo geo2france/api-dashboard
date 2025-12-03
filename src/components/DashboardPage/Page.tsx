@@ -124,8 +124,6 @@ type ControlContextType = {
     pushValue: (control: { name: string; value: any }) => void;
 }
 
-export const DatasetContext = createContext<Record<string, dataset>>({}); //TODO a supprimer, utiliser le get du DatasetRegistryContext
-
 
 interface DatasetRegistryContextValue {
   register: (dataset: dataset) => void;

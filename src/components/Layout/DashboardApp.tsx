@@ -8,7 +8,7 @@ import { Content } from "antd/es/layout/layout";
 import { ErrorComponent } from "./Error";
 import { DasbhoardFooter } from "./Footer";
 import { createContext, useCallback, useState } from "react";
-import { ControlContext, dataset, DatasetContext, DatasetRegistryContext } from "../DashboardPage/Page";
+import { ControlContext, dataset, DatasetRegistryContext } from "../DashboardPage/Page";
 import { HelmetProvider } from "react-helmet-async";
 
 //import '../../index.css' //TODO a intégrer en jsx
@@ -124,7 +124,6 @@ const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, f
           <HelmetProvider>
           <AppContext.Provider value={ context_values }>
             <DatasetRegistryContext.Provider value={ {register: pushDataset, clear: clearDatasets, get:getDataset, getAll:getAllDataset} } >
-            <DatasetContext.Provider value={ datasets }>
             <ControlContext.Provider value={{ values:controls, pushValue:pushControl }}>
               <HashRouter>
                   <Routes>
@@ -147,7 +146,6 @@ const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, f
                   </Routes>
               </HashRouter>
             </ControlContext.Provider>
-            </DatasetContext.Provider>
             </DatasetRegistryContext.Provider>
           </AppContext.Provider>
           </HelmetProvider>
