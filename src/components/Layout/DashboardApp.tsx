@@ -7,9 +7,10 @@ import DashboardSider from "./Sider";
 import { Content } from "antd/es/layout/layout";
 import { ErrorComponent } from "./Error";
 import { DasbhoardFooter } from "./Footer";
-import { createContext, useCallback, useState } from "react";
-import { ControlContext, dataset, DatasetRegistryContext } from "../DashboardPage/Page";
+import { createContext, useState } from "react";
+import { ControlContext, DatasetRegistryContext } from "../DashboardPage/Page";
 import { HelmetProvider } from "react-helmet-async";
+import { useDatasetRegistry } from "../Dataset/hooks";
 
 //import '../../index.css' //TODO a intégrer en jsx
 
@@ -93,37 +94,13 @@ const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, f
         }));
     }
 
-    /* DATASET */
-    const [datasets, setdatasets] = useState<Record<string, dataset>>({});
-    const pushDataset = useCallback((d: dataset) => {
-      setdatasets(prev => {
-        const existing = prev[d.id];
-        if (existing && existing.dataHash === d.dataHash) { // Eviter les rerender si les données n'ont pas changé
-          return prev; 
-        }
-        return { ...prev, [d.id]: d };
-      });
-    }, []);
-
-    const clearDatasets = useCallback(() => {
-      setdatasets({});
-    }, []);
-
-    const getDataset = useCallback((dataset_id?: string) => {
-      if (!dataset_id) return undefined;       
-      return datasets[dataset_id] ?? undefined; 
-    }, [datasets]);
-
-    const getAllDataset =  useCallback(() => {
-      return datasets; 
-    }, [datasets]);
 
     return (
         <QueryClientProvider client={queryClient}>
           <ConfigProvider theme={theme || default_theme /* Merger plutôt ?*/}>
           <HelmetProvider>
           <AppContext.Provider value={ context_values }>
-            <DatasetRegistryContext.Provider value={ {register: pushDataset, clear: clearDatasets, get:getDataset, getAll:getAllDataset} } >
+            <DatasetRegistryContext.Provider value={ useDatasetRegistry() } >
             <ControlContext.Provider value={{ values:controls, pushValue:pushControl }}>
               <HashRouter>
                   <Routes>

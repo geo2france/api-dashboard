@@ -5,7 +5,7 @@ import React, { isValidElement, ReactElement, useState, createContext, useEffect
 import { Helmet } from "react-helmet-async";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
 import Control, { DSL_Control } from "../Control/Control";
-import { SimpleRecord } from "../../types";
+import { dataset } from "../Dataset/Dataset"
 import { Dataset, Debug, Provider } from "../../dsl";
 import { DEFAULT_PALETTE, Palette, PaletteContext, PaletteType } from "../Palette/Palette";
 import { Section, SectionProps } from "./Section";
@@ -104,20 +104,6 @@ const DashboardPage:React.FC<IDashboardPageProps> = ({children:children_input, c
 }
 
 export default DashboardPage;
-
-
-
-export type dataset = {
-    id: string;
-    resource: string;
-    data?: SimpleRecord[];
-    isFetching: boolean;
-    isError: boolean;
-    producers?:any[];
-    geojson?:any
-    dataHash?:number;
-}
-
 
 type ControlContextType = {
     values : Record<string, any>;

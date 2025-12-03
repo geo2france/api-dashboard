@@ -25,6 +25,16 @@ interface IDatasetProps {
     meta?:any
 }
 
+export type dataset = {
+    id: string;
+    resource: string;
+    data?: SimpleRecord[];
+    isFetching: boolean;
+    isError: boolean;
+    producers?:any[];
+    geojson?:any
+    dataHash?:number;
+}
  
 export const DSL_Dataset:React.FC<IDatasetProps> = ({
   children, 
