@@ -20,6 +20,7 @@ import { useBlockConfig } from "../components/DashboardPage/Block";
 import { Statistics, StatisticsCollection } from "../components/Charts/Statistics";
 import { MapLayer, Map } from "../components/Map/Map";
 import { Section } from "../components/DashboardPage/Section";
+import { LegendControl } from "../components/MapLegend/MapLegend";
 
 export {
     Dashboard,
@@ -52,6 +53,7 @@ export {
     PalettePreview,
     Debug,
     Map,
-    MapLayer
+    MapLayer,
+    LegendControl
 }
 
