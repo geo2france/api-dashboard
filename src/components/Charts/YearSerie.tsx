@@ -81,6 +81,7 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
            areaStyle : chart_type === 'area' ? {} : undefined,
            markLine: idx === 0 && yearMark ? {
             symbol: 'none',
+            silent: true,
             data: [
               { xAxis: String(yearMark) }  
             ]
