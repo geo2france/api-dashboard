@@ -17,6 +17,7 @@ interface IYearSerieProps {
     title?:string
     yearKey:string
     valueKey:string
+    secondaryValueKey?:string
     categoryKey?:string
     stack?: boolean
     yearMark?:number | string
@@ -24,12 +25,11 @@ interface IYearSerieProps {
     /* Options Echarts addtionnelles */
     options?:Partial<EChartsOption>
 }
-export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, categoryKey, valueKey, yearKey, yearMark, stack:stack_input, title, type:chart_type='bar', options:custom_options={}}) => {
+export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, categoryKey, valueKey, secondaryValueKey, yearKey, yearMark, stack:stack_input, title, type:chart_type='bar', options:custom_options={}}) => {
     const stack = stack_input || chart_type == 'line' ? false : true ; // Pas de stack par défaut pour le type line
     const dataset = useDataset(dataset_id)
     const data = dataset?.data
     
-
     let chart_data:SimpleRecord[] = []
     let distinct_cat:string[] = []
 
@@ -38,15 +38,23 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
       dataExport: data
     })
     
+    const rollupSpec: Record<string, any> = { //Construire le rollup pour 1 ou 2 valeurs
+        [valueKey]: op.sum(valueKey),
+    };
+    if (secondaryValueKey) {
+        rollupSpec[secondaryValueKey] = op.sum(secondaryValueKey);
+    }
+
     if (data && data.length > 0) {
         const grouped_data = categoryKey ? from(data).groupby(yearKey, categoryKey) //Somme par année et categorykey
-                                                .rollup({[valueKey]:op.sum(valueKey)})
+                                                .rollup(rollupSpec)
                                                 .groupby(yearKey).orderby(yearKey)
                                                 :
                                              from(data).groupby(yearKey) //Somme par année seulement
-                                            .rollup({[valueKey]:op.sum(valueKey)}).orderby(yearKey)
+                                            .rollup(rollupSpec)
+                                            .orderby(yearKey)
+
                                             
- 
         const all_years = from(data).groupby(yearKey).rollup({[yearKey]: op.any(yearKey)})
         const all_cats= categoryKey ? (from(data).groupby(categoryKey).rollup({[categoryKey]: op.any(categoryKey)})) : from([{'cat':valueKey}])
         const full = all_years.cross(all_cats) // Contient chaque annee x catégorie (pour éviter les trous)
@@ -64,8 +72,8 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
         {
             name:cat,
             type:chart_type === 'area' ? 'line' : chart_type,
-            data :categoryKey ? chart_data?.filter((row:SimpleRecord) => row[categoryKey] === cat).map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey] || 0 ]))
-                              : chart_data?.map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey] || 0 ])),
+            data :categoryKey ? chart_data?.filter((row:SimpleRecord) => row[categoryKey] === cat).map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey] || 0, secondaryValueKey ? row[secondaryValueKey] : undefined ]))
+                              : chart_data?.map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey] || 0, secondaryValueKey ? row[secondaryValueKey] : undefined ])),
             itemStyle:{
                 color:colors_labels.find( i => i.label.toLowerCase() === cat.toLowerCase())?.color ?? (COLORS && COLORS[idx % COLORS.length]),
            },
@@ -110,7 +118,7 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
     }
      
     return (
-        <ChartEcharts option={deepMerge({}, option, custom_options)}/>
+        <ChartEcharts notMerge option={deepMerge({}, option, custom_options)}/>
     )
 
 
