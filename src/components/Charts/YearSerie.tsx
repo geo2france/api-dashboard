@@ -10,6 +10,7 @@ import { EChartsOption, SeriesOption } from "echarts"
 import { usePalette, usePaletteLabels } from "../Palette/Palette"
 import { ChartEcharts } from "./ChartEcharts"
 import { useBlockConfig } from "../DashboardPage/Block"
+import deepMerge from "../../utils/deepmerge"
 
 interface IYearSerieProps {
     dataset:string
@@ -20,8 +21,10 @@ interface IYearSerieProps {
     stack?: boolean
     yearMark?:number | string
     type?: 'bar' | 'line' | 'area'
+    /* Options Echarts addtionnelles */
+    options?:Partial<EChartsOption>
 }
-export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, categoryKey, valueKey, yearKey, yearMark, stack:stack_input, title, type:chart_type='bar'}) => {
+export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, categoryKey, valueKey, yearKey, yearMark, stack:stack_input, title, type:chart_type='bar', options:custom_options={}}) => {
     const stack = stack_input || chart_type == 'line' ? false : true ; // Pas de stack par défaut pour le type line
     const dataset = useDataset(dataset_id)
     const data = dataset?.data
@@ -107,8 +110,7 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
     }
      
     return (
-        <ChartEcharts option={option}/>
-
+        <ChartEcharts option={deepMerge({}, option, custom_options)}/>
     )
 
 
