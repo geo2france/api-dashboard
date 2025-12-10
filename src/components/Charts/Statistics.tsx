@@ -205,7 +205,7 @@ export const StatisticsCollection:React.FC<StatisticsCollectionProps> = ( {child
   const arrayChildren = Children.toArray(children);
   useBlockConfig({title:title})
   return (
-      <Row gutter={[8,8]}>
+      <Row gutter={[8,8]} style={{margin:8}}>
       { arrayChildren.map( (c, index) => (
         <Col  xl={24/columns} xs={24} key={index}>{c}</Col>
       ))}
