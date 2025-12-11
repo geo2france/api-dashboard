@@ -35,7 +35,7 @@ export const useDatasetRegistry = () => {
     const pushDataset = useCallback((d: dataset) => {
       setdatasets(prev => {
         const existing = prev[d.id];
-        if (existing && existing.dataHash === d.dataHash) { // Eviter les rerender si les données n'ont pas changé
+        if (existing && existing.dataHash === d.dataHash && existing.isFetching === d.isFetching) { // Eviter les rerender si les données n'ont pas changé
           return prev; 
         }
         return { ...prev, [d.id]: d };
