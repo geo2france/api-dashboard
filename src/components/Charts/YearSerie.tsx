@@ -67,9 +67,8 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
             .derive({part : d => 100*d.value / op.sum(d.value)}) // Data for normalized view
             .rename({ value: valueKey, part: `${valueKey}_pct`, secondaryValue:secondaryValueKey || ''  }) // Rename to original var name
         ).objects()
-        console.log('chart_data', chart_data)
     }
-    {/* devnote : ajouter ici une colonne contenant la part du total (pour normalize) */}
+    
     const COLORS = usePalette({nColors:distinct_cat?.length}) || []
     const colors_labels = usePaletteLabels() 
 
