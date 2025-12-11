@@ -1,7 +1,7 @@
 import { useContext, useEffect, ReactNode, ReactElement } from "react"
 import { SimpleRecord, useApi } from "../.."
 import { CrudFilters,DataProvider } from "../../data_providers/types"
-import { ControlContext, DatasetRegistryContext } from "../DashboardPage/Page"
+import { ControlContext } from "../DashboardPage/Page"
 import { Producer, ProducerType } from "./Producer"
 import React from "react"
 import { Filter, Transform, useAllDatasets, useDatasets } from "../../dsl"
@@ -11,6 +11,7 @@ import { Join, joinTypeType } from "./Join"
 import { from } from "arquero"
 import { JoinOptions } from "arquero/dist/types/table/types"
 import hashCode from "../../utils/hash_data"
+import { DatasetRegistryContext } from "./context"
 
 
 interface IDatasetProps {
@@ -25,6 +26,16 @@ interface IDatasetProps {
     meta?:any
 }
 
+export type dataset = {
+    id: string;
+    resource: string;
+    data?: SimpleRecord[];
+    isFetching: boolean;
+    isError: boolean;
+    producers?:any[];
+    geojson?:any
+    dataHash?:number;
+}
  
 export const DSL_Dataset:React.FC<IDatasetProps> = ({
   children, 
@@ -149,7 +160,7 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
             data.data
           );
         if (datasetRegistryContext) {
-           datasetRegistryContext({
+           datasetRegistryContext.register({
              id: id,
              resource: resource,
              data: finalData,

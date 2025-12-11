@@ -10,6 +10,8 @@ import { DasbhoardFooter } from "./Footer";
 import { createContext, useState } from "react";
 import { ControlContext } from "../DashboardPage/Page";
 import { HelmetProvider } from "react-helmet-async";
+import { useDatasetRegistry } from "../Dataset/hooks";
+import { DatasetRegistryContext } from "../Dataset/context";
 
 //import '../../index.css' //TODO a intégrer en jsx
 
@@ -84,7 +86,6 @@ export interface DashboardConfig {
 const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, footerSlider, title, subtitle}) => {
 
     const context_values = { title, subtitle, logo };
-    
     /* CONTROLS */
     const [controls, setControles] = useState<Record<string, any>>({});
     const pushControl = (c: Record<string, any>) => {
@@ -94,12 +95,14 @@ const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, f
         }));
     }
 
+
     return (
         <QueryClientProvider client={queryClient}>
           <ConfigProvider theme={theme || default_theme /* Merger plutôt ?*/}>
           <HelmetProvider>
           <AppContext.Provider value={ context_values }>
-            <ControlContext.Provider value={{ values:controls, pushValue:pushControl  }}>
+            <DatasetRegistryContext.Provider value={ useDatasetRegistry() } >
+            <ControlContext.Provider value={{ values:controls, pushValue:pushControl }}>
               <HashRouter>
                   <Routes>
                     <Route
@@ -121,6 +124,7 @@ const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, f
                   </Routes>
               </HashRouter>
             </ControlContext.Provider>
+            </DatasetRegistryContext.Provider>
           </AppContext.Provider>
           </HelmetProvider>
           </ConfigProvider>
