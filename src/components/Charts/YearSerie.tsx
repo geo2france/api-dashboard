@@ -21,11 +21,12 @@ interface IYearSerieProps {
     categoryKey?:string
     stack?: boolean
     yearMark?:number | string
+    normalize?:boolean
     type?: 'bar' | 'line' | 'area'
     /* Options Echarts addtionnelles */
     options?:Partial<EChartsOption>
 }
-export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, categoryKey, valueKey, secondaryValueKey, yearKey, yearMark, stack:stack_input, title, type:chart_type='bar', options:custom_options={}}) => {
+export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, categoryKey, valueKey, secondaryValueKey, yearKey, yearMark, stack:stack_input, title, type:chart_type='bar', normalize=false, options:custom_options={}}) => {
     const stack = stack_input || chart_type == 'line' ? false : true ; // Pas de stack par défaut pour le type line
     const dataset = useDataset(dataset_id)
     const data = dataset?.data
@@ -39,10 +40,10 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
     })
     
     const rollupSpec: Record<string, any> = { //Construire le rollup pour 1 ou 2 valeurs
-        [valueKey]: op.sum(valueKey),
+        'value': op.sum(valueKey),
     };
     if (secondaryValueKey) {
-        rollupSpec[secondaryValueKey] = op.sum(secondaryValueKey);
+        rollupSpec['secondaryValue'] = op.sum(secondaryValueKey);
     }
 
     if (data && data.length > 0) {
@@ -61,10 +62,14 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
 
         distinct_cat = all_cats.array(categoryKey || 'cat') as string[] // Pour générer chaque serie
 
-        chart_data = full.join_left(grouped_data).objects()
-
+        chart_data = full.join_left(
+            grouped_data
+            .derive({part : d => 100*d.value / op.sum(d.value)}) // Data for normalized view
+            .rename({ value: valueKey, part: `${valueKey}_pct`, secondaryValue:secondaryValueKey || ''  }) // Rename to original var name
+        ).objects()
+        console.log('chart_data', chart_data)
     }
-
+    {/* devnote : ajouter ici une colonne contenant la part du total (pour normalize) */}
     const COLORS = usePalette({nColors:distinct_cat?.length}) || []
     const colors_labels = usePaletteLabels() 
 
@@ -72,8 +77,20 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
         {
             name:cat,
             type:chart_type === 'area' ? 'line' : chart_type,
-            data :categoryKey ? chart_data?.filter((row:SimpleRecord) => row[categoryKey] === cat).map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey] || 0, secondaryValueKey ? row[secondaryValueKey] : undefined ]))
-                              : chart_data?.map((row:SimpleRecord) => ([String(row[yearKey]), row[valueKey] || 0, secondaryValueKey ? row[secondaryValueKey] : undefined ])),
+            data :categoryKey ? chart_data?.filter((row:SimpleRecord) => row[categoryKey] === cat)
+                                            .map((row:SimpleRecord) => ([String(row[yearKey]), 
+                                                                row[valueKey] || 0, 
+                                                                secondaryValueKey ? row[secondaryValueKey] : undefined ,
+                                                                row[`${valueKey}_pct`] 
+                                                            ]))
+                              : chart_data?.map((row:SimpleRecord) => ([String(row[yearKey]), 
+                                                                        row[valueKey] || 0, 
+                                                                        secondaryValueKey ? row[secondaryValueKey] : undefined ,
+                                                                        row[`${valueKey}_pct`] ])),
+            encode: {
+                x: 0,   // annee
+                y: normalize ? 3 : 1    // valueKey ou `${ValueKey}_pct`
+            },
             itemStyle:{
                 color:colors_labels.find( i => i.label.toLowerCase() === cat.toLowerCase())?.color ?? (COLORS && COLORS[idx % COLORS.length]),
            },
@@ -81,11 +98,12 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
            areaStyle : chart_type === 'area' ? {} : undefined,
            markLine: idx === 0 && yearMark ? {
             symbol: 'none',
+            animation: false,
             silent: true,
             data: [
               { xAxis: String(yearMark) }  
             ]
-          } : undefined
+          } : undefined,
         }
     )) as SeriesOption[];
 
@@ -115,6 +133,8 @@ export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, ca
         },
         yAxis:  {
             type: 'value',
+            max : normalize ? 100 : undefined,
+            min : normalize ? 0 : undefined,
         },
     }
      
