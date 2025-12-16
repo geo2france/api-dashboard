@@ -13,7 +13,7 @@ L'url du provider et le nom de la ressource sont concatenÃ©s pour former l'url Ã
 Interroger un fichier statique :
 
 ```tsx
-onst myStaticFileProvider = FileProvider('https://raw.githubusercontent.com/LearnWebCode/json-example/refs/heads/master/', { processData : (e) => e.pets })
+const myStaticFileProvider = FileProvider('https://raw.githubusercontent.com/LearnWebCode/json-example/refs/heads/master/', { processData : (e) => e.pets })
 const pets = useApi({
     dataProvider:myStaticFileProvider,
     resource:'pets-data.json'

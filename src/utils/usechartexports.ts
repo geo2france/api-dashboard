@@ -40,7 +40,7 @@ export const useChartExport = ( {chartRef}:useChartExportProps) => {
     )
 
     const exportImage = () => {
-        console.log('called')
+        //console.log('called')
         setExportRequested(true);
     };
     return { img64, exportImage}

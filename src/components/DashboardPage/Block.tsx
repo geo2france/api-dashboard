@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react";
 import { ProducersFooter } from "../Dataset/Producer";
 import { MoreOutlined } from '@ant-design/icons';
 import { ErrorBoundary } from "../Layout/Error";
+import { cardStyles } from "../../utils/cardStyles";
 
 
 const { useToken } = theme;
@@ -68,7 +69,9 @@ export const DSL_ChartBlock:React.FC<IChartBlockProps> = ({children}) => {
     return (
         <ChartBlockContext.Provider value={{config:config, setConfig:(e) => setConfig(e)}}>
             <Card 
+            className="dashboard-element"
             style={{height:'100%' }} 
+            styles={cardStyles}
             extra={has_action && dropdown_toolbox}
             title={config.title}>
                 <ErrorBoundary>

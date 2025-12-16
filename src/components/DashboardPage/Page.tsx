@@ -1,15 +1,15 @@
 import { Button, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps, Tabs, theme } from "antd";
 import type { TabsProps } from 'antd';
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
-import React, { isValidElement, ReactElement, useState, createContext, } from "react";
+import React, { isValidElement, ReactElement, useState, createContext, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
 import Control, { DSL_Control } from "../Control/Control";
-import { SimpleRecord } from "../../types";
 import { Dataset, Debug, Provider } from "../../dsl";
 import { DEFAULT_PALETTE, Palette, PaletteContext, PaletteType } from "../Palette/Palette";
 import { Section, SectionProps } from "./Section";
 import { Icon } from "@iconify/react";
+import { useDatasetRegistry } from "../Dataset/hooks";
 
 const { Header } = Layout;
 
@@ -105,28 +105,15 @@ const DashboardPage:React.FC<IDashboardPageProps> = ({children:children_input, c
 
 export default DashboardPage;
 
-
-
-type dataset = {
-    id: string;
-    resource: string;
-    data?: SimpleRecord[];
-    isFetching: boolean;
-    isError: boolean;
-    producers?:any[];
-    geojson?:any
-    dataHash?:number;
-}
-
-
 type ControlContextType = {
     values : Record<string, any>;
     pushValue: (control: { name: string; value: any }) => void;
 }
 
-export const DatasetContext = createContext<Record<string, dataset>>({});
-export const DatasetRegistryContext = createContext<(dataset: dataset) => void>(()=>{}); // A modifier, utiliser un seul context
-export const ControlContext = createContext<ControlContextType | undefined>(undefined);
+
+
+
+export const ControlContext = createContext<ControlContextType | undefined>(undefined); 
 
 interface IDSLDashboardPageProps {
     children : React.ReactNode // TODO, lister les type possible ?React.ReactElement<typeof DashboardElement>[];
@@ -134,24 +121,28 @@ interface IDSLDashboardPageProps {
     columns?: number
     debug?: boolean
 }
+
+      
+
+
+
 export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tableau de bord', columns=2, children, debug=false}) => {
 
     const { token } = useToken();
 
-    const [datasets, setdatasets] = useState<Record<string, dataset>>({});
     const [palette, setPalette] = useState<PaletteType>(DEFAULT_PALETTE);
  
+    const datasetRegistry = useDatasetRegistry()
+    useEffect(() => {
+        return () => { // Page cleanup
+            datasetRegistry.clear() 
+        }
+    }, []);
+
     //const allDatasetLoaded = Object.values(datasets).every(d => !d.isFetching);
     //const isDatasetError = Object.values(datasets).some(d => d.isError);
 
 
-    // Ajouter ou mettre à jour un dataset
-    const pushDataset = (d: dataset) => {
-        setdatasets(prev => ({
-          ...prev, 
-          [d.id]: d
-        }));
-    };
 
     
 
@@ -204,8 +195,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
         <Helmet>
             <title>{name}</title>
         </Helmet>
-        <DatasetRegistryContext.Provider value={ pushDataset }>
-            <DatasetContext.Provider value={ datasets }>
+
                 <PaletteContext.Provider value={{ palette, setPalette }}>
                     { control_components.length > 0 && <Header
                     style={{
@@ -231,7 +221,6 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
                     }
                 {logic_components}
                 </PaletteContext.Provider>
-            </ DatasetContext.Provider>
-        </DatasetRegistryContext.Provider>
     </>
 )}
+

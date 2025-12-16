@@ -50,7 +50,6 @@ const build_geojson = (params: {
     }else{
         features_collection = undefined
     }
-    console.log(geomKey, features_collection )
     return features_collection
 }
 
@@ -169,7 +168,6 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 
 
     const geomKey = [geomKey_input,"geom","geometry"].find(c => c && keys?.includes(c))
 
-    console.log(data?.id, data?.data, geomKey)
     // Si x et y sont definie, on construit le geojson
     const geojson = xKey && yKey && data?.data ? 
         build_geojson({data:data.data, xKey:xKey, yKey:yKey})
