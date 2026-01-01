@@ -1,13 +1,21 @@
 import { SimpleRecord } from "../..";
 
 
-interface ITransformProps<T = SimpleRecord[]> {
-    children:string | ((data: T) => T)
+interface ITransformProps {
+    /**
+   * Contenu du Transform :
+   * - **string** : SQL (interprété par Alasql)
+   * - **fonction** `(data: any) => SimpleRecord[]` : transforme les données brutes ou déjà transformées
+   *   en un tableau de `SimpleRecord`.
+   */
+    children:string | ((data: any ) => SimpleRecord[])
 }
-/*
-* Les props sont utilisées dans le Dataset parent pour appliquer une (ou plusieurs fonction de transformation)
-*/
-export const DSL_Transform:React.FC<ITransformProps> = () => {
+
+/**
+ * Composant permettant d'appliquer une transformation à un jeu de données.
+ * La transformation est appliquée via une fonction ou une chaîne SQL. 
+ */
+export const Transform:React.FC<ITransformProps> = () => {
     return <></>
 
 }
