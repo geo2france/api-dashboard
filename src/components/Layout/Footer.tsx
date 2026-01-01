@@ -1,5 +1,5 @@
 import { Button, Layout, Typography } from "antd";
-import { CSSProperties, useContext, useState } from "react";
+import { CSSProperties, useContext, useEffect, useState } from "react";
 import Slider from "@ant-design/react-slick";
 
 import { UpOutlined, DownOutlined } from "@ant-design/icons";
@@ -20,6 +20,33 @@ interface DbFooterProps {
 
 export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands, slider=true}) => {
   const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 768 ? true : false);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+
+/* 🤖 IA Generated effect
+* Permet d'afficher ou non le scrollIndicator
+*/
+  useEffect(() => {
+    const checkShadow = () => {
+      const scrollTop = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
+      setShowScrollIndicator(scrollTop + windowHeight < docHeight - 1);
+    };
+
+    // scroll listener
+    window.addEventListener("scroll", checkShadow);
+    // observer pour changements dynamiques du contenu
+    const observer = new ResizeObserver(checkShadow);
+    observer.observe(document.body);
+
+    checkShadow(); // initial
+
+    return () => {
+      window.removeEventListener("scroll", checkShadow);
+      observer.disconnect();
+    };
+  }, []);
+
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
@@ -63,11 +90,25 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands, slider=true}) 
         height: "auto",
         minHeight: "40px",
         transition: "height 0.5s ease-in-out",
-        overflow: "hidden",
+        overflow: "visible",
         borderTop: "1px solid #ccc", 
         zIndex: 600, // maplibre top zIndex if 500
       }}
     >
+     {showScrollIndicator &&   <div
+      style={{
+        position: "absolute", // relatif au footer
+        top: -40, 
+        left: 0,
+        right: 0,
+        height: 40,
+        pointerEvents: "none",
+        background:
+          "linear-gradient(to bottom, rgba(255,255,255,0), rgba(0,0,0,0.1))",
+      }}
+    /> 
+}
+
       {/* Texte affiché uniquement lorsque le footer est rétracté */}
       {isCollapsed && (
             <Text type="secondary">{app_context?.title} - {app_context?.subtitle}</Text>
