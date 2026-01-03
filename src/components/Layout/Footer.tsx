@@ -99,6 +99,7 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands, slider=true}) 
       }}
     >
      {showScrollIndicator &&   <div
+     className="scroll-indicator"
       style={{
         position: "absolute",
         top: -40, 

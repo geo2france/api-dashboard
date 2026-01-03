@@ -192,7 +192,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
 
 
     return (
-    <div>
+    <>
         <Helmet>
             <title>{name}</title>
         </Helmet>
@@ -222,6 +222,6 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
                     }
                 {logic_components}
                 </PaletteContext.Provider>
-    </div>
+    </>
 )}
 
