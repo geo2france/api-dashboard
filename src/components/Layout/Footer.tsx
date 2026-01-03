@@ -98,24 +98,26 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands, slider=true}) 
         zIndex: 600, // maplibre top zIndex if 500
       }}
     >
-     {showScrollIndicator &&   <div
-     className="scroll-indicator"
-      style={{
-        position: "absolute",
-        top: -40, 
-        left: 0,
-        right: 0,
-        height: 40,
-        pointerEvents: "none",
-        display: "flex", 
-        justifyContent:"center",
-        alignContent:"flex-end",
-        background:
-          "linear-gradient(to bottom, rgba(255,255,255,0), rgba(0,0,0,0.1))",
-      }}
-    >
-      <Icon icon="fa6-solid:chevron-down" fontSize={ 35 } color={ token.colorPrimary } />
-    </div> 
+     {showScrollIndicator &&   
+      /* Shaddow + chevron : show the user that remaing content is avaible downside */
+      <div
+      className="scroll-indicator"
+        style={{
+          position: "absolute",
+          top: -40, 
+          left: 0,
+          right: 0,
+          height: 40,
+          pointerEvents: "none",
+          display: "flex", 
+          justifyContent:"center",
+          alignContent:"flex-end",
+          background:
+            "linear-gradient(to bottom, rgba(255,255,255,0), rgba(0,0,0,0.1))",
+        }}
+      >
+        <Icon icon="fa6-solid:chevron-down" fontSize={ 35 } color={ token.colorPrimary } />
+      </div> 
 }
 
       {/* Texte affiché uniquement lorsque le footer est rétracté */}
