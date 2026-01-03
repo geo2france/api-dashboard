@@ -1,4 +1,4 @@
-import { Button, Layout, Typography } from "antd";
+import { Button, Layout, theme, Typography } from "antd";
 import { CSSProperties, useContext, useEffect, useState } from "react";
 import Slider from "@ant-design/react-slick";
 
@@ -8,8 +8,10 @@ import { AppContext } from "./DashboardApp";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { Icon } from "@iconify/react";
 
 const { Text } = Typography;
+const { useToken } = theme;
 
 
 
@@ -22,6 +24,7 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands, slider=true}) 
   const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 768 ? true : false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
 
+  const { token } = useToken()
 /* 🤖 IA Generated effect
 * Permet d'afficher ou non le scrollIndicator
 */
@@ -97,16 +100,21 @@ export const DasbhoardFooter: React.FC<DbFooterProps> = ({brands, slider=true}) 
     >
      {showScrollIndicator &&   <div
       style={{
-        position: "absolute", // relatif au footer
+        position: "absolute",
         top: -40, 
         left: 0,
         right: 0,
         height: 40,
         pointerEvents: "none",
+        display: "flex", 
+        justifyContent:"center",
+        alignContent:"flex-end",
         background:
           "linear-gradient(to bottom, rgba(255,255,255,0), rgba(0,0,0,0.1))",
       }}
-    /> 
+    >
+      <Icon icon="fa6-solid:chevron-down" fontSize={ 35 } color={ token.colorPrimary } />
+    </div> 
 }
 
       {/* Texte affiché uniquement lorsque le footer est rétracté */}

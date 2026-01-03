@@ -1,7 +1,7 @@
 import { Button, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps, Tabs, theme } from "antd";
 import type { TabsProps } from 'antd';
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
-import React, { isValidElement, ReactElement, useState, createContext, useEffect, CSSProperties } from "react";
+import React, { isValidElement, ReactElement, useState, createContext, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
 import Control, { DSL_Control } from "../Control/Control";
@@ -191,22 +191,6 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
     })}
 
 
-const overflowStyle: React.CSSProperties = {
-  overflowY: "auto",
-  maxHeight: 400,
-  position: "relative", // nécessaire pour que l'ombre soit positionnée par rapport au container
-  border: "1px solid #ccc",
-};
-
-const shadowStyle: React.CSSProperties = {
-  position: "absolute", // collé en bas du container
-  bottom: 0,
-  left: 0,
-  right: 0,
-  height: 40, // hauteur de l'ombre
-  pointerEvents: "none",
-  background: "linear-gradient(to bottom, rgba(255,255,255,0), rgba(0,0,0,0.1))",
-};
     return (
     <div>
         <Helmet>
