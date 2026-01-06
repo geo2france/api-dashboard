@@ -102,7 +102,7 @@ export const Statistics: React.FC<StatisticsProps> = ({
 
     const row = dataset?.data?.slice(-1)[0]
     const value = row?.[dataKey] ; // Dernière valeur du dataset. Caster en Number ?
-    const compare_value = compareWith === 'previous' ? dataset?.data?.slice(-2)[0][dataKey] : dataset?.data?.slice(0,1)[0][dataKey] ; //Première ou avant dernière
+    const compare_value = compareWith === 'previous' ? dataset?.data?.slice(-2)?.[0]?.[dataKey] : dataset?.data?.slice(0,1)?.[0]?.[dataKey] ; //Première ou avant dernière
 
     const evolution = relativeEvolution ? 100*((value - compare_value) / compare_value) : value - compare_value ;
     const evolution_unit = relativeEvolution ? '%' : unit ;
