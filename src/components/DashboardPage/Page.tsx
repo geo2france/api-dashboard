@@ -190,6 +190,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
         children:<Section title='Autres'>{visible_components}</Section>
     })}
 
+
     return (
     <>
         <Helmet>
