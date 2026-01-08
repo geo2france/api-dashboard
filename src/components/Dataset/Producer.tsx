@@ -44,7 +44,7 @@ export const ProducersFooter:React.FC<IProducersFooterProps> = ({component}) => 
                 );
                 uniqueProducers.sort((a, b) => a.nom.localeCompare(b.nom));
 
-                return datasets ? (
+                return ( producers?.length > 0 ) ? (
                   <>
                     Source des données :{" "}
                       {uniqueProducers?.map((p, idx, arr) => (
