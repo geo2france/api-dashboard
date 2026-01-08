@@ -1,7 +1,7 @@
 import { Button, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps, Tabs, theme } from "antd";
 import type { TabsProps } from 'antd';
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
-import React, { isValidElement, ReactElement, useState, createContext, useEffect } from "react";
+import React, { isValidElement, ReactElement, useState, createContext, useEffect, useContext } from "react";
 import { Helmet } from "react-helmet-async";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
 import Control, { DSL_Control } from "../Control/Control";
@@ -9,7 +9,7 @@ import { Dataset, Debug, Provider } from "../../dsl";
 import { DEFAULT_PALETTE, Palette, PaletteContext, PaletteType } from "../Palette/Palette";
 import { Section, SectionProps } from "./Section";
 import { Icon } from "@iconify/react";
-import { useDatasetRegistry } from "../Dataset/hooks";
+import { DatasetRegistryContext } from "../Dataset/context";
 
 const { Header } = Layout;
 
@@ -131,8 +131,8 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
     const { token } = useToken();
 
     const [palette, setPalette] = useState<PaletteType>(DEFAULT_PALETTE);
- 
-    const datasetRegistry = useDatasetRegistry()
+
+    const datasetRegistry = useContext(DatasetRegistryContext);
     useEffect(() => {
         return () => { // Page cleanup
             datasetRegistry.clear() 

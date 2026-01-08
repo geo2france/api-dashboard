@@ -10,7 +10,7 @@ import { DasbhoardFooter } from "./Footer";
 import { createContext, useState } from "react";
 import { ControlContext } from "../DashboardPage/Page";
 import { HelmetProvider } from "react-helmet-async";
-import { useDatasetRegistry } from "../Dataset/hooks";
+import { createDatasetRegistry } from "../Dataset/hooks";
 import { DatasetRegistryContext } from "../Dataset/context";
 
 //import '../../index.css' //TODO a intégrer en jsx
@@ -101,7 +101,7 @@ const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, f
           <ConfigProvider theme={theme || default_theme /* Merger plutôt ?*/}>
           <HelmetProvider>
           <AppContext.Provider value={ context_values }>
-            <DatasetRegistryContext.Provider value={ useDatasetRegistry() } >
+            <DatasetRegistryContext.Provider value={ createDatasetRegistry() } >
             <ControlContext.Provider value={{ values:controls, pushValue:pushControl }}>
               <HashRouter>
                   <Routes>

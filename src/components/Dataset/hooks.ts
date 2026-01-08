@@ -28,8 +28,11 @@ export const useDatasets = (dataset_ids? : string[]) => {
 }
 
 
-
-export const useDatasetRegistry = () => {
+/**
+ * Fonction permettant de créer le registre de dataset
+ * avec les méthodes nécessaires.
+ */
+export const createDatasetRegistry = () => {
     /* DATASET */
     const [datasets, setdatasets] = useState<Record<string, dataset>>({});
     const pushDataset = useCallback((d: dataset) => {
