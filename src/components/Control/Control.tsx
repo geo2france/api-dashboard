@@ -63,11 +63,11 @@ export const useAllControls = (): Record<string, any> => {
 };
 
 /* Convenient function to return Options from list or Options */
-export const list_to_options = (input : string[] | number[] | { label: string | number; value: string | number }[] = []):{ label: string | number ; value: string | number }[] => {
+export const list_to_options = (input : string[] | { label: string; value: string }[] = [])=> {
   if (input === undefined) { return []}
   return input.map((o) => {
-    if (typeof o == "string" || typeof o == "number"){
-      return {label:String(o), value:o}
+    if (typeof o == "string"){
+      return {label:String(o), value:String(o)}
     }
     return o
   })
