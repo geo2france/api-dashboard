@@ -1,6 +1,5 @@
 import { Descriptions, DescriptionsProps, Form, Layout } from "antd";
-import React, { CSSProperties, ReactElement, useContext, useEffect } from "react";
-import { ControlContext } from "../DashboardPage/Page";
+import React, { createContext, CSSProperties, ReactElement, useCallback, useContext, useEffect, useState } from "react";
 
 const { Header } = Layout;
 
@@ -43,8 +42,7 @@ export const useControl = (name: string): string | undefined => {
     throw new Error("useControl must be used within a ControlProvider");
   }
 
-  const { values } = context_controls;
-
+  const values  = context_controls.getAll();
   const value = values[name];
 
   return value;
@@ -92,7 +90,7 @@ export const DSL_Control: React.FC<IControlProps> = ({ children }) => {
   if (!context_controls) { //Le contexte peut être nul ?
     throw new Error("useControl must be used within a ControlProvider");
   }
-  const { values:_control, pushValue:pushControl } = context_controls;
+  const { values:_control, register:pushControl } = context_controls;
 
 
   const childrenArray = React.Children.toArray(children).filter((child) =>
@@ -133,4 +131,47 @@ export const ControlPreview:React.FC = ({}) => {
     <Descriptions items={items} />
   )
 
+}
+
+
+type ControlContextType = {
+    values : Record<string, any>;
+    register: (control: { name: string; value: any }) => void;
+    clear: () => void,
+    getAll : () =>  Record<string, any>
+}
+
+export const ControlContext = createContext<ControlContextType | undefined>(undefined); 
+
+
+      
+
+
+export const CreateControlesRegistry = () => {
+
+      /* CONTROLS */
+      const [controls, setControles] = useState<Record<string, any>>({});
+      
+      const pushControl = useCallback( (c: Record<string, any>) => { 
+        setControles(prev => ({
+            ...prev, 
+            ...c
+          }));
+      }, []);
+
+      const clear = useCallback(() => {
+        setControles({});
+      }, []);
+
+      const getAll = useCallback(()=> {
+        return controls
+      }, [controls]);
+
+      return ({
+        register: pushControl,
+        clear,
+        getAll,
+        values:controls
+      })
+  
 }

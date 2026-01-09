@@ -1,10 +1,9 @@
 import { useContext, useEffect, ReactNode, ReactElement } from "react"
 import { SimpleRecord, useApi } from "../.."
 import { CrudFilters,DataProvider } from "../../data_providers/types"
-import { ControlContext } from "../DashboardPage/Page"
 import { Producer, ProducerType } from "./Producer"
 import React from "react"
-import { Filter, Transform, useAllDatasets, useDatasets } from "../../dsl"
+import { Filter, Transform, useAllControls, useAllDatasets, useDatasets } from "../../dsl"
 import alasql from "alasql"
 import { DataProviderContext, getProviderFromType, ProviderType } from "./Provider"
 import { Join, joinTypeType } from "./Join"
@@ -100,9 +99,7 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
 
     const allDatasets = useAllDatasets()
 
-    const controlContext = useContext(ControlContext)
-    const controls = controlContext?.values ;
-
+    const controls = useAllControls() ;
     const providerContext = useContext(DataProviderContext)
 
     const provider = (providerUrl && getProviderFromType(providerType)(providerUrl)) || providerContext || provider_input;

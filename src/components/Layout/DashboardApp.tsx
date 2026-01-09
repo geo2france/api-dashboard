@@ -7,11 +7,11 @@ import DashboardSider from "./Sider";
 import { Content } from "antd/es/layout/layout";
 import { ErrorComponent } from "./Error";
 import { DasbhoardFooter } from "./Footer";
-import { createContext, useState } from "react";
-import { ControlContext } from "../DashboardPage/Page";
+import { createContext } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import { createDatasetRegistry } from "../Dataset/hooks";
 import { DatasetRegistryContext } from "../Dataset/context";
+import { ControlContext, CreateControlesRegistry } from "../Control/Control";
 
 //import '../../index.css' //TODO a intégrer en jsx
 
@@ -86,15 +86,6 @@ export interface DashboardConfig {
 const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, footerSlider, title, subtitle}) => {
 
     const context_values = { title, subtitle, logo };
-    /* CONTROLS */
-    const [controls, setControles] = useState<Record<string, any>>({});
-    const pushControl = (c: Record<string, any>) => {
-      setControles(prev => ({
-          ...prev, 
-          ...c
-        }));
-    }
-
 
     return (
         <QueryClientProvider client={queryClient}>
@@ -102,7 +93,8 @@ const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, f
           <HelmetProvider>
           <AppContext.Provider value={ context_values }>
             <DatasetRegistryContext.Provider value={ createDatasetRegistry() } >
-            <ControlContext.Provider value={{ values:controls, pushValue:pushControl }}>
+            <ControlContext.Provider value={CreateControlesRegistry()}>
+
               <HashRouter>
                   <Routes>
                     <Route
