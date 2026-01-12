@@ -9,8 +9,8 @@ import { list_to_options } from './Control';
 
 type ExtendedSelectProps = Omit<SelectProps<any>, 'options'> & {
     dataset?: string;
-    options?: { label: string ; value: string | number }[] | string[] | number[];
-    initial_value? : string | number,
+    options?: { label: string ; value: string }[] | string[];
+    initial_value? : string,
     labelField?:string,
     valueField?:string,
     name?:string,
@@ -36,9 +36,9 @@ export const Select: React.FC<ExtendedSelectProps> = ({
     const data = useDataset(datasetSource)?.data
     const data_options = datasetSource ? (data && buildOptionsFromData(data,labelField, valueField )) : options
 
-    const myOptions:SelectProps['options'] = data_options && data_options.map((o) => {
-      if (typeof o == "string" || typeof o == "number"){
-        return {label:o, value:o}
+    const myOptions = data_options && data_options.map((o) => {
+      if (typeof o == "string"){
+        return {label:o, value:String(o)}
       }
       return o
     })

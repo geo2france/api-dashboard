@@ -1,8 +1,9 @@
 import React from 'react'
 import { CaretLeftOutlined, CaretRightOutlined } from "@ant-design/icons"
 import { Button, ConfigProvider, Flex, Form, FormInstance, Select } from "antd"
-import { CSSProperties, useEffect, useState } from "react"
+import { CSSProperties, useEffect } from "react"
 import { list_to_options } from '../Control/Control'
+import { useSearchParamsState } from '../../utils/useSearchParamsState'
 
 
   // Update field and trigger form OnValueChange, thanks to : https://github.com/ant-design/ant-design/issues/23782#issuecomment-2114700558
@@ -15,11 +16,11 @@ import { list_to_options } from '../Control/Control'
   }
 
 type NextPrevSelectProps =  {
-    options?:{ label: string | number ; value: string | number }[] | string[] | number[]
+    options?:{ label: string ; value: string }[] | string[]
     style?:CSSProperties
-    defaultValue?:string | number
-    value?:string | number
-    onChange?: (value: string | number) => void;
+    defaultValue?:string
+    value?:string
+    onChange?: (value: string) => void;
     reverse?:boolean // False : next = goDown
     name?:string
     arrows?:boolean
@@ -40,7 +41,7 @@ const style_button_right:CSSProperties = {
 }
 
 const NextPrevSelect: React.FC<NextPrevSelectProps> = ({
-  name,
+  name='sansnom',
   options: input_options = [],
   style,
   value,
@@ -50,26 +51,27 @@ const NextPrevSelect: React.FC<NextPrevSelectProps> = ({
   arrows = true,
   ...rest
 }) => {
-  const [current_value, setCurrent_value] = useState<string | number | undefined>(value);
+  const [current_value, setCurrent_value] = useSearchParamsState(name, String(defaultValue) || '');
+
   const form = Form.useFormInstance();
 
   useEffect(() => {
-    value && handleChange(value)
-  },[value])
+    current_value && handleChange(current_value)
+  },[value, current_value])
 
   const options = list_to_options(input_options);
 
   const current_index = options?.findIndex((o) => o.value == form?.getFieldValue(name) || o.value == current_value );
 
   const next = () =>
-    reverse
+    String(reverse
       ? options[current_index - 1].value!
-      : options[current_index + 1].value!;
+      : options[current_index + 1].value!)
 
   const previous = () =>
-    reverse
+    String(reverse
       ? options[current_index + 1].value!
-      : options[current_index - 1].value!;
+      : options[current_index - 1].value!)
 
   const isFirst = () =>
     reverse ? current_index == options.length - 1 : current_index == 0;
@@ -77,7 +79,7 @@ const NextPrevSelect: React.FC<NextPrevSelectProps> = ({
   const isLast = () =>
     reverse ? current_index == 0 : current_index == options.length - 1;
 
-  const handleChange = (v:string | number) => {
+  const handleChange = (v:string) => {
     setCurrent_value(v);
     name && form && updateFieldValue(form,name, v)
     onChange && onChange(v);
