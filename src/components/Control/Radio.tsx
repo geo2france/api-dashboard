@@ -15,6 +15,10 @@ export const buildOptionsFromData = (
 
     const t = from(data);
 
+    if (data.length <= 0){ //Avoir arquero error on empty data
+      return []
+    }
+
     return (
       t.select(labelField, valueField)
         .dedupe(valueField)
