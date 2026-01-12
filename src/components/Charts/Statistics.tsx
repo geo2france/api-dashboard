@@ -110,7 +110,7 @@ export const Statistics: React.FC<StatisticsProps> = ({
 
     const tooltip =  help && <Tooltip title={help}><QuestionCircleOutlined /></Tooltip>
 
-    const CallbackParams:ICallbackParams = {value: value || NaN, compareValue: compare_value || NaN, data:dataset?.data || [], row: row }
+    const CallbackParams:ICallbackParams = {value: value ?? NaN, compareValue: compare_value ?? NaN, data:dataset?.data ?? [], row: row }
 
     let subtitle
 
