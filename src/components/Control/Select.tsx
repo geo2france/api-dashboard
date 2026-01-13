@@ -14,7 +14,9 @@ type ExtendedSelectProps = Omit<SelectProps<any>, 'options'> & {
     labelField?:string,
     valueField?:string,
     name?:string,
-    arrows?:boolean
+    label?:string,
+    arrows?:boolean,
+    reverse?:boolean
   };
 
 
@@ -27,6 +29,8 @@ export const Select: React.FC<ExtendedSelectProps> = ({
     labelField = 'label',
     valueField = 'value',
     arrows = false,
+    reverse = false,
+    label,
     initial_value:initial_value_in,
     ...rest
   }) => {
@@ -55,10 +59,12 @@ export const Select: React.FC<ExtendedSelectProps> = ({
     return (
       <NextPrevSelect
         name={name}
+        label={label ?? name}
         options={data_options}
         defaultValue={ value }
         value={ value }
         arrows={arrows}
+        reverse={reverse}
         optionFilterProp="label"
         {...rest}
       />

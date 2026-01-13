@@ -1,11 +1,11 @@
 import React from 'react'
 import { CaretLeftOutlined, CaretRightOutlined } from "@ant-design/icons"
-import { Button, ConfigProvider, Flex, Form, FormInstance, Select } from "antd"
+import { Button, ConfigProvider, Flex, Form, FormInstance, Select, theme, Typography } from "antd"
 import { CSSProperties, useEffect } from "react"
 import { list_to_options } from '../Control/Control'
 import { useSearchParamsState } from '../../utils/useSearchParamsState'
 
-
+const { Text } = Typography
   // Update field and trigger form OnValueChange, thanks to : https://github.com/ant-design/ant-design/issues/23782#issuecomment-2114700558
   const updateFieldValue = (form: FormInstance, name: string, value: any) => {
     (form as any).getInternalHooks('RC_FORM_INTERNAL_HOOKS').dispatch({
@@ -24,6 +24,7 @@ type NextPrevSelectProps =  {
     reverse?:boolean // False : next = goDown
     name?:string
     arrows?:boolean
+    label?:string
   }
 
 const style_button_left:CSSProperties = {
@@ -49,11 +50,15 @@ const NextPrevSelect: React.FC<NextPrevSelectProps> = ({
   onChange,
   reverse = false,
   arrows = true,
+  label,
   ...rest
 }) => {
   const [current_value, setCurrent_value] = useSearchParamsState(name, String(defaultValue) || '');
 
+  const { token } = theme.useToken();
   const form = Form.useFormInstance();
+
+  const labelApplied = label ?? name;
 
   useEffect(() => {
     current_value && handleChange(current_value)
@@ -87,13 +92,14 @@ const NextPrevSelect: React.FC<NextPrevSelectProps> = ({
 
 
   return (
-      <Flex style={style} {...{name:name}}>
-      { arrows && <Button style={style_button_left} onClick={() => handleChange(previous())} disabled={isFirst()}>
+      <Flex style={style} align='center' {...{name:name}}> {/* devnote : name nécessaire ici ?*/}
+        { arrows && <Text type='secondary' style={{color:token.colorTextLabel}}> {labelApplied}&nbsp;:&nbsp;</Text> }
+      { arrows &&  <Button style={style_button_left} onClick={() => handleChange(previous())} disabled={isFirst()}>
           <CaretLeftOutlined /> 
         </Button> }
 
         <ConfigProvider theme={ arrows ? { components: { Select: { borderRadius: 0, }, }, } : undefined} > {/* Radius zero uniquement pour ce select*/}
-          <Form.Item name={name} label={name} noStyle={arrows} initialValue={defaultValue} shouldUpdate >
+          <Form.Item name={name} label={labelApplied} noStyle={arrows} initialValue={defaultValue} shouldUpdate >
             <Select
               className="nextPrevSelect"
               options={options}
