@@ -1,15 +1,15 @@
 import { Button, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps, Tabs, theme } from "antd";
 import type { TabsProps } from 'antd';
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
-import React, { isValidElement, ReactElement, useState, createContext, useEffect } from "react";
+import React, { isValidElement, ReactElement, useState, useEffect, useContext } from "react";
 import { Helmet } from "react-helmet-async";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
-import Control, { DSL_Control } from "../Control/Control";
+import Control, { ControlContext, DSL_Control } from "../Control/Control";
 import { Dataset, Debug, Provider } from "../../dsl";
 import { DEFAULT_PALETTE, Palette, PaletteContext, PaletteType } from "../Palette/Palette";
 import { Section, SectionProps } from "./Section";
 import { Icon } from "@iconify/react";
-import { useDatasetRegistry } from "../Dataset/hooks";
+import { DatasetRegistryContext } from "../Dataset/context";
 
 const { Header } = Layout;
 
@@ -105,15 +105,6 @@ const DashboardPage:React.FC<IDashboardPageProps> = ({children:children_input, c
 
 export default DashboardPage;
 
-type ControlContextType = {
-    values : Record<string, any>;
-    pushValue: (control: { name: string; value: any }) => void;
-}
-
-
-
-
-export const ControlContext = createContext<ControlContextType | undefined>(undefined); 
 
 interface IDSLDashboardPageProps {
     children : React.ReactNode // TODO, lister les type possible ?React.ReactElement<typeof DashboardElement>[];
@@ -122,7 +113,6 @@ interface IDSLDashboardPageProps {
     debug?: boolean
 }
 
-      
 
 
 
@@ -131,11 +121,13 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
     const { token } = useToken();
 
     const [palette, setPalette] = useState<PaletteType>(DEFAULT_PALETTE);
- 
-    const datasetRegistry = useDatasetRegistry()
+
+    const datasetRegistry = useContext(DatasetRegistryContext);
+    const controlesRegistry = useContext(ControlContext)
     useEffect(() => {
         return () => { // Page cleanup
-            datasetRegistry.clear() 
+            datasetRegistry.clear()
+            controlesRegistry?.clear()
         }
     }, []);
 
@@ -189,6 +181,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
         label: '-',
         children:<Section title='Autres'>{visible_components}</Section>
     })}
+
 
     return (
     <>

@@ -11,9 +11,13 @@ export const buildOptionsFromData = (
     data: SimpleRecord[],
     labelField: string = 'label',
     valueField: string = 'value'
-  ): { label: string ; value: string | number }[] => {
+  ): { label: string ; value: string }[] => {
 
     const t = from(data);
+
+    if (data.length <= 0){ //Avoir arquero error on empty data
+      return []
+    }
 
     return (
       t.select(labelField, valueField)
@@ -29,10 +33,10 @@ export const buildOptionsFromData = (
 type ExtendedRadioGroupProps = RadioGroupProps & {
     name?: string;
     dataset?: string;
-    options?: { label: string ; value: string | number }[] | string[] | number[];
+    options?: { label: string ; value: string }[] | string[];
     labelField?:string,
     valueField?:string,
-    initalValue?:string | number
+    initalValue?:string
   };
 
 export const Radio: React.FC<ExtendedRadioGroupProps> = ({

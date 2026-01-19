@@ -2,7 +2,7 @@ import { ReactElement } from "react"
 import { useDatasets } from "./hooks"
 import { Typography } from "antd"
 
-const {Link} = Typography
+const { Link, Text } = Typography
 export type ProducerType = {
     nom: string,
     url?: string
@@ -44,8 +44,8 @@ export const ProducersFooter:React.FC<IProducersFooterProps> = ({component}) => 
                 );
                 uniqueProducers.sort((a, b) => a.nom.localeCompare(b.nom));
 
-                return datasets ? (
-                  <>
+                return ( producers?.length > 0 ) ? (
+                  <Text type="secondary" style={{padding:4}}>
                     Source des données :{" "}
                       {uniqueProducers?.map((p, idx, arr) => (
                         <span key={idx}>
@@ -54,7 +54,7 @@ export const ProducersFooter:React.FC<IProducersFooterProps> = ({component}) => 
                           </Link>{idx < arr.length - 1 ? ', ' : ''}
                         </span>
                       ))}
-                  </>
+                  </Text>
                 ) : null;
         }
         return <></>
