@@ -1,11 +1,13 @@
 import { useDataset } from "../Dataset/hooks";
-import { EChartsOption } from "echarts";
+import { EChartsOption, LabelFormatterCallback } from "echarts";
+import type { CallbackDataParams } from 'echarts/types/dist/shared';
 import { usePalette, usePaletteLabels } from "../Palette/Palette";
 import { SimpleRecord } from "../../types";
 import { from, op } from "arquero";
 import { ChartEcharts } from "./ChartEcharts";
 import { merge_others } from "../..";
 import { useBlockConfig } from "../DashboardPage/Block"
+import deepMerge from "../../utils/deepmerge";
 
 
 interface IChartPieProps {
@@ -16,9 +18,20 @@ interface IChartPieProps {
     title?:string
     donut?:boolean
     other?:number | null // Merge categorie with less than `other` percent
+    
+    /** Nombre de décimales après la virgule à afficher (1 par défaut)
+     */
+    precision?:number
+
+    /** Personnaliser le formatter des labels de la série
+     * cf. https://echarts.apache.org/en/option.html#series-pie.label.formatter */
+    labelFormatter?: string | LabelFormatterCallback<CallbackDataParams>
+
+    /** Options suplémentaires passées à Echarts */
+    option?:EChartsOption
 }
 
-export const ChartPie:React.FC<IChartPieProps> = ({dataset:dataset_id, nameKey, dataKey, unit, title, donut=false, other=5}) => {
+export const ChartPie:React.FC<IChartPieProps> = ({dataset:dataset_id, nameKey, dataKey, unit, title, donut=false, other=5, labelFormatter, precision=1, option:customOption = {}}) => {
     const dataset = useDataset(dataset_id)
     const data = dataset?.data
 
@@ -39,7 +52,9 @@ export const ChartPie:React.FC<IChartPieProps> = ({dataset:dataset_id, nameKey, 
             }))
         : [];
 
-
+    //@ts-ignore
+    const total = chart_data1.length > 0 && from(chart_data1).rollup({ value: op.sum('value') }).object()?.value
+    console.log('total',total)
     const chart_data = merge_others({dataset:chart_data1 || [], min:other || -1 })
     const colors = usePalette({nColors:chart_data?.length})
     const colors_labels = usePaletteLabels() 
@@ -55,13 +70,27 @@ export const ChartPie:React.FC<IChartPieProps> = ({dataset:dataset_id, nameKey, 
         }, 
         data:chart_data,
         radius : donut ? ['40%','75%'] : [0, '75%'],
+        label: {
+          formatter : labelFormatter
+        }
       }],
       tooltip:{
         show:true,
-        valueFormatter: v => `${v?.toLocaleString()} ${unit || ''} `
+        valueFormatter: v => `${v?.toLocaleString(undefined, {maximumFractionDigits:precision})} ${unit || ''} `
+      },
+      graphic: {
+        type: 'text',
+        left: 'center',
+        top: 'center',
+        style: {
+          text: `${total.toLocaleString(undefined,{maximumFractionDigits:precision})} ${unit}`, 
+          fontSize: 24,
+          fontWeight: 'bold',
+          fill: '#333',
+        }
       }
     }
 
-    return <ChartEcharts option={option}/>  
+    return <ChartEcharts option={deepMerge({},option, customOption)}/>  
        
 }
