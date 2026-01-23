@@ -71,7 +71,8 @@ export const ChartPie:React.FC<IChartPieProps> = ({dataset:dataset_id, nameKey, 
         data:chart_data,
         radius : donut ? ['40%','75%'] : [0, '75%'],
         label: {
-          formatter : labelFormatter
+          formatter : labelFormatter,
+          overflow: "break"
         }
       }],
       tooltip:{
