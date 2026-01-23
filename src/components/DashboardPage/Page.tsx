@@ -10,6 +10,7 @@ import { DEFAULT_PALETTE, Palette, PaletteContext, PaletteType } from "../Palett
 import { Section, SectionProps } from "./Section";
 import { Icon } from "@iconify/react";
 import { DatasetRegistryContext } from "../Dataset/context";
+import { Intro } from "./Intro";
 
 const { Header } = Layout;
 
@@ -142,9 +143,12 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
 
     const logicalComponents:string[] = [Dataset.name, Provider.name, Palette.name, Debug.name]; //Composant logiques, a ne pas mettre dans la grid
 
-    const getComponentKind = (c:ReactElement) : "logical" | "control" | "other" | "section" => {
+    const getComponentKind = (c:ReactElement) : "logical" | "control" | "other" | "section" | "intro" => {
         if  (typeof(c.type) != 'string' &&  logicalComponents.includes(c.type.name)) {
             return "logical"
+        }
+        else if (typeof(c.type) != 'string' &&  c.type.name == Intro.name){
+            return "intro"
         }
         else if (typeof(c.type) != 'string' &&  c.type.name == DSL_Control.name){
             return "control"
@@ -161,6 +165,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
     const logic_components = childrenArray.filter((c) => getComponentKind(c) == 'logical');
     const control_components = childrenArray.filter((c) => getComponentKind(c) == 'control');
     const section_components = childrenArray.filter((c) => getComponentKind(c) == 'section') as React.ReactElement<SectionProps>[];
+    const intro_component = childrenArray.find((c) => getComponentKind(c) == 'intro') 
 
     if (debug && !logic_components.some((c) => typeof c.type !== "string" && c.type.name === Debug.name) ){
         logic_components.push(<Debug key="debug_property"/>);
@@ -213,6 +218,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
                         <div style={{margin:4}}> {items?.[0].children} </div>//Show content without tabs if only one
                     }
                 {logic_components}
+                {intro_component}
                 </PaletteContext.Provider>
     </>
 )}
