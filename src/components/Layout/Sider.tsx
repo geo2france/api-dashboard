@@ -108,7 +108,7 @@ const DashboardSider: React.FC<DbSiderProps> = ({style, logo, route_config, powe
         </Col>
       </Row>
       { (poweredBy && !collapsed) && <Text type="secondary" style={{position:"absolute", bottom:0, left:0, margin:4}}>
-            Propulsé et fait avec ❤️ par{" "}<Link to="https://github.com/geo2france/api-dashboard">Geo2France</Link>
+            Propulsé et fait avec ❤️ par{" "}<Link to="https://github.com/geo2france/api-dashboard">Géo2France</Link>
       </Text> }
     </Layout.Sider>
   );
