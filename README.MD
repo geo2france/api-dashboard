@@ -2,33 +2,35 @@
 
 Collection de composants React pour faciliter la création de **tableaux de bords territoriaux**.
 
-Le projet permet la mise en place d'un tableau de bord facile à déployer sur une **infrastucture légère**.
-Le tableau de bord, une fois compilé, peut-être mis à disposition des utilisateurs via un **simple server web** (HTTP/HTTPS) sans configuration particulière.
-Il s'agit d'une application React (Javascript) s'executant dans le navigateur des utilisateurs. Il n'y a pas **backend à installer**,
-l'application récupère les données via API **auprès d'un partenaire** (plateforme régionale, portail open-data, etc.) ou sur **votre serveur de données**.
-Les données sont ensuites traitées par le client et présentées à l'utilisateur via des graphiques ou cartes.
+Demo : 
+- [Odema](https://www.geo2france.fr/public/odema/dashboard/) ([code source](https://github.com/geo2france/odema-dashboard))
+- [Clicnat](https://dashboard.clicnat.fr/)
 
-Le tableau de bord est construit de manière déclarative **JSX** (accronyme de JavaScript XML).
-Comme son nom l'indique, il permet de combiner la clarté et l'efficacité du XML, avec la souplesse et la puissance du JavaScript.
+![capture d'écran](screenshot.png)
 
-Les API suivantes sont actuellement supportées (interrogation, filtre, pagination, etc. ) :
-- [WFS](src/data_providers/wfs/) : API proposée par la plupart des serveurs geographiques (QGIS Server, GeoServer, ArcGIS server, etc.)
-- [Data Fair](src/data_providers/datafair/) : API de la solution open source Data Fair.
-- En développement : OGC API Features, TJS
+## Points forts
 
-![diag](architecture_1.png)
+- ✅ Compatibles avec de **nombreux fournisseurs de données** (WFS, Datafair, fichiers statiques csv ou json, etc.),
+- ✅ **Traitement** de données possibles (filtres, agréations, etc. via SQL ou javascript),
+- ✅ Créez vos dataviz en utilisants [Apache ECharts](https://echarts.apache.org/) ou n'importe quel bibliothèque web,
+- ✅ Application cliente : peut-être mis à disposition des utilisateurs via un **simple server web** (HTTP/HTTPS) sans configuration particulière,
+- ✅ Ecriture des tableaux de en **JSX/TSX** : combiner la clarté du XML avec la souplesse et puissance du Javascript/Typescript.
 
-En bref : 
-
-- ✅ Déploiement facile et rapide (_client side_)
-- ✅ Présentez au même endroit des données tierces, vos données et celles de vos partenaires
-- ✅ Possibilité de visualiser des données sensibles
-- ✅ Flexibilité
-
-Les composants sont actuellement utilisés pour le [tableau de bord de l'Odema](https://github.com/geo2france/odema-dashboard).
 
 ## Installation
 
+## Installer nvm et Node.js
+
+- Sur Windows : https://github.com/coreybutler/nvm-windows?tab=readme-ov-file#install-nvm-windows
+- Sur Linux : `apt install nvm`
+
+Ensuite, depuis un terminal ([Powershell](https://learn.microsoft.com/fr-fr/powershell/scripting/install/install-powershell-on-windows?view=powershell-7.5) ou autre) : 
+```bash
+# Installer la dernière vers LTS de Node.js
+nvm install --lts
+```
+
+## Créer un tableau de bord
 Pour créer un nouveau tableau de bord :
 
 ```sh
@@ -40,4 +42,5 @@ npm run dev
 ```
 
 Consulter la [documentation](https://geo2france.github.io/api-dashboard/) du projet.
+
 
