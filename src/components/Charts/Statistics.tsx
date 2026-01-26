@@ -5,10 +5,14 @@ import { useDataset } from "../Dataset/hooks";
 import { Icon } from "@iconify/react";
 import { useBlockConfig } from "../DashboardPage/Block";
 import { SimpleRecord } from "../../types";
-
+import { from, op } from "arquero"
 const { Text, Paragraph} = Typography;
 
 type comparwithType = "first" | "previous"
+
+type aggregateType = "last" | "first" | "sum" | "lastNotNull" | "min" | "max" | "count" | "mean" | "count_distinct" | "count_missing"
+
+
 
 interface ICallbackParams {
     /** Valeur principale */
@@ -56,13 +60,16 @@ interface StatisticsProps {
     help?: string
 
     /** Comparer la valeur avec la précédente ou la première du jeu de données */
-    compareWith? : comparwithType
+    compareWith? : comparwithType // A supprimer ?
 
     /** Texte d'annotation (remplace evolution si définie) */
     annotation?: React.ReactNode | ((param: ICallbackParams) => React.ReactNode)
 
     /** Fonction a appliquer avant rendu */
     valueFormatter?: ((param: ICallbackParams) => React.ReactNode)
+
+    /** Méthode d'aggrégation */
+    aggregate?:aggregateType
 }
 
 
@@ -94,14 +101,70 @@ export const Statistics: React.FC<StatisticsProps> = ({
   compareWith,
   relativeEvolution = false,
   valueFormatter = (param) => (param.value.toLocaleString()),
-  annotation
+  annotation,
+  aggregate="last"
 }) => {
 
     const icon =  typeof icon_input === "string" ? <Icon icon={icon_input} /> : icon_input ;
     const dataset = useDataset(dataset_id);
 
-    const row = dataset?.data?.slice(-1)[0]
-    const value = row?.[dataKey] ; // Dernière valeur du dataset. Caster en Number ?
+    let row:SimpleRecord | undefined
+    let value:number
+
+
+    switch (aggregate) { // DEVNOTE : a factoriser au niveau de la lib api-dashboard
+      case "last":
+        row = dataset?.data?.slice(-1)[0]
+        value = Number(row?.[dataKey]);
+        break;
+
+      case "first":
+        row = dataset?.data?.[0]
+        value = Number(row?.[dataKey]);
+        break;
+
+
+      case "lastNotNull":
+        row = dataset?.data?.filter( r => r?.[dataKey] != null).slice(-1)[0]
+        value = Number(row?.[dataKey]);
+        break;
+
+      case "sum":
+        row = undefined
+        value = dataset?.data && (from(dataset?.data).rollup({value: op.sum( dataKey) }).object() as SimpleRecord).value || NaN
+        break;
+
+      case "min":
+        row = undefined
+        value = dataset?.data && (from(dataset?.data).rollup({value: op.min( dataKey) }).object() as SimpleRecord).value || NaN
+        break;
+
+      case "max":
+        row = undefined
+        value = dataset?.data && (from(dataset?.data).rollup({value: op.max( dataKey) }).object() as SimpleRecord).value || NaN
+        break;
+
+      case "count":
+        row = undefined
+        value = dataset?.data && (from(dataset?.data).rollup({value: op.valid(dataKey) }).object() as SimpleRecord).value || NaN
+        break;
+
+      case "mean":
+        row = undefined
+        value = dataset?.data && (from(dataset?.data).rollup({value: op.average(dataKey) }).object() as SimpleRecord).value || NaN
+        break;
+
+      case "count_distinct":
+        row = undefined
+        value = dataset?.data && (from(dataset?.data).rollup({value: op.distinct(dataKey) }).object() as SimpleRecord).value || NaN
+        break;
+
+      case "count_missing":
+        row = undefined
+        value = dataset?.data && (from(dataset?.data).rollup({value: op.invalid(dataKey) }).object() as SimpleRecord).value || NaN
+        break;
+    }
+    console.log(aggregate, value)
     const compare_value = compareWith === 'previous' ? dataset?.data?.slice(-2)?.[0]?.[dataKey] : dataset?.data?.slice(0,1)?.[0]?.[dataKey] ; //Première ou avant dernière
 
     const evolution = relativeEvolution ? 100*((value - compare_value) / compare_value) : value - compare_value ;
