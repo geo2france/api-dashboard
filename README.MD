@@ -10,11 +10,11 @@ Demo :
 
 ## Points forts
 
-- ✅ Compatibles avec de **nombreux fournisseurs de données** (WFS, Datafair, fichiers statiques csv ou json, etc.),
-- ✅ **Traitement** de données possibles (filtres, agréations, etc. via SQL ou javascript),
-- ✅ Créez vos dataviz en utilisants [Apache ECharts](https://echarts.apache.org/) ou n'importe quel bibliothèque web,
-- ✅ Application cliente : peut-être mis à disposition des utilisateurs via un **simple server web** (HTTP/HTTPS) sans configuration particulière,
-- ✅ Ecriture des tableaux de en **JSX/TSX** : combiner la clarté du XML avec la souplesse et puissance du Javascript/Typescript.
+- ✅ Compatible avec de **nombreux fournisseurs de données** (WFS, Datafair, fichiers statiques csv ou json, etc.),
+- ✅ **Traitements** de données possibles (filtres, agréations, etc. via SQL ou JavaScript),
+- ✅ Créez vos dataviz en utilisants [Apache ECharts](https://echarts.apache.org/) ou n'importe quelle bibliothèque web,
+- ✅ Application cliente : peut-être mise à disposition des utilisateurs via un **simple server web** (HTTP/HTTPS) sans configuration particulière,
+- ✅ Ecriture des tableaux de bord en **JSX/TSX** : combiner la clarté du XML avec la souplesse et puissance du JavaScript/TypeScript.
 
 
 ## Installation
