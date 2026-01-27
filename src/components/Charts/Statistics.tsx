@@ -6,6 +6,7 @@ import { Icon } from "@iconify/react";
 import { useBlockConfig } from "../DashboardPage/Block";
 import { SimpleRecord } from "../../types";
 import { aggregator } from "../../utils/aggregator";
+import CountUp from "react-countup";
 const { Text, Paragraph} = Typography;
 
 type comparwithType = "first" | "previous"
@@ -66,10 +67,13 @@ interface StatisticsProps {
     annotation?: React.ReactNode | ((param: ICallbackParams) => React.ReactNode)
 
     /** Fonction a appliquer avant rendu */
-    valueFormatter?: ((param: ICallbackParams) => React.ReactNode)
+    valueFormatter?: ((param: ICallbackParams) => string)
 
     /** Méthode d'aggrégation */
     aggregate?:aggregateType
+
+    /** Afficher une animation (Count-up) */
+    animation?: boolean
 }
 
 
@@ -102,7 +106,8 @@ export const Statistics: React.FC<StatisticsProps> = ({
   relativeEvolution = false,
   valueFormatter = (param) => (param.value.toLocaleString()),
   annotation,
-  aggregate="last"
+  aggregate="last",
+  animation=false
 }) => {
 
     const icon =  typeof icon_input === "string" ? <Icon icon={icon_input} /> : icon_input ;
@@ -163,7 +168,15 @@ export const Statistics: React.FC<StatisticsProps> = ({
     >
     <Flex vertical>
       <Flex justify="space-between" align="center">
-        <Text style={{fontSize:"150%", paddingTop:8, paddingBottom:8, paddingLeft:0}}>{valueFormatter(CallbackParams)} {unit}</Text>
+    
+            <Text style={{fontSize:"150%", paddingTop:8, paddingBottom:8, paddingLeft:0}}>
+              { animation ?   
+                <CountUp formattingFn={(v) => `${valueFormatter({...CallbackParams, value:v})} ${unit}` } duration={1.5} end={value || NaN} />
+                :
+                <span>{valueFormatter(CallbackParams)} {unit}</span>
+              }
+              </Text>
+
         {icon && <Avatar
             size={32+8}
             icon={icon}
