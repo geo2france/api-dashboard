@@ -5,7 +5,7 @@ import { useDataset } from "../Dataset/hooks";
 import { Icon } from "@iconify/react";
 import { useBlockConfig } from "../DashboardPage/Block";
 import { SimpleRecord } from "../../types";
-import { from, op } from "arquero"
+import { aggregator } from "../../utils/aggregator";
 const { Text, Paragraph} = Typography;
 
 type comparwithType = "first" | "previous"
@@ -108,66 +108,11 @@ export const Statistics: React.FC<StatisticsProps> = ({
     const icon =  typeof icon_input === "string" ? <Icon icon={icon_input} /> : icon_input ;
     const dataset = useDataset(dataset_id);
 
-    let row:SimpleRecord | undefined
-    let value:number
-
-
-    switch (aggregate) { // DEVNOTE : a factoriser au niveau de la lib api-dashboard
-      case "last":
-        row = dataset?.data?.slice(-1)[0]
-        value = Number(row?.[dataKey]);
-        break;
-
-      case "first":
-        row = dataset?.data?.[0]
-        value = Number(row?.[dataKey]);
-        break;
-
-
-      case "lastNotNull":
-        row = dataset?.data?.filter( r => r?.[dataKey] != null).slice(-1)[0]
-        value = Number(row?.[dataKey]);
-        break;
-
-      case "sum":
-        row = undefined
-        value = dataset?.data && (from(dataset?.data).rollup({value: op.sum( dataKey) }).object() as SimpleRecord).value || NaN
-        break;
-
-      case "min":
-        row = undefined
-        value = dataset?.data && (from(dataset?.data).rollup({value: op.min( dataKey) }).object() as SimpleRecord).value || NaN
-        break;
-
-      case "max":
-        row = undefined
-        value = dataset?.data && (from(dataset?.data).rollup({value: op.max( dataKey) }).object() as SimpleRecord).value || NaN
-        break;
-
-      case "count":
-        row = undefined
-        value = dataset?.data && (from(dataset?.data).rollup({value: op.valid(dataKey) }).object() as SimpleRecord).value || NaN
-        break;
-
-      case "mean":
-        row = undefined
-        value = dataset?.data && (from(dataset?.data).rollup({value: op.average(dataKey) }).object() as SimpleRecord).value || NaN
-        break;
-
-      case "countDistinct":
-        row = undefined
-        value = dataset?.data && (from(dataset?.data).rollup({value: op.distinct(dataKey) }).object() as SimpleRecord).value || NaN
-        break;
-
-      case "countMissing":
-        row = undefined
-        value = dataset?.data && (from(dataset?.data).rollup({value: op.invalid(dataKey) }).object() as SimpleRecord).value || NaN
-        break;
-    }
+    const { row , value } = aggregator({data: dataset?.data, dataKey, aggregate})
 
     const compare_value = compareWith === 'previous' ? dataset?.data?.slice(-2)?.[0]?.[dataKey] : dataset?.data?.slice(0,1)?.[0]?.[dataKey] ; //Première ou avant dernière
 
-    const evolution = relativeEvolution ? 100*((value - compare_value) / compare_value) : value - compare_value ;
+    const evolution = relativeEvolution ? 100*((Number(value) - compare_value) / compare_value) : Number(value) - compare_value ;
     const evolution_unit = relativeEvolution ? '%' : unit ;
     const evolution_is_good = invertColor ? evolution! < 0 : evolution! > 0;
 
