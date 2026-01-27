@@ -10,6 +10,7 @@ export { useMapControl } from "./utils/useMapControl";
 export { BaseRecordToGeojsonPoint } from "./utils/baserecordtogeojsonpoint"
 export {cardStyles} from "./utils/cardStyles"
 export { merge_others } from "./utils/merge_others"
+export { aggregator } from "./utils/aggregator"
 
 // Components
 import KeyFigure from "./components/KeyFigure/KeyFigure"
