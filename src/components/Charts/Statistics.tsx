@@ -10,7 +10,7 @@ const { Text, Paragraph} = Typography;
 
 type comparwithType = "first" | "previous"
 
-type aggregateType = "last" | "first" | "sum" | "lastNotNull" | "min" | "max" | "count" | "mean" | "count_distinct" | "count_missing"
+type aggregateType = "last" | "first" | "sum" | "lastNotNull" | "min" | "max" | "count" | "mean" | "countDistinct" | "countMissing"
 
 
 
@@ -154,17 +154,17 @@ export const Statistics: React.FC<StatisticsProps> = ({
         value = dataset?.data && (from(dataset?.data).rollup({value: op.average(dataKey) }).object() as SimpleRecord).value || NaN
         break;
 
-      case "count_distinct":
+      case "countDistinct":
         row = undefined
         value = dataset?.data && (from(dataset?.data).rollup({value: op.distinct(dataKey) }).object() as SimpleRecord).value || NaN
         break;
 
-      case "count_missing":
+      case "countMissing":
         row = undefined
         value = dataset?.data && (from(dataset?.data).rollup({value: op.invalid(dataKey) }).object() as SimpleRecord).value || NaN
         break;
     }
-    console.log(aggregate, value)
+
     const compare_value = compareWith === 'previous' ? dataset?.data?.slice(-2)?.[0]?.[dataKey] : dataset?.data?.slice(0,1)?.[0]?.[dataKey] ; //Première ou avant dernière
 
     const evolution = relativeEvolution ? 100*((value - compare_value) / compare_value) : value - compare_value ;
