@@ -5,10 +5,14 @@ import { useDataset } from "../Dataset/hooks";
 import { Icon } from "@iconify/react";
 import { useBlockConfig } from "../DashboardPage/Block";
 import { SimpleRecord } from "../../types";
-
+import { aggregator } from "../../utils/aggregator";
 const { Text, Paragraph} = Typography;
 
 type comparwithType = "first" | "previous"
+
+type aggregateType = "last" | "first" | "sum" | "lastNotNull" | "min" | "max" | "count" | "mean" | "countDistinct" | "countMissing"
+
+
 
 interface ICallbackParams {
     /** Valeur principale */
@@ -56,13 +60,16 @@ interface StatisticsProps {
     help?: string
 
     /** Comparer la valeur avec la précédente ou la première du jeu de données */
-    compareWith? : comparwithType
+    compareWith? : comparwithType // A supprimer ?
 
     /** Texte d'annotation (remplace evolution si définie) */
     annotation?: React.ReactNode | ((param: ICallbackParams) => React.ReactNode)
 
     /** Fonction a appliquer avant rendu */
     valueFormatter?: ((param: ICallbackParams) => React.ReactNode)
+
+    /** Méthode d'aggrégation */
+    aggregate?:aggregateType
 }
 
 
@@ -94,17 +101,18 @@ export const Statistics: React.FC<StatisticsProps> = ({
   compareWith,
   relativeEvolution = false,
   valueFormatter = (param) => (param.value.toLocaleString()),
-  annotation
+  annotation,
+  aggregate="last"
 }) => {
 
     const icon =  typeof icon_input === "string" ? <Icon icon={icon_input} /> : icon_input ;
     const dataset = useDataset(dataset_id);
 
-    const row = dataset?.data?.slice(-1)[0]
-    const value = row?.[dataKey] ; // Dernière valeur du dataset. Caster en Number ?
+    const { row , value } = aggregator({data: dataset?.data, dataKey, aggregate})
+
     const compare_value = compareWith === 'previous' ? dataset?.data?.slice(-2)?.[0]?.[dataKey] : dataset?.data?.slice(0,1)?.[0]?.[dataKey] ; //Première ou avant dernière
 
-    const evolution = relativeEvolution ? 100*((value - compare_value) / compare_value) : value - compare_value ;
+    const evolution = relativeEvolution ? 100*((Number(value) - compare_value) / compare_value) : Number(value) - compare_value ;
     const evolution_unit = relativeEvolution ? '%' : unit ;
     const evolution_is_good = invertColor ? evolution! < 0 : evolution! > 0;
 
