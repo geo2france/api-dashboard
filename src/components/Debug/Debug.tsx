@@ -39,7 +39,7 @@ export const Debug:React.FC = () => {
             title="Information concepteur"
             width="90%"
             centered
-            styles={{content:{'width':"100%", padding:36}}}
+            styles={{body:{'width':"100%", padding:36}}}
             closable={{ 'aria-label': 'Custom Close Button' }}
             open={isModalOpen}
             onCancel={() => setIsModalOpen(false)}
