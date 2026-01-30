@@ -23,7 +23,7 @@ interface AggregatorResult {
 /** Fonction permettant d'agréger une colonne d'un dataset */
 export const aggregator = ( {data, dataKey, aggregate}:AggregatorParams ):AggregatorResult => {
 
-    if (data == undefined || dataKey == undefined){
+    if (data == undefined || dataKey == undefined || data.length < 1){
         return {row: undefined, value: undefined}
     }
 
