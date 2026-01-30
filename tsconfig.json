@@ -10,7 +10,7 @@
       "strict": true,
       "forceConsistentCasingInFileNames": true,
       "module": "ESNext",
-      "moduleResolution": "Node",
+      "moduleResolution": "bundler",
       "resolveJsonModule": true,
       "isolatedModules": true,
       "noEmit": false,
@@ -21,6 +21,11 @@
       "outDir": "dist",
     },
     "include": ["src","src/custom.d.ts"],
+    "exclude": [
+      "**/*.stories.ts",
+      "**/*.stories.tsx",
+      ".storybook"
+    ]
     /*"references": [
       {
         "path": "./tsconfig.node.json"

@@ -1,4 +1,4 @@
-import { Card, Dropdown, theme } from "antd";
+import { Card, Dropdown, Spin, theme } from "antd";
 import { createContext, useContext, useEffect, useId, useState } from "react";
 import { SimpleRecord } from "../../types";
 import { Icon } from "@iconify/react";
@@ -6,6 +6,7 @@ import { ProducersFooter } from "../Dataset/Producer";
 import { MoreOutlined } from '@ant-design/icons';
 import { ErrorBoundary } from "../Layout/Error";
 import { cardStyles } from "../../utils/cardStyles";
+import { useDataset } from "../../dsl";
 
 
 const { useToken } = theme;
@@ -29,6 +30,9 @@ export const DSL_ChartBlock:React.FC<IChartBlockProps> = ({children}) => {
     const id = useId()
     const [config, setConfig] = useState<ChartBlockConfig>({})
     const {token} = useToken()
+
+    const dataset = useDataset(children.props.dataset)
+
     const menu_items = [
         {
             key: "export_data_csv",
@@ -75,8 +79,10 @@ export const DSL_ChartBlock:React.FC<IChartBlockProps> = ({children}) => {
             extra={has_action && dropdown_toolbox}
             title={config.title}>
                 <ErrorBoundary>
+                  <Spin spinning={dataset?.isFetching || false} size="large" delay={250}>
                   {children}
                   <ProducersFooter component={children} />
+                  </Spin>
                 </ErrorBoundary>
             </Card>
         </ChartBlockContext.Provider>

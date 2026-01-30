@@ -8,18 +8,16 @@ import deepMerge from "../../utils/deepmerge"
 const { useToken } = theme;
 
 
-interface ChartEchartsProps extends EChartsReactProps {
+export interface ChartEchartsProps extends EChartsReactProps {
     option:EChartsOption,
 }
 
-/*
+/**
 * Ce composant peut servir de base aux développements d'autres composants ou être utilisé directement dans une page (non conseillé).
 * - Applique la palette utilisateur
 * - Utilise le style de texte de l'application
-* devnote : A partir de React 19, ne plus utiliser forwardRef https://react.dev/reference/react/forwardRef
 */
-
-export const ChartEcharts = forwardRef<EChartsReact, ChartEchartsProps>(({ option = {}, ...restProps }, ref) =>  {
+export const ChartEcharts = forwardRef<EChartsReact, ChartEchartsProps>(({ option = {}, ...restProps }, ref) =>  { // devnote : A partir de React 19, ne plus utiliser forwardRef https://react.dev/reference/react/forwardRef
     const innerRef = useRef<EChartsReact>(null)
     useImperativeHandle(ref, () => innerRef.current as EChartsReact, []) // Pour exposer le innerref au parent
 

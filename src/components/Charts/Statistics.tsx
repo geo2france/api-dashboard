@@ -5,10 +5,15 @@ import { useDataset } from "../Dataset/hooks";
 import { Icon } from "@iconify/react";
 import { useBlockConfig } from "../DashboardPage/Block";
 import { SimpleRecord } from "../../types";
-
+import { aggregator } from "../../utils/aggregator";
+import CountUp from "react-countup";
 const { Text, Paragraph} = Typography;
 
 type comparwithType = "first" | "previous"
+
+type aggregateType = "last" | "first" | "sum" | "lastNotNull" | "min" | "max" | "count" | "mean" | "countDistinct" | "countMissing"
+
+
 
 interface ICallbackParams {
     /** Valeur principale */
@@ -24,7 +29,7 @@ interface ICallbackParams {
     compareValue: number ;
 }
 
-interface StatisticsProps {
+export interface StatisticsProps {
     /** Identifiant du jeu de données */
     dataset:string, 
 
@@ -56,13 +61,19 @@ interface StatisticsProps {
     help?: string
 
     /** Comparer la valeur avec la précédente ou la première du jeu de données */
-    compareWith? : comparwithType
+    compareWith? : comparwithType // A supprimer ?
 
     /** Texte d'annotation (remplace evolution si définie) */
     annotation?: React.ReactNode | ((param: ICallbackParams) => React.ReactNode)
 
     /** Fonction a appliquer avant rendu */
-    valueFormatter?: ((param: ICallbackParams) => React.ReactNode)
+    valueFormatter?: ((param: ICallbackParams) => string)
+
+    /** Méthode d'aggrégation */
+    aggregate?:aggregateType
+
+    /** Afficher une animation (Count-up) */
+    animation?: boolean
 }
 
 
@@ -94,17 +105,19 @@ export const Statistics: React.FC<StatisticsProps> = ({
   compareWith,
   relativeEvolution = false,
   valueFormatter = (param) => (param.value.toLocaleString()),
-  annotation
-}) => {
+  annotation,
+  aggregate="last",
+  animation=false
+}:StatisticsProps) => {
 
     const icon =  typeof icon_input === "string" ? <Icon icon={icon_input} /> : icon_input ;
     const dataset = useDataset(dataset_id);
 
-    const row = dataset?.data?.slice(-1)[0]
-    const value = row?.[dataKey] ; // Dernière valeur du dataset. Caster en Number ?
+    const { row , value } = aggregator({data: dataset?.data, dataKey, aggregate})
+
     const compare_value = compareWith === 'previous' ? dataset?.data?.slice(-2)?.[0]?.[dataKey] : dataset?.data?.slice(0,1)?.[0]?.[dataKey] ; //Première ou avant dernière
 
-    const evolution = relativeEvolution ? 100*((value - compare_value) / compare_value) : value - compare_value ;
+    const evolution = relativeEvolution ? 100*((Number(value) - compare_value) / compare_value) : Number(value) - compare_value ;
     const evolution_unit = relativeEvolution ? '%' : unit ;
     const evolution_is_good = invertColor ? evolution! < 0 : evolution! > 0;
 
@@ -155,7 +168,15 @@ export const Statistics: React.FC<StatisticsProps> = ({
     >
     <Flex vertical>
       <Flex justify="space-between" align="center">
-        <Text style={{fontSize:"150%", paddingTop:8, paddingBottom:8, paddingLeft:0}}>{valueFormatter(CallbackParams)} {unit}</Text>
+    
+            <Text style={{fontSize:"150%", paddingTop:8, paddingBottom:8, paddingLeft:0}}>
+              { animation ?   
+                <CountUp formattingFn={(v) => `${valueFormatter({...CallbackParams, value:v})} ${unit}` } duration={1.5} end={value || NaN} />
+                :
+                <span>{valueFormatter(CallbackParams)} {unit}</span>
+              }
+              </Text>
+
         {icon && <Avatar
             size={32+8}
             icon={icon}
@@ -176,7 +197,7 @@ export const Statistics: React.FC<StatisticsProps> = ({
 }
 
 
-type StatisticsCollectionProps = {
+export interface StatisticsCollectionProps {
   /**
    * Un ou plusieurs composants `<Statistics>`.
    */
@@ -196,12 +217,9 @@ type StatisticsCollectionProps = {
 /**
  * `StatisticsCollection` permet de regrouper plusieurs cartes statistiques
  * dans un bloc
- * 
- * @param {StatisticsProps} props - Propriétés du composant
- * @returns {ReactElement} Collection de cartes statistiques
  * ```
  */
-export const StatisticsCollection:React.FC<StatisticsCollectionProps> = ( {children, columns=3, title} ) => {
+export const StatisticsCollection:React.FC<StatisticsCollectionProps> = ( {children, columns=3, title}:StatisticsCollectionProps ) => {
   const arrayChildren = Children.toArray(children);
   useBlockConfig({title:title})
   return (

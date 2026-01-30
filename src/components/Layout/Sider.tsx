@@ -1,13 +1,14 @@
 
 import React, { CSSProperties, useContext, useState } from "react";
-import { Layout, Menu, theme, Row, Col, Button, Divider } from "antd";
+import { Layout, Menu, theme, Row, Col, Button, Divider, Typography } from "antd";
 
-import { NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 
 import { generateMenuItems } from "../../utils/route_utils";
 import { RouteConfig } from "../../types";
 import { AppContext } from "./DashboardApp";
 import { Icon } from "@iconify/react";
+const { Text } = Typography
 
 const style_img: CSSProperties = {
   height:52,
@@ -20,9 +21,10 @@ interface DbSiderProps {
   route_config?:RouteConfig[];
   //menu?: React.ReactElement; // Pour passer directement un menu (remplace celui du Sider)
   style?: CSSProperties;
+  poweredBy?: boolean
 }
 
-const DashboardSider: React.FC<DbSiderProps> = ({style, logo, route_config}) => {
+const DashboardSider: React.FC<DbSiderProps> = ({style, logo, route_config, poweredBy=true}) => {
   const {logo: appLogo, title} = useContext(AppContext)
 
   const { token } = theme.useToken();
@@ -105,6 +107,9 @@ const DashboardSider: React.FC<DbSiderProps> = ({style, logo, route_config}) => 
           />
         </Col>
       </Row>
+      { (poweredBy && !collapsed) && <Text type="secondary" style={{position:"absolute", bottom:0, left:0, margin:4}}>
+            Propulsé et fait avec ❤️ par{" "}<Link to="https://github.com/geo2france/api-dashboard">Géo2France</Link>
+      </Text> }
     </Layout.Sider>
   );
 };

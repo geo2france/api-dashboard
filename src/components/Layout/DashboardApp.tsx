@@ -80,10 +80,15 @@ export interface DashboardConfig {
    * Active ou désactive le mode “slider” dans le pied de page (faire défiler les logos de partenaires).
   */
   footerSlider?: boolean;
+
+  /** 
+   * Désactiver la mention à Géo2France 
+   */
+  disablePoweredBy?: boolean;
 }
 
 
-const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, footerSlider, title, subtitle}) => {
+const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, footerSlider, title, subtitle, disablePoweredBy=false}) => {
 
     const context_values = { title, subtitle, logo };
 
@@ -100,7 +105,7 @@ const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, f
                     <Route
                           element={
                                   <Layout hasSider  style={{ minHeight: '100vh' }}>
-                                      <DashboardSider route_config={routes}/>
+                                      <DashboardSider route_config={routes} poweredBy={!disablePoweredBy}/>
                                       <Layout> 
                                       <Content style={{width:"100%"}}>
                                           <Outlet />

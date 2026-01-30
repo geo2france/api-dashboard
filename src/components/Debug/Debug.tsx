@@ -29,12 +29,17 @@ export const Debug:React.FC = () => {
         children: <DataPreview dataset={dataset.id} pageSize={3}/>
     }))
     return (<>
-        <FloatButton icon={<BugOutlined />} type="primary" onClick={() => setIsModalOpen(true)} style={{top:5}} className="debugFloatButton"/>
+        <FloatButton 
+            icon={<BugOutlined />} 
+            type="primary" 
+            onClick={() => setIsModalOpen(true)} 
+            style={{bottom:8, left: 8}} 
+            className="debugFloatButton"/>
         <Modal
             title="Information concepteur"
             width="90%"
             centered
-            styles={{content:{'width':"100%", padding:36}}}
+            styles={{body:{'width':"100%", padding:36}}}
             closable={{ 'aria-label': 'Custom Close Button' }}
             open={isModalOpen}
             onCancel={() => setIsModalOpen(false)}

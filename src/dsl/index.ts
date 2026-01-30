@@ -21,6 +21,7 @@ import { Statistics, StatisticsCollection } from "../components/Charts/Statistic
 import { MapLayer, Map } from "../components/Map/Map";
 import { Section } from "../components/DashboardPage/Section";
 import { LegendControl } from "../components/MapLegend/MapLegend";
+import { Intro } from "../components/DashboardPage/Intro";
 
 export {
     Dashboard,
@@ -30,6 +31,7 @@ export {
     Join,
     Filter,
     Section,
+    Intro,
     DataPreview,
     ChartEcharts,
     ChartPie,
