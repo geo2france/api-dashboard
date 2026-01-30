@@ -12,7 +12,7 @@ import { ChartEcharts } from "./ChartEcharts"
 import { useBlockConfig } from "../DashboardPage/Block"
 import deepMerge from "../../utils/deepmerge"
 
-interface IYearSerieProps {
+export interface IYearSerieProps {
     dataset:string
     title?:string
     yearKey:string

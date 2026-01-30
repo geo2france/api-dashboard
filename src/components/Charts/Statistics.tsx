@@ -29,7 +29,7 @@ interface ICallbackParams {
     compareValue: number ;
 }
 
-interface StatisticsProps {
+export interface StatisticsProps {
     /** Identifiant du jeu de données */
     dataset:string, 
 
@@ -108,7 +108,7 @@ export const Statistics: React.FC<StatisticsProps> = ({
   annotation,
   aggregate="last",
   animation=false
-}) => {
+}:StatisticsProps) => {
 
     const icon =  typeof icon_input === "string" ? <Icon icon={icon_input} /> : icon_input ;
     const dataset = useDataset(dataset_id);
@@ -197,7 +197,7 @@ export const Statistics: React.FC<StatisticsProps> = ({
 }
 
 
-type StatisticsCollectionProps = {
+export interface StatisticsCollectionProps {
   /**
    * Un ou plusieurs composants `<Statistics>`.
    */
@@ -217,12 +217,9 @@ type StatisticsCollectionProps = {
 /**
  * `StatisticsCollection` permet de regrouper plusieurs cartes statistiques
  * dans un bloc
- * 
- * @param {StatisticsProps} props - Propriétés du composant
- * @returns {ReactElement} Collection de cartes statistiques
  * ```
  */
-export const StatisticsCollection:React.FC<StatisticsCollectionProps> = ( {children, columns=3, title} ) => {
+export const StatisticsCollection:React.FC<StatisticsCollectionProps> = ( {children, columns=3, title}:StatisticsCollectionProps ) => {
   const arrayChildren = Children.toArray(children);
   useBlockConfig({title:title})
   return (

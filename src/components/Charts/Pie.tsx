@@ -10,14 +10,27 @@ import { useBlockConfig } from "../DashboardPage/Block"
 import deepMerge from "../../utils/deepmerge";
 
 
-interface IChartPieProps {
-    dataset?:string, //dataset ID
-    dataKey:string,
-    nameKey:string,
-    unit?:string,
-    title?:string
-    donut?:boolean
-    other?:number | null // Merge categorie with less than `other` percent
+export interface IChartPieProps {
+    /** Identifiant du dataset */
+    dataset?:string;
+
+    /** Nom de la colonne qui contient les valeurs numériques */
+    dataKey:string;
+
+    /** Nom de la colonne qui contient les catégories */
+    nameKey:string;
+
+    /** Unité à afficher */
+    unit?:string;
+
+    /** Titre du graphique */
+    title?:string;
+
+    /** Donut ou camembert ? */
+    donut?:boolean;
+
+    /** Merge categorie with less than `other` percent */
+    other?:number | null 
     
     /** Nombre de décimales après la virgule à afficher (1 par défaut)
      */
@@ -27,11 +40,13 @@ interface IChartPieProps {
      * cf. https://echarts.apache.org/en/option.html#series-pie.label.formatter */
     labelFormatter?: string | LabelFormatterCallback<CallbackDataParams>
 
-    /** Options suplémentaires passées à Echarts */
-    option?:EChartsOption
+    /** Options suplémentaires passées à Echarts 
+     * @see https://echarts.apache.org/en/option.html
+    */
+    option?:EChartsOption;
 }
 
-export const ChartPie:React.FC<IChartPieProps> = ({dataset:dataset_id, nameKey, dataKey, unit, title, donut=false, other=5, labelFormatter, precision=1, option:customOption = {}}) => {
+export const ChartPie = ({dataset:dataset_id, nameKey, dataKey, unit, title, donut=false, other=5, labelFormatter, precision=1, option:customOption = {}}:IChartPieProps) => {
     const dataset = useDataset(dataset_id)
     const data = dataset?.data
 
