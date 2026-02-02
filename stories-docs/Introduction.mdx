@@ -1,0 +1,44 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+
+<Meta title="Documentation/Introduction"  />
+
+# Introduction
+
+
+
+## Installation & mise en route
+
+### Installer nvm et Node.js
+
+- Sur Windows : [https://github.com/coreybutler/nvm-windows?tab=readme-ov-file#install-nvm-windows](https://github.com/coreybutler/nvm-windows?tab=readme-ov-file#install-nvm-windows)
+- Sur Linux : `apt install nvm`
+
+Ensuite, depuis un terminal ([Powershell](https://learn.microsoft.com/fr-fr/powershell/scripting/install/install-powershell-on-windows?view=powershell-7.5) ou autre) : 
+```bash
+# Installer la dernière vers LTS de Node.js
+nvm install --lts
+```
+
+### Créer un tableau de bord
+
+Pour créer un nouveau tableau de bord :
+
+```sh
+npm init @geo2france/api-dashboard@latest nom-du-projet
+cd nom-du-projet && npm install
+
+# Lancer le serveur de développement
+npm run dev
+```
+
+
+### Gestion des pages
+
+Le fichier `config.ts` peut-être édité pour personnaliser l'application : thème graphique, titre, routes, etc.
+
+### Personnalisation
+
+Theme, titre, footer, etc.
+
+*Rédaction en cours*
