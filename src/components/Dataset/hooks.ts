@@ -1,8 +1,9 @@
 import { useCallback, useContext, useState } from "react"
 import { dataset } from "./Dataset";
 import { DatasetRegistryContext } from "./context";
+import { SimpleRecord } from "../..";
 
-const demo_dataset: dataset = {
+const demo_dataset: dataset = { //devnote a supprimer
   id: 'demo_dataset',
   isError: false,
   isFetching: false,
@@ -21,12 +22,17 @@ const demo_dataset: dataset = {
   ]
 };
 
+export type useDatasetInput = string | SimpleRecord[]
 
 // 🔹 Hook pour récupérer un dataset unique
-export const useDataset = (dataset_id? : string) => {
+export const useDataset = (dataset_id? : useDatasetInput):dataset | undefined => {
 
-    if(dataset_id == 'demo_dataset'){
+    if(dataset_id == 'demo_dataset'){ //Devnote : a supprimer
       return demo_dataset
+    }
+
+    if (Array.isArray(dataset_id)) { //inline dataset
+      return { data: dataset_id, isFetching: false, isError: false, resource: '', id:'' }
     }
 
     const datasetRegistry = useContext(DatasetRegistryContext)

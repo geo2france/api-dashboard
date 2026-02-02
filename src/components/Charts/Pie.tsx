@@ -1,4 +1,4 @@
-import { useDataset } from "../Dataset/hooks";
+import { useDataset, useDatasetInput } from "../Dataset/hooks";
 import { EChartsOption, LabelFormatterCallback } from "echarts";
 import type { CallbackDataParams } from 'echarts/types/dist/shared';
 import { usePalette, usePaletteLabels } from "../Palette/Palette";
@@ -12,7 +12,7 @@ import deepMerge from "../../utils/deepmerge";
 
 export interface IChartPieProps {
     /** Identifiant du dataset */
-    dataset?:string;
+    dataset?:useDatasetInput;
 
     /** Nom de la colonne qui contient les valeurs numériques */
     dataKey:string;
