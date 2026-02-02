@@ -30,7 +30,7 @@ interface ICallbackParams {
 }
 
 export interface StatisticsProps {
-    /** Identifiant du jeu de données */
+    /** Identifiant du jeu de données ou tableau de valeurs */
     dataset:useDatasetInput, 
 
     /** Nom de la colonne qui contient les valeurs */
@@ -54,7 +54,7 @@ export interface StatisticsProps {
     /** Inverser les couleurs (rouge/vert) de l'évolution */
     invertColor?: boolean
 
-    /** Icône (composant ou nom de l'icône sur Iconify.js ) */
+    /** Icône. Composant ou nom de l'icône sur https://icon-sets.iconify.design/ */
     icon?: ReactElement | string
 
     /** Texte à afficher dans le tooltip d'aide */
@@ -66,7 +66,7 @@ export interface StatisticsProps {
     /** Texte d'annotation (remplace evolution si définie) */
     annotation?: React.ReactNode | ((param: ICallbackParams) => React.ReactNode)
 
-    /** Fonction a appliquer avant rendu */
+    /** Fonction de formattager a appliquer avant rendu */
     valueFormatter?: ((param: ICallbackParams) => string)
 
     /** Méthode d'aggrégation */
@@ -80,30 +80,20 @@ export interface StatisticsProps {
 // DEV : modele cf https://bootstrapbrain.com/component/bootstrap-statistics-card-example/
 
 /**
- * Composant `Statistics` affichant une valeur d'un dataset avec son évolution.
- *
- * Affiche :
- * - La dernière valeur du dataset
- * - Unité et picto
- * - Évolution par rapport à la première ou l'avant-dernière valeur
- * - Couleur selon évolution positive/négative
- * - Tooltip d'aide si fourni
- *
- * @param {StatisticsProps} props - Propriétés du composant
- * @returns {ReactElement} Carte statistique
+ * Composant `Statistics` affichant une valeur depuis un dataset.
  */
 export const Statistics: React.FC<StatisticsProps> = ({
   dataset:dataset_id,
   dataKey,
   unit,
-  evolutionSuffix,
+  evolutionSuffix, // A supprimer
   title,
   icon:icon_input,
   color,
-  invertColor = false,
+  invertColor = false, // A supprimer
   help,
-  compareWith,
-  relativeEvolution = false,
+  compareWith, // A supprimer
+  relativeEvolution = false, // A supprimer
   valueFormatter = (param) => (param.value.toLocaleString()),
   annotation,
   aggregate="last",
