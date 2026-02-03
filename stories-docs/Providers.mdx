@@ -1,0 +1,35 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+
+<Meta title="Documentation/Fournisseurs de données"  />
+
+# Fournisseurs de données supportés
+
+Les fournisseurs permettent d'accéder à des jeux de données via différentes API.
+Ils traduisent les filtres et interprètent la réponse de l'API.
+
+```tsx
+<Dataset
+        id="indicateur_territoire" //Identifiant utilisé pour le tableau de bord
+        type="wfs"
+        url="https://www.geo2france.fr/geoserver/odema/ows" //URL de l'API
+        resource="odema:destination_dma_epci_harmonise" //Nom de la couche
+    >
+    <Filter field="siren_epci">248000531</Filter>
+    <Filter field="annee" operator="gte">2019</Filter>
+</Dataset>
+```
+
+## WFS
+
+WFS 1.0
+
+## Datafair 
+
+Utiliser pour accéder aux données fournies par les portails [Data Fair](https://data-fair.github.io/3/functional-presentation/introduction/)
+
+## File
+
+Fichier statique. Si le fichier n'est pas un tableau JSON, il est possible de
+le mettre en forme avec le composant `<Transform>`.
+En passant des paramètres dynamiques dans l'URL, il peut aussi permettre d'accéder à une API non supportée par un fournisseur.
