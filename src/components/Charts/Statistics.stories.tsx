@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Statistics, StatisticsCollection } from './Statistics';
 
 const meta = {
+  title: 'Dataviz/Statistics',
   component: Statistics,
 } satisfies Meta<typeof Statistics>;
 

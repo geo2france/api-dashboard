@@ -205,7 +205,7 @@ export interface StatisticsCollectionProps {
 };
 
 /**
- * `StatisticsCollection` permet de regrouper plusieurs cartes statistiques
+ * `StatisticsCollection` permet de regrouper plusieurs cartes [`Statistics`](?path=/docs/dataviz-statistics--docs)
  * dans un bloc
  * ```
  */

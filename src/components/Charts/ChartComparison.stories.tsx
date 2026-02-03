@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ChartComparison } from './ChartComparison';
 
 const meta = {
+  title: 'Dataviz/Comparison',
   component: ChartComparison,
 } satisfies Meta<typeof ChartComparison>;
 
@@ -27,6 +28,32 @@ export const Default: Story = {
     label: "percent",
     singleColor: false,
     unit: "kg",
+  },
+  argTypes: {
+    valueKey: {
+      table: { readonly: true },
+    },
+    nameKey: {
+      table: { readonly: true },
+    },
+    title: {
+      table: { disable: true }
+    },
+    chartType:{
+       control: 'select'
+    },
+    label:{
+       control: 'select'
+    }
+  },
+};
+
+export const Donut: Story = {
+  args: {
+    chartType: "donut",
+    valueKey: "value",
+    nameKey: "cat",
+    dataset: demoDataset,
   },
   argTypes: {
     valueKey: {
