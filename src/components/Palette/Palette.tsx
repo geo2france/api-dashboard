@@ -3,7 +3,7 @@ import chroma from "chroma-js";
 import { createContext, useContext, useEffect } from "react";
 
 
-export const DEFAULT_PALETTE:PaletteType = {steps:['red','green', 'blue'], mode:'hsl'}
+export const DEFAULT_PALETTE:PaletteType = {steps:['#264653','#2a9d8f', '#e9c46a','#f4a261','#e76f51'], mode:'hsl'}
 
 type PaletteModeType = 'rgb' | 'hsl' | 'lab' | 'lrgb' | 'lch'
 
