@@ -18,7 +18,7 @@ export interface ChartComparisonProps {
     nameKey:string;
 
     /** Type de graphique */
-    chartType?: 'bar' | 'pie'
+    chartType?: 'bar' | 'pie' | 'donut'
 
     /** Unité à afficher */
     unit?:string;
@@ -59,7 +59,7 @@ option:custom_option={}}:ChartComparisonProps) => {
     })
 
     // Label par défaut selon le type de graphique
-    const label:labelType = label_in ?? (chartType === 'pie' ? 'category' : 'none');
+    const label:labelType = label_in ?? ( (chartType === 'pie' || chartType === 'donut' ) ? 'category' : 'none');
 
     const chart_data1: SimpleRecord[] =
     data && data.length > 0
@@ -83,7 +83,10 @@ option:custom_option={}}:ChartComparisonProps) => {
     const labelFormatter: LabelFormatterCallback = (v) => {
         if (!label || label == 'none') return '';
 
-        const value = chartType == 'pie' ? v?.value as number : (v?.value as number[])?.[1];
+        const value = (chartType === 'pie' || chartType === 'donut' ) ?
+             v?.value as number 
+             : (v?.value as number[])?.[1];
+             
         const name =  v?.name;
 
         switch (label) {
@@ -131,6 +134,7 @@ option:custom_option={}}:ChartComparisonProps) => {
         } :
         {
             type:'pie',
+            radius: chartType == 'donut' ? ['40%', '75%'] : [0, '75%'],
             data: chart_data1?.map( r => ({ name: r[0], value: r[1]})),
             label:{
                 show: label && label !== 'none',

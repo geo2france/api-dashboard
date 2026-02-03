@@ -20,13 +20,13 @@ const demoDataset = [
 ];
 export const Default: Story = {
   args: {
+    chartType: "bar",
     valueKey: "value",
     nameKey: "cat",
     dataset: demoDataset,
     label: "percent",
     singleColor: false,
     unit: "kg",
-    chartType: "pie"
   },
   argTypes: {
     valueKey: {
