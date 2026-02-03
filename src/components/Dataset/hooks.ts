@@ -1,32 +1,16 @@
 import { useCallback, useContext, useState } from "react"
 import { dataset } from "./Dataset";
 import { DatasetRegistryContext } from "./context";
+import { SimpleRecord } from "../..";
 
-const demo_dataset: dataset = {
-  id: 'demo_dataset',
-  isError: false,
-  isFetching: false,
-  resource: 'demo_dataset',
-  data: [
-    { name: 'Mercure', type: 'Planète', satellites: 0, diameter_km: 4879 },
-    { name: 'Vénus', type: 'Planète', satellites: 0, diameter_km: 12104 },
-    { name: 'Terre', type: 'Planète', satellites: 1, diameter_km: 12742 },
-    { name: 'Mars', type: 'Planète', satellites: 2, diameter_km: 6779 },
-    { name: 'Jupiter', type: 'Planète', satellites: 79, diameter_km: 139820 },
-    { name: 'Saturne', type: 'Planète', satellites: 83, diameter_km: 116460 },
-    { name: 'Uranus', type: 'Planète', satellites: 27, diameter_km: 50724 },
-    { name: 'Neptune', type: 'Planète', satellites: 14, diameter_km: 49244 },
-    { name: 'Pluton', type: 'Planète naine', satellites: 5, diameter_km: 2370 },
-    { name: 'Cérès', type: 'Astéroïde', satellites: 0, diameter_km: 946 },
-  ]
-};
 
+export type useDatasetInput = string | SimpleRecord[]
 
 // 🔹 Hook pour récupérer un dataset unique
-export const useDataset = (dataset_id? : string) => {
+export const useDataset = (dataset_id? : useDatasetInput):dataset | undefined => {
 
-    if(dataset_id == 'demo_dataset'){
-      return demo_dataset
+    if (Array.isArray(dataset_id)) { //inline dataset
+      return { data: dataset_id, isFetching: false, isError: false, resource: '', id:'' }
     }
 
     const datasetRegistry = useContext(DatasetRegistryContext)

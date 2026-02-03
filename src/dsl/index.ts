@@ -22,6 +22,7 @@ import { MapLayer, Map } from "../components/Map/Map";
 import { Section } from "../components/DashboardPage/Section";
 import { LegendControl } from "../components/MapLegend/MapLegend";
 import { Intro } from "../components/DashboardPage/Intro";
+import { ChartComparison } from "../components/Charts/ChartComparison";
 
 export {
     Dashboard,
@@ -36,6 +37,7 @@ export {
     ChartEcharts,
     ChartPie,
     ChartYearSerie,
+    ChartComparison,
     Statistics,
     StatisticsCollection,
     useDataset,
