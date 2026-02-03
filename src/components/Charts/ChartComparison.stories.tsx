@@ -26,6 +26,7 @@ export const Default: Story = {
     label: "percent",
     singleColor: false,
     unit: "kg",
+    chartType: "pie"
   },
   argTypes: {
     valueKey: {
@@ -36,6 +37,12 @@ export const Default: Story = {
     },
     title: {
       table: { disable: true }
+    },
+    chartType:{
+       control: 'select'
+    },
+    label:{
+       control: 'select'
     }
   },
 };

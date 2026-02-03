@@ -1,11 +1,11 @@
-import { EChartsOption, LabelFormatterCallback } from "echarts";
+import { EChartsOption, LabelFormatterCallback, SeriesOption } from "echarts";
 import { useDataset, useDatasetInput } from "../Dataset/hooks";
 import { ChartEcharts, useBlockConfig, usePalette, usePaletteLabels } from "../../dsl";
 import { SimpleRecord } from "../../types";
 import { from, op } from "arquero";
 import deepMerge from "../../utils/deepmerge";
 
-type labelType = "percent" | "value" | "none"
+type labelType = "percent" | "value" | "category" | "none" 
 
 export interface ChartComparisonProps {
     /** Identifiant du dataset */
@@ -16,6 +16,9 @@ export interface ChartComparisonProps {
 
     /** Nom de la colonne qui contient les catégories */
     nameKey:string;
+
+    /** Type de graphique */
+    chartType?: 'bar' | 'pie'
 
     /** Unité à afficher */
     unit?:string;
@@ -41,9 +44,10 @@ dataset:dataset_id,
 title, 
 nameKey, 
 valueKey, 
+chartType='bar',
 unit,
 singleColor=false,
-label, 
+label: label_in, 
 option:custom_option={}}:ChartComparisonProps) => {
 
     const dataset = useDataset(dataset_id)
@@ -54,6 +58,8 @@ option:custom_option={}}:ChartComparisonProps) => {
         dataExport: data
     })
 
+    // Label par défaut selon le type de graphique
+    const label:labelType = label_in ?? (chartType === 'pie' ? 'category' : 'none');
 
     const chart_data1: SimpleRecord[] =
     data && data.length > 0
@@ -63,19 +69,22 @@ option:custom_option={}}:ChartComparisonProps) => {
             .orderby('value')
             .objects()
             .map((d: any) => ([
-            d[nameKey],
-            d.value,
+                d[nameKey], //0
+                d.value,  //1
             ]))
         : [];
 
     const colors_libels = usePaletteLabels()
     const colors_palette = usePalette({nColors:chart_data1.length})  || ['#d4d4d4']
 
+    // Total, utilisé pour les pourcentage
     const total = chart_data1?.reduce((sum, item) => sum + item[1], 0);
 
     const labelFormatter: LabelFormatterCallback = (v) => {
         if (!label || label == 'none') return '';
-        const value = (v?.value as number[])?.[1];
+
+        const value = chartType == 'pie' ? v?.value as number : (v?.value as number[])?.[1];
+        const name =  v?.name;
 
         switch (label) {
             case 'percent': {
@@ -91,21 +100,26 @@ option:custom_option={}}:ChartComparisonProps) => {
                     maximumFractionDigits: 0,
                     })}  ${unit || ''}`;
 
+            case 'category':
+                return name
+
             default:
                 return '';
         }
     };
 
-    const option:EChartsOption = {
-        tooltip:{
-            show: true,
-            valueFormatter: (v) => `${v?.toLocaleString(undefined, {maximumFractionDigits:0})} t`
+    const serie_common = {
+        itemStyle: {
+            color: (p:any) => singleColor? colors_palette?.[0] : 
+                colors_libels.find(c => c.label == p.data[0] || c.label == p.name )?.color || colors_palette?.[p.dataIndex]
         },
-        series:{
+    }
+    const serie:SeriesOption = chartType == 'bar' ?
+        {
             type: 'bar',
             data: chart_data1?.map( r => [r[0], r[1] ]),
             label:{
-                show: true,
+                show: label && label !== 'none',
                 position: 'right',
                 formatter: labelFormatter
             },
@@ -113,12 +127,27 @@ option:custom_option={}}:ChartComparisonProps) => {
                 x:1,
                 y:0
             },
-            itemStyle: {
-                color: (p:any) => singleColor? colors_palette?.[0] : colors_libels.find(c => c.label == p.data[0])?.color || colors_palette?.[p.dataIndex]
+            ...serie_common,
+        } :
+        {
+            type:'pie',
+            data: chart_data1?.map( r => ({ name: r[0], value: r[1]})),
+            label:{
+                show: label && label !== 'none',
+                formatter: labelFormatter
             },
+            ...serie_common,
+
+        }
+
+    const option:EChartsOption = {
+        tooltip:{
+            show: true,
+            valueFormatter: (v) => `${v?.toLocaleString(undefined, {maximumFractionDigits:0})} t`
         },
-        xAxis: {type:'value', axisLabel:{formatter: (v) => `${(v).toLocaleString()} ${unit}` } },
-        yAxis: {type: 'category', }
+        yAxis: {show: chartType == 'bar', type: 'category' },
+        xAxis: { show: chartType == 'bar', type:'value', axisLabel:{formatter: (v:any) => `${(v).toLocaleString()} ${unit}` } },
+        series: [ serie ],
     }
 
     return <ChartEcharts option={deepMerge(option, custom_option)} />
