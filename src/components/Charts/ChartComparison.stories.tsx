@@ -73,3 +73,29 @@ export const Donut: Story = {
     }
   },
 };
+
+export const CustomizeEchart: Story = {
+  name: "Personnalisation poussée",
+  parameters: {
+    docs: {
+      description: {
+        story: 'Modifier directement la [configuration Echart](https://echarts.apache.org/en/option.html) du graphique pour un usage avancée.',
+      },
+    },
+    controls: {
+      include: ['option'],
+    }
+  },
+  args: {
+    chartType: "bar",
+    valueKey: "value",
+    nameKey: "cat",
+    unit:"€",
+    dataset:  demoDataset.map(d =>
+                d.cat === 'Alimentation'
+                  ? { ...d, value: d.value*100 }
+                  : d
+              ) ,
+    option: { xAxis: {breaks:[{start:2700, end:319000, gap:"2.5%"}]} }
+  },
+};
