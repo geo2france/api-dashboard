@@ -3,7 +3,7 @@ import { SimpleRecord, useApi } from "../.."
 import { CrudFilters,DataProvider } from "../../data_providers/types"
 import { Producer, ProducerType } from "./Producer"
 import React from "react"
-import { Filter, Transform, useAllControls, useAllDatasets, useDatasets } from "../../dsl"
+import { Filter, Transform, useAllDatasets, useDatasets } from "../../dsl"
 import alasql from "alasql"
 import { DataProviderContext, getProviderFromType, ProviderType } from "./Provider"
 import { Join, joinTypeType } from "./Join"
@@ -99,7 +99,6 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
 
     const allDatasets = useAllDatasets()
 
-    const controls = useAllControls() ;
     const providerContext = useContext(DataProviderContext)
 
     const provider = (providerUrl && getProviderFromType(providerType)(providerUrl)) || providerContext || provider_input;
@@ -114,7 +113,7 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
       .filter((c): c is React.ReactElement => React.isValidElement(c))
       .filter((c) => typeof c.type!='string' && c.type.name == Filter.name).forEach(
       (c) => {
-          const value = (typeof c.props.children === "string" ? c.props.children.trim() : c.props.children ) || controls?.[c.props.control]
+          const value = (typeof c.props.children === "string" ? c.props.children.trim() : c.props.children )
           filters.push({
             operator:c.props.operator || 'eq',
             value: value,
