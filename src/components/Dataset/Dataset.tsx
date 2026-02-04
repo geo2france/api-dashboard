@@ -52,9 +52,6 @@ export type dataset = {
 
 /**
  * Composant **logique** permettant de récupérer des données.
- * 
- * ℹ️ Ce composant n'a pas de rendu graphique direct. Les données doivent
- * être utilisées dans des composants graphiques (carto, dataviz, tableau, etc.)
  */
 export const DSL_Dataset:React.FC<IDatasetProps> = ({
   children, 

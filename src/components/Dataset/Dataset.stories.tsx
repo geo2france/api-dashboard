@@ -32,6 +32,18 @@ const DatasetTable = ({}) => {
 }
 
 export const Default: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+ℹ️ Ce composant n'a pas de rendu graphique direct. Les données doivent
+être utilisées dans des composants graphiques (carto, dataviz, tableau, etc.)
+Un tableau permet ici de visualiser le contenu brut.
+        `,
+      },
+    },
+  },
+
     args:{
         type: 'datafair',
         id: 'mon_dataset',
