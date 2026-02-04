@@ -1,15 +1,20 @@
 import type { Preview } from '@storybook/react-vite'
+import { customTheme } from './manager';
+
+
+
 
 const preview: Preview = {
-  tags:['autodocs'],
-    parameters: {
-      parameters:{
-      codePanel: true,
+tags:['autodocs'],
+  parameters: {
+    codePanel: true, // ?
+    docs: {
+        theme: customTheme,
     },
     controls: {
       matchers: {
-       color: /(background|color)$/i,
-       date: /Date$/i,
+        color: /(background|color)$/i,
+        date: /Date$/i,
       },
     },
     options: {
@@ -26,5 +31,7 @@ const preview: Preview = {
     }
   },
 };
+
+
 
 export default preview;
