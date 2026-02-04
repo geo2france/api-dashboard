@@ -1,6 +1,6 @@
 import { useContext, useEffect, ReactNode, ReactElement } from "react"
 import { SimpleRecord, useApi } from "../.."
-import { CrudFilters,DataProvider } from "../../data_providers/types"
+import { CrudFilters } from "../../data_providers/types"
 import { Producer, ProducerType } from "./Producer"
 import React from "react"
 import { Filter, Transform, useAllDatasets, useDatasets } from "../../dsl"
@@ -14,14 +14,28 @@ import { DatasetRegistryContext } from "./context"
 
 
 interface IDatasetProps {
+    /**Identifiant interne unique du jeu de données*/
     id:string
-    provider?:DataProvider // Remplacer/ajouter providerUrl et providerType dans les props Dataset ?
+
+    /** Url du fournisseur */
     url?:string
-    type?:ProviderType
+
+    /** Type de fournisseur */
+    type:ProviderType
+
+    /** Nom de la ressource côté fournisseur
+     * (couche, dataset, fichier, etc.)
+     */
     resource:string
+
+    /**
+     * ⚠️ deprecated
+     */
     filters?:CrudFilters
     children?: ReactNode
     pageSize?:number
+
+    /** Paramètres additionnels à passer au fournisseur */
     meta?:any
 }
 
@@ -35,12 +49,17 @@ export type dataset = {
     geojson?:any
     dataHash?:number;
 }
- 
+
+/**
+ * Composant **logique** permettant de récupérer des données.
+ * 
+ * ℹ️ Ce composant n'a pas de rendu graphique direct. Les données doivent
+ * être utilisées dans des composants graphiques (carto, dataviz, tableau, etc.)
+ */
 export const DSL_Dataset:React.FC<IDatasetProps> = ({
   children, 
   id, 
-  provider : provider_input, 
-  type: providerType='file', 
+  type: providerType, 
   url:providerUrl, 
   resource, 
   pageSize, 
@@ -101,9 +120,9 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
 
     const providerContext = useContext(DataProviderContext)
 
-    const provider = (providerUrl && getProviderFromType(providerType)(providerUrl)) || providerContext || provider_input;
+    const provider = (providerUrl && getProviderFromType(providerType)(providerUrl)) || providerContext;
     if (provider === undefined){
-      throw new Error("Error : No dataProvider, please use one of : <Provider> parent, providerUrl/providerType properties or provider property")
+      throw new Error("Error : No dataProvider, please use providerUrl/providerType properties")
     }
 
 
