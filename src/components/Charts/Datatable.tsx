@@ -1,12 +1,12 @@
 import { Table } from "antd"
-import { useDataset, useDatasetInput } from "../Dataset/hooks"
+import { useDataset, datasetInput } from "../Dataset/hooks"
 import type { TableProps } from 'antd';
 import { useBlockConfig } from "../DashboardPage/Block";
 
 
 export interface DataTableProps {
     /** Jeu de données */
-    dataset: useDatasetInput
+    dataset: datasetInput
 
     /** Titre du composant */
     title?: string

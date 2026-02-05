@@ -1,7 +1,7 @@
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { Avatar, Card, Col, Flex, Row, Tooltip, Typography } from "antd"
 import { Children, ReactElement } from "react";
-import { useDataset, useDatasetInput } from "../Dataset/hooks";
+import { useDataset, datasetInput } from "../Dataset/hooks";
 import { Icon } from "@iconify/react";
 import { useBlockConfig } from "../DashboardPage/Block";
 import { SimpleRecord } from "../../types";
@@ -31,7 +31,7 @@ interface ICallbackParams {
 
 export interface StatisticsProps {
     /** Identifiant du jeu de données ou tableau de valeurs */
-    dataset:useDatasetInput, 
+    dataset:datasetInput, 
 
     /** Nom de la colonne qui contient les valeurs */
     dataKey:string, 
