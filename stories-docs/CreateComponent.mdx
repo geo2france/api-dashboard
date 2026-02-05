@@ -1,0 +1,73 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+
+<Meta title="Avancé/Création d'un composant" />
+
+# Créer son composant graphique
+
+## A partir d'un graphique api-dashboard
+
+Partir d'un graphique générique et personnaliser les propriétés.
+> TODO
+
+## Un graphique ECharts
+
+Modèle pour créer un composant ECharts : 
+
+```tsx
+import { ChartEcharts, useBlockConfig, useDataset } from "@geo2france/api-dashboard/dsl"
+import { EChartsOption } from "echarts"
+import { datasetInput } from "@geo2france/api-dashboard"
+
+
+export interface MyDatavizProps {
+    /** Jeu de données */
+    dataset: datasetInput
+
+    /** Titre du composant */
+    title?: string
+
+    /** Colonne contenant les catégories */
+    categoryKey: string
+
+    /** Colonne contenant les valeurs numériques */
+    valueKey: string
+}
+
+/** Description du composant
+ */
+export const MyDataviz:React.FC<MyDatavizProps> = ({
+    dataset: dataset_id,
+    title,
+    categoryKey,
+    valueKey
+}:MyDatavizProps) => {
+
+    const dataset = useDataset(dataset_id) //Récupérer le jeu de données
+    const data = dataset?.data 
+
+    useBlockConfig({
+        title: title,
+        dataExport: data  // Données exportables pour l'utilisateur (csv)
+    })
+
+    /* Configuration du graphique
+     https://echarts.apache.org/option.html */
+    const option:EChartsOption = {
+        xAxis: {
+            type: 'category',
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+            data: data?.map( row => ([row[categoryKey], row[valueKey]])),
+            type: 'bar'
+            }
+        ]
+    };
+
+    return <ChartEcharts option={option} />
+}
+```
