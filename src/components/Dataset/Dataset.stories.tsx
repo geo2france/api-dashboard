@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Dataset } from '../../dsl';
+import { Dataset, DataTable } from '../../dsl';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Table } from 'antd';
 import { DatasetRegistryContext } from './context';
 import { createDatasetRegistry, useDataset } from './hooks';
+import { SimpleRecord } from '../..';
 
 
 const meta = {
@@ -16,18 +16,19 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 
-const DatasetTable = ({}) => {
-    const dataset = useDataset('mon_dataset')
-    const data = dataset?.data
-    const cols = Object.keys(data?.[0] || {})?.filter( (k:string) => !k.startsWith("_"))?.map( (k:string) => ({
-        dataIndex:k,
-        title: k,
-        ellipsis: true,
-        key:k
-    }))
+const DatasetTable = ({dataset:dataset_id}:{ dataset: string }) => {
+    const dataset = useDataset(dataset_id)
+
+    // Pour la story, filtrer les colonnes avec "_"
+    const data: SimpleRecord[] = (dataset?.data ?? []).map(obj =>
+        Object.fromEntries(
+            Object.entries(obj).filter(([key]) => !key.startsWith('_'))
+        )
+    );
 
     return (
-        <Table columns={cols} dataSource={ Array.isArray(data) ? data?.map((r, idx) => ({...r, key:idx})) : []  } pagination={{ pageSize:5 }}/>
+        <DataTable  dataset={data.map( row => ({  ...row, valeur_en_nombre:Number(row.valeur_en_nombre) } )) }/> 
+        // Pour la storie, on formatte les nombres (en string dans le JDD de la poste.. )
     )
 }
 
@@ -58,15 +59,14 @@ Un tableau permet ici de visualiser le contenu brut.
         id:{ table: { readonly: true }},
     },
     decorators: [
-        (Story, context) => {
-            const key = JSON.stringify(context.args);
+        (Story, { args }) => {
+            const key = JSON.stringify(args);
             const queryClient = new QueryClient();
-
             return (
             <QueryClientProvider client={queryClient} key={key}>
                 <DatasetRegistryContext.Provider value={ createDatasetRegistry() } >
                     <Story />
-                    <DatasetTable />
+                    <DatasetTable dataset={args.id} />
                 </DatasetRegistryContext.Provider>
             </QueryClientProvider>
             )
