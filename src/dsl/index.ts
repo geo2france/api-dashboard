@@ -23,6 +23,7 @@ import { Section } from "../components/DashboardPage/Section";
 import { LegendControl } from "../components/MapLegend/MapLegend";
 import { Intro } from "../components/DashboardPage/Intro";
 import { ChartComparison } from "../components/Charts/ChartComparison";
+import { DataTable } from "../components/Charts/Datatable";
 
 export {
     Dashboard,
@@ -38,6 +39,7 @@ export {
     ChartPie,
     ChartYearSerie,
     ChartComparison,
+    DataTable,
     Statistics,
     StatisticsCollection,
     useDataset,

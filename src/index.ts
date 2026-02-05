@@ -56,6 +56,7 @@ export {WfsProvider, DatafairProvider, FileProvider}
 export type { SimpleRecord, Partner, RouteConfig } from "./types"
 export type { LegendItem } from "./components/MapLegend/MapLegend" 
 export type { DashboardConfig } from "./components/Layout/DashboardApp"
+export type  { datasetInput } from "./components/Dataset/hooks";
 
 // DSL
 import * as DSL from './dsl';

@@ -8,20 +8,40 @@ import { list_to_options } from './Control';
 
 
 type ExtendedSelectProps = Omit<SelectProps<any>, 'options'> & {
-    dataset?: string;
-    options?: { label: string ; value: string }[] | string[];
-    initial_value? : string,
-    labelField?:string,
-    valueField?:string,
+    /** Nom technique du controle */
     name?:string,
+
+    /** Nom à afficher */
     label?:string,
+
+    /** Jeu de données contenant les choix (à la place de options) */
+    dataset?: string;
+
+    /** Choix possible */
+    options?: { label: string ; value: string }[] | string[];
+
+    /** Valeur intiale sélectionnée */
+    initial_value? : string,
+
+    /** Colonne à utiliser pour le libellé (si dataset utilisé) */
+    labelField?:string,
+
+    /** Colonne à utiliser pour la valeur (si dataset utilisé) */
+    valueField?:string,
+
+    /** Affichage des flèches Suivant/Précédent */
     arrows?:boolean,
+
+    /** Inverser le sens des flêches */
     reverse?:boolean
   };
 
 
 // TODO : a fusionner avec NextPrevSelect pour n'avoir qu'un seul composant
 // Actuellement, Select apporte seulement le fait de choisir les valeurs depuis un
+/** Composant de controle permettant de choisir une valeur parmis une liste de choix.
+ * Adapté pour les choix de territoires ou d'années
+ */
 export const Select: React.FC<ExtendedSelectProps> = ({
     name,
     dataset:datasetSource,
@@ -33,7 +53,7 @@ export const Select: React.FC<ExtendedSelectProps> = ({
     label,
     initial_value:initial_value_in,
     ...rest
-  }) => {
+  }:ExtendedSelectProps) => {
     
     const options = list_to_options(input_options);
 

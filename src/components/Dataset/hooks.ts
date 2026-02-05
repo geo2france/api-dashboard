@@ -4,10 +4,10 @@ import { DatasetRegistryContext } from "./context";
 import { SimpleRecord } from "../..";
 
 
-export type useDatasetInput = string | SimpleRecord[]
+export type datasetInput = string | SimpleRecord[]
 
 // 🔹 Hook pour récupérer un dataset unique
-export const useDataset = (dataset_id? : useDatasetInput):dataset | undefined => {
+export const useDataset = (dataset_id? : datasetInput):dataset | undefined => {
 
     if (Array.isArray(dataset_id)) { //inline dataset
       return { data: dataset_id, isFetching: false, isError: false, resource: '', id:'' }

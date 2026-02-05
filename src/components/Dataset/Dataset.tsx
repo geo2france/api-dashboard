@@ -1,9 +1,9 @@
 import { useContext, useEffect, ReactNode, ReactElement } from "react"
 import { SimpleRecord, useApi } from "../.."
-import { CrudFilters,DataProvider } from "../../data_providers/types"
+import { CrudFilters } from "../../data_providers/types"
 import { Producer, ProducerType } from "./Producer"
 import React from "react"
-import { Filter, Transform, useAllControls, useAllDatasets, useDatasets } from "../../dsl"
+import { Filter, Transform, useAllDatasets, useDatasets } from "../../dsl"
 import alasql from "alasql"
 import { DataProviderContext, getProviderFromType, ProviderType } from "./Provider"
 import { Join, joinTypeType } from "./Join"
@@ -14,14 +14,28 @@ import { DatasetRegistryContext } from "./context"
 
 
 interface IDatasetProps {
+    /**Identifiant interne unique du jeu de données*/
     id:string
-    provider?:DataProvider // Remplacer/ajouter providerUrl et providerType dans les props Dataset ?
+
+    /** Url du fournisseur */
     url?:string
-    type?:ProviderType
+
+    /** Type de fournisseur */
+    type:ProviderType
+
+    /** Nom de la ressource côté fournisseur
+     * (couche, dataset, fichier, etc.)
+     */
     resource:string
+
+    /**
+     * ⚠️ deprecated
+     */
     filters?:CrudFilters
     children?: ReactNode
     pageSize?:number
+
+    /** Paramètres additionnels à passer au fournisseur */
     meta?:any
 }
 
@@ -35,12 +49,14 @@ export type dataset = {
     geojson?:any
     dataHash?:number;
 }
- 
+
+/**
+ * Composant **logique** permettant de récupérer des données.
+ */
 export const DSL_Dataset:React.FC<IDatasetProps> = ({
   children, 
   id, 
-  provider : provider_input, 
-  type: providerType='file', 
+  type: providerType, 
   url:providerUrl, 
   resource, 
   pageSize, 
@@ -99,12 +115,11 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
 
     const allDatasets = useAllDatasets()
 
-    const controls = useAllControls() ;
     const providerContext = useContext(DataProviderContext)
 
-    const provider = (providerUrl && getProviderFromType(providerType)(providerUrl)) || providerContext || provider_input;
+    const provider = (providerUrl && getProviderFromType(providerType)(providerUrl)) || providerContext;
     if (provider === undefined){
-      throw new Error("Error : No dataProvider, please use one of : <Provider> parent, providerUrl/providerType properties or provider property")
+      throw new Error("Error : No dataProvider, please use providerUrl/providerType properties")
     }
 
 
@@ -114,7 +129,7 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
       .filter((c): c is React.ReactElement => React.isValidElement(c))
       .filter((c) => typeof c.type!='string' && c.type.name == Filter.name).forEach(
       (c) => {
-          const value = (typeof c.props.children === "string" ? c.props.children.trim() : c.props.children ) || controls?.[c.props.control]
+          const value = (typeof c.props.children === "string" ? c.props.children.trim() : c.props.children )
           filters.push({
             operator:c.props.operator || 'eq',
             value: value,

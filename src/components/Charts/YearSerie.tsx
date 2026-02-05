@@ -4,7 +4,7 @@
  */
 
 import { from, op } from "arquero"
-import { useDataset, useDatasetInput } from "../Dataset/hooks"
+import { useDataset, datasetInput } from "../Dataset/hooks"
 import { SimpleRecord } from "../../types"
 import { EChartsOption, SeriesOption } from "echarts"
 import { usePalette, usePaletteLabels } from "../Palette/Palette"
@@ -13,7 +13,7 @@ import { useBlockConfig } from "../DashboardPage/Block"
 import deepMerge from "../../utils/deepmerge"
 
 export interface IYearSerieProps {
-    dataset:useDatasetInput
+    dataset:datasetInput
     title?:string
     yearKey:string
     valueKey:string

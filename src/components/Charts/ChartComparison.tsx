@@ -1,5 +1,5 @@
 import { EChartsOption, LabelFormatterCallback, SeriesOption } from "echarts";
-import { useDataset, useDatasetInput } from "../Dataset/hooks";
+import { useDataset, datasetInput } from "../Dataset/hooks";
 import { ChartEcharts, useBlockConfig, usePalette, usePaletteLabels } from "../../dsl";
 import { SimpleRecord } from "../../types";
 import { from, op } from "arquero";
@@ -9,7 +9,7 @@ type labelType = "percent" | "value" | "category" | "none"
 
 export interface ChartComparisonProps {
     /** Identifiant du dataset */
-    dataset?:useDatasetInput;
+    dataset?:datasetInput;
 
     /** Nom de la colonne qui contient les valeurs numériques */
     valueKey:string;
