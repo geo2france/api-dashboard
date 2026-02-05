@@ -70,7 +70,7 @@ export const YearSelection: Story = {
 };
 
 export const Filter: Story = {
-  name: "Filtre",
+  name: "Listre filtrable",
   parameters:{
     controls: {
       include: ['showSearch'],
