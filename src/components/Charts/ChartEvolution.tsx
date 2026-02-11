@@ -6,7 +6,6 @@ import { useBlockConfig } from "../DashboardPage/Block";
 import { ChartEcharts, useDataset } from "../../dsl";
 import { datasetInput } from "../Dataset/hooks";
 
-type labelType = "percent" | "value" | "category" | "none" 
 
 export interface ChartEvolutionProps {
     /** Identifiant du dataset */
@@ -16,8 +15,9 @@ export interface ChartEvolutionProps {
     valueKey:string;
 
     /** Nom de la colonne qui contient les catégories */
-    nameKey:string;
+    nameKey?:string;
 
+    /** Colonne qui contient la date ou année */
     timeKey:string;
 
     /** Type de graphique */
@@ -28,9 +28,6 @@ export interface ChartEvolutionProps {
 
     /** Titre du graphique */
     title?:string;
-
-    /** Valeur à afficher en étiquette */
-    label?: labelType
 
     /** Empiler les valeurs ? */
     stack?:boolean
@@ -44,6 +41,10 @@ export interface ChartEvolutionProps {
     option?:EChartsOption;
 }
 
+
+/** Composant de visualisation permettant de montrer l'évolution d'une valeur au cours du temps.
+ * La valeur peut-être décomposée en plusieurs catégories
+ */
 export const ChartEvolution:React.FC<ChartEvolutionProps> = ({
 dataset:dataset_id, 
 title, 
@@ -54,7 +55,6 @@ chartType='bar',
 stack:stack_in,
 timeMarker,
 unit,
-label: label_in, 
 option:custom_option={}}:ChartEvolutionProps) => {
 
     const dataset = useDataset(dataset_id)
@@ -65,26 +65,31 @@ option:custom_option={}}:ChartEvolutionProps) => {
         dataExport: data
     })
 
+    // Devnote : ajouter une propriété "timePrecision" ? (year, month, day, etc..)
+    // Ceci pourrait permettre aussi d'aggréger les données selon la précision souhaité
+    const first_time = data?.[0]?.[timeKey];
+    const yearMode = (typeof first_time === 'number' || isNaN(Number(first_time))== false)
 
     const stack = stack_in ?? (chartType !== 'line');
-    // Label par défaut 
-    //const label:labelType = label_in || 'value'
+
 
     const chart_data1: SimpleRecord[] =
         data && data.length > 0
             ? from(data.filter( e => e[valueKey]) )
-                .groupby([nameKey, timeKey])
+                .groupby(nameKey ? [nameKey, timeKey] : timeKey )
                 .rollup({ value: op.sum(valueKey) })
                 .orderby(timeKey)
                 .objects()
                 .map((d: any) => ([
                     String(d[timeKey]), 
                     d.value, 
-                    d[nameKey]
+                    nameKey ? d[nameKey] : valueKey // Si pas de dimension "cat", on utilise le nom la colonne de valeur
                 ]))
             : [];
 
-    const cat =  data?.length ? from(data).select(nameKey).dedupe().array(nameKey) as string[] : undefined
+    const cat =  nameKey ?
+                     data?.length ? from(data).select(nameKey).dedupe().array(nameKey) as string[] : undefined
+                 : [ valueKey ] // Nom de la série unique
 
     const series:SeriesOption[] = cat?.map( (c, idx) => ({
         type: chartType === "area" ? 'line' : chartType,
@@ -111,7 +116,11 @@ option:custom_option={}}:ChartEvolutionProps) => {
         },
         tooltip:{
             show: true,
-            valueFormatter: (v) => `${v?.toLocaleString(undefined, {maximumFractionDigits:0})} t`
+            trigger: 'axis',
+            axisPointer:{ 
+                // N'afficher que l'année (au lieu de la date du 1er janvier) 
+                label:{formatter: yearMode ? (p) => String(new Date(p.value).getUTCFullYear()) ?? `` : undefined }}, 
+            valueFormatter: (v) => `${v?.toLocaleString(undefined, {maximumFractionDigits:0})} ${unit ?? ''}`
         },
         yAxis: {show: true, type: 'value' },
         xAxis: {show: true, type: 'time' },
