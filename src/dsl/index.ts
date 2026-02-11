@@ -24,6 +24,7 @@ import { LegendControl } from "../components/MapLegend/MapLegend";
 import { Intro } from "../components/DashboardPage/Intro";
 import { ChartComparison } from "../components/Charts/ChartComparison";
 import { DataTable } from "../components/Charts/Datatable";
+import { ChartEvolution } from "../components/Charts/ChartEvolution";
 
 export {
     Dashboard,
@@ -39,6 +40,7 @@ export {
     ChartPie,
     ChartYearSerie,
     ChartComparison,
+    ChartEvolution,
     DataTable,
     Statistics,
     StatisticsCollection,
