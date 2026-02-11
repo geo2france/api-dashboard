@@ -61,7 +61,7 @@ export const YearSelection: Story = {
     }
   },
   args:{
-    options: [...Array(2024 - 2018 + 1)].map((_, i) => String(2018 + i)).reverse(),
+    options: [...Array(2024 - 2018 + 1)].map((_, i) => 2018 + i).reverse(),
     arrows: true,
     reverse: true,
     label: 'Année',

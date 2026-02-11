@@ -63,16 +63,18 @@ export const useAllControls = (): Record<string, any> => {
 };
 
 /* Convenient function to return Options from list or Options */
-export const list_to_options = (input : string[] | { label: string; value: string }[] = [])=> {
-  if (input === undefined) { return []}
+export const list_to_options = 
+  (input : string[] | number[] | { label: string; value: string | number }[] = []) 
+  : ({ label: string; value: string }[])  => {
   return input.map((o) => {
-    if (typeof o == "string"){
+    if (typeof o == "string" || typeof o == "number"){
       return {label:String(o), value:String(o)}
     }
-    return o
+    return {label:String(o.label), value:String(o.value)}
   })
 }
 
+export type ListToOptionsInput = Parameters<typeof list_to_options>[0];
 
 interface IControlProps {
   children: ReactElement | ReactElement[];
