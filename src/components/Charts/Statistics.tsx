@@ -55,7 +55,7 @@ export interface StatisticsProps {
     invertColor?: boolean
 
     /** Icône. Composant ou nom de l'icône sur https://icon-sets.iconify.design/ */
-    icon?: ReactElement | string
+    icon?: React.ReactNode | string
 
     /** Texte à afficher dans le tooltip d'aide */
     help?: string

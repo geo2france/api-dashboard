@@ -1,7 +1,7 @@
 import { Button, Col, Dropdown, Empty, Flex, Grid, Layout, Radio, Row, RowProps, Tabs, theme } from "antd";
 import type { TabsProps } from 'antd';
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
-import React, { isValidElement, ReactElement, useState, useEffect, useContext } from "react";
+import React, { isValidElement, ReactElement, useState, useEffect, useContext, ReactNode } from "react";
 import { Helmet } from "react-helmet-async";
 import { useSearchParamsState } from "../../utils/useSearchParamsState";
 import Control, { ControlContext, DSL_Control } from "../Control/Control";
@@ -108,15 +108,25 @@ export default DashboardPage;
 
 
 interface IDSLDashboardPageProps {
-    children? : React.ReactNode 
+
+    /** Composants visibles (dataviz, carto) ou logiques (dataset, palette) */
+    children? : ReactNode 
+
+    /** Nom de la page (titre). */
     name? : string
+
+    /** Nombre de colonnes. */
     columns?: number
+
+    /** Mode debug. Affiche un bouton permettant d'accéder aux informations développeur. */
     debug?: boolean
 }
 
 
 
-
+/** Une page de tableau de bord.
+ * Cette page peut contenir plusieurs `Section` ou directement le contenu.
+ */
 export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tableau de bord', columns=2, children, debug=false}) => {
 
     const { token } = useToken();
@@ -181,7 +191,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
     if (visible_components.length > 0) {items.push({
         key:"99 - Autres", 
         label: '-',
-        children:<Section title='Autres'>{visible_components}</Section>
+        children:<Section title='Autres' columns={columns}>{visible_components}</Section>
     })}
 
 
