@@ -1,4 +1,4 @@
-import { Button, Col, Dropdown, Flex, Grid, Layout, Radio, Row, RowProps, Tabs, theme } from "antd";
+import { Button, Col, Dropdown, Empty, Flex, Grid, Layout, Radio, Row, RowProps, Tabs, theme } from "antd";
 import type { TabsProps } from 'antd';
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
 import React, { isValidElement, ReactElement, useState, useEffect, useContext } from "react";
@@ -108,7 +108,7 @@ export default DashboardPage;
 
 
 interface IDSLDashboardPageProps {
-    children : React.ReactNode // TODO, lister les type possible ?React.ReactElement<typeof DashboardElement>[];
+    children? : React.ReactNode 
     name? : string
     columns?: number
     debug?: boolean
@@ -135,9 +135,6 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
     //const allDatasetLoaded = Object.values(datasets).every(d => !d.isFetching);
     //const isDatasetError = Object.values(datasets).some(d => d.isError);
 
-
-
-    
 
     const childrenArray = React.Children.toArray(children).filter(isValidElement);
 
@@ -215,7 +212,14 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
                                 borderRadius:token.borderRadiusLG}} 
                             style={{margin:4}} />
                         :
+                      items.length == 1 ?
                         <div style={{margin:4}}> {items?.[0].children} </div>//Show content without tabs if only one
+                        : //no visible content
+                       <Flex align="center" justify="center" style={{height:"100%"}}>
+                        <Empty 
+                            description="Ce tableau de bord est vide pour le moment."
+                            image={<Icon icon="solar:sleeping-circle-bold" height={55} color={token.colorIcon} />}/>
+                       </Flex>
                     }
                 {logic_components}
                 {intro_component}
