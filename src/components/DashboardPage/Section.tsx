@@ -1,17 +1,25 @@
 
 import { Col, Row } from "antd";
-import React, {isValidElement} from "react";
+import {Children, FC, isValidElement, ReactNode} from "react";
 import { DSL_ChartBlock } from "./Block";
 
+
 export interface SectionProps {
+    /** Titre de la section, doit être unique */
     title: string
-    children?: React.ReactElement | React.ReactElement[]
-    icon?: React.ReactElement | string
+
+    /** Composants visibles (dataviz, carto) ou logiques (dataset, palette) */
+    children?: ReactNode
+
+    /** Icone de la section. Composant ou nom (iconify) de l'icon */
+    icon?: ReactNode | string
+
+    /** Nombre de colonnes. */
+    columns?: number
 }
 
-export const Section: React.FC<SectionProps> = ({ children }) => {
-  const columns = 2;
-  const childrenArray = React.Children.toArray(children).filter(isValidElement);
+export const Section: FC<SectionProps> = ({ children, columns=2 }) => {
+  const childrenArray = Children.toArray(children).filter(isValidElement);
   return (
     <Row gutter={[8, 8]} style={{ margin: 0 }}>
       {childrenArray.map((component, idx) => (

@@ -2,7 +2,7 @@ import type {  SelectProps } from 'antd';
 import { useDataset } from '../Dataset/hooks';
 import { buildOptionsFromData } from './Radio';
 import NextPrevSelect from '../NextPrevSelect/NextPrevSelect';
-import { list_to_options } from './Control';
+import { list_to_options, ListToOptionsInput } from './Control';
 
 
 
@@ -17,8 +17,8 @@ type ExtendedSelectProps = Omit<SelectProps<any>, 'options'> & {
     /** Jeu de données contenant les choix (à la place de options) */
     dataset?: string;
 
-    /** Choix possible */
-    options?: { label: string ; value: string }[] | string[];
+    /** Choix possibles */
+    options?: ListToOptionsInput;
 
     /** Valeur intiale sélectionnée */
     initial_value? : string,
