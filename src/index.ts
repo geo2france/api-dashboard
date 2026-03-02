@@ -57,6 +57,8 @@ export type { SimpleRecord, Partner, RouteConfig } from "./types"
 export type { LegendItem } from "./components/MapLegend/MapLegend" 
 export type { DashboardConfig } from "./components/Layout/DashboardApp"
 export type  { datasetInput } from "./components/Dataset/hooks";
+export type { PageProps } from "./components/Layout/DashboardApp";
+
 
 // DSL
 import * as DSL from './dsl';

@@ -2,12 +2,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ConfigProvider, Layout, ThemeConfig } from "antd";
 import { HashRouter, Outlet, Route, Routes } from "react-router-dom";
 import { Partner, RouteConfig } from "../../types";
-import { generateRoutes } from "../../utils/route_utils";
+//import { generateRoutes } from "../../utils/route_utils";
 import DashboardSider from "./Sider";
 import { Content } from "antd/es/layout/layout";
 import { ErrorComponent } from "./Error";
 import { DasbhoardFooter } from "./Footer";
-import { createContext } from "react";
+import { Children, createContext, isValidElement, ReactNode } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import { createDatasetRegistry } from "../Dataset/hooks";
 import { DatasetRegistryContext } from "../Dataset/context";
@@ -42,10 +42,21 @@ interface AppContextProps {
     subtitle?: string;
     logo?: string;
 }
+
+export interface PageProps {
+  title: string
+  icon?: ReactNode
+  hidden?: boolean
+  path?: string
+}
   
 export const AppContext = createContext<AppContextProps>({});  
 
 export interface DashboardConfig {
+  /** Pages de dashboard */
+  children?: ReactNode
+
+
   /**
   * Titre principal du tableau de bord (affiché dans le header ou le titre de page).
   */
@@ -88,9 +99,23 @@ export interface DashboardConfig {
 }
 
 
-const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, footerSlider, title, subtitle, disablePoweredBy=false}) => {
+const DashboardApp: React.FC<DashboardConfig> = ({children, theme, logo, brands, footerSlider, title, subtitle, disablePoweredBy=false}) => {
 
     const context_values = { title, subtitle, logo };
+
+    const pages = Children.toArray(children).filter(page =>  isValidElement(page) )
+
+    const routes = pages.map((page,idx) => {
+      const title = page.props.title ?? String(idx)
+      const path = page.props.path ?? title+String(idx)
+      return ({ 
+            label: title,
+            path:path,
+            element:page,
+            hidden:page.props.hidden ?? false,
+            icon:page.props.icon
+        })
+    });
 
     return (
         <QueryClientProvider client={queryClient}>
@@ -115,7 +140,9 @@ const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, f
                                   </Layout>
                           }
                       >
-                      {generateRoutes(routes)}
+                      {routes.map( r => 
+                                <Route key={r.path} path={r.path} element={r.element} />
+                      )}
                       <Route path="*" element={<ErrorComponent />} />
                     </Route>
                   </Routes>
