@@ -7,12 +7,13 @@ import DashboardSider from "./Sider";
 import { Content } from "antd/es/layout/layout";
 import { ErrorComponent } from "./Error";
 import { DasbhoardFooter } from "./Footer";
-import { Children, createContext, isValidElement, ReactNode } from "react";
+import { Children, createContext, isValidElement, ReactElement, ReactNode } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import { createDatasetRegistry } from "../Dataset/hooks";
 import { DatasetRegistryContext } from "../Dataset/context";
 import { ControlContext, CreateControlesRegistry } from "../Control/Control";
-
+import slug from 'slug'
+import { generateRoutes } from "../../utils/route_utils";
 //import '../../index.css' //TODO a intégrer en jsx
 
 const queryClient = new QueryClient()
@@ -47,14 +48,14 @@ export interface PageProps {
   title: string
   icon?: ReactNode
   hidden?: boolean
-  path?: string
+  children?: ReactNode
 }
   
 export const AppContext = createContext<AppContextProps>({});  
 
 export interface DashboardConfig {
   /** Pages de dashboard */
-  children?: ReactNode
+  children?: ReactElement<PageProps> | ReactElement<PageProps>[];
 
 
   /**
@@ -69,6 +70,7 @@ export interface DashboardConfig {
 
   /**
    * Liste des routes de l'application (chaque route correspond à une page du tableau de bord).
+   * @deprecated since 1.22. Use DashboardApp childrens.
   */
   routes: RouteConfig[];
 
@@ -99,23 +101,42 @@ export interface DashboardConfig {
 }
 
 
-const DashboardApp: React.FC<DashboardConfig> = ({children, theme, logo, brands, footerSlider, title, subtitle, disablePoweredBy=false}) => {
+const DashboardApp: React.FC<DashboardConfig> = ({children, theme, routes: routes_legacy, logo, brands, footerSlider, title, subtitle, disablePoweredBy=false}) => {
 
     const context_values = { title, subtitle, logo };
 
-    const pages = Children.toArray(children).filter(page =>  isValidElement(page) )
+    const pages = Children.toArray(children)
+                          .filter(isValidElement) as ReactElement<PageProps>[];
 
-    const routes = pages.map((page,idx) => {
-      const title = page.props.title ?? String(idx)
-      const path = page.props.path ?? title+String(idx)
-      return ({ 
-            label: title,
-            path:path,
-            element:page,
+    const routes:RouteConfig[] = pages.length > 1 ? pages.map((page) => {
+      if (typeof(page.type) != 'string' && page.type.name == PagesGroup.name ){ // Groupe
+        return ({
+            label: page.props.title, 
+            path:slug(page.props.title),
+            element:undefined, // Pas de route pour les groupes
             hidden:page.props.hidden ?? false,
-            icon:page.props.icon
+            icon:page.props.icon,
+            children: Children.toArray(page.props.children)?.map( (c:any) => (
+              { 
+                label: c.props.title, // A factoriser avec les pages hors groupes
+                path: slug(c.props.title),
+                element:c,
+                hidden:c.props.hidden ?? false,
+                icon:c.props.icon
+              }
+            )
+            )
         })
-    });
+      }else { //Pages directes (sans groupe)
+              return ({ 
+                    label: page.props.title,
+                    path:slug(page.props.title),
+                    element:page,
+                    hidden:page.props.hidden ?? false,
+                    icon:page.props.icon
+                })
+      }
+    }) : routes_legacy ; // Pour rétro-compatibiltié
 
     return (
         <QueryClientProvider client={queryClient}>
@@ -140,9 +161,7 @@ const DashboardApp: React.FC<DashboardConfig> = ({children, theme, logo, brands,
                                   </Layout>
                           }
                       >
-                      {routes.map( r => 
-                                <Route key={r.path} path={r.path} element={r.element} />
-                      )}
+                      {generateRoutes(routes)}
                       <Route path="*" element={<ErrorComponent />} />
                     </Route>
                   </Routes>
@@ -157,3 +176,8 @@ const DashboardApp: React.FC<DashboardConfig> = ({children, theme, logo, brands,
 }
 
 export default DashboardApp;
+
+/** Regrouper des pages dans le menu */
+export const PagesGroup:React.FC<PageProps> = ({children}:PageProps) => {
+  return children
+}
