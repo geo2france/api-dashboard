@@ -14,6 +14,7 @@ import { DatasetRegistryContext } from "../Dataset/context";
 import { ControlContext, CreateControlesRegistry } from "../Control/Control";
 import slug from 'slug'
 import { generateRoutes } from "../../utils/route_utils";
+import renderIcon from "../../utils/icon";
 //import '../../index.css' //TODO a intégrer en jsx
 
 const queryClient = new QueryClient()
@@ -46,7 +47,11 @@ interface AppContextProps {
 
 export interface PageProps {
   title: string
-  icon?: ReactNode
+
+  /** Icône de la page. 
+   * Composant ou nom (iconify) de l'icone */
+  icon?: ReactElement | string
+
   hidden?: boolean
   children?: ReactNode
 }
@@ -115,14 +120,14 @@ const DashboardApp: React.FC<DashboardConfig> = ({children, theme, routes: route
             path:slug(page.props.title),
             element:undefined, // Pas de route pour les groupes
             hidden:page.props.hidden ?? false,
-            icon:page.props.icon,
+            icon: renderIcon(page.props.icon),
             children: Children.toArray(page.props.children)?.map( (c:any) => (
               { 
                 label: c.props.title, // A factoriser avec les pages hors groupes
                 path: slug(c.props.title),
                 element:c,
                 hidden:c.props.hidden ?? false,
-                icon:c.props.icon
+                icon:renderIcon(c.props.icon)
               }
             )
             )
@@ -133,10 +138,10 @@ const DashboardApp: React.FC<DashboardConfig> = ({children, theme, routes: route
                     path:slug(page.props.title),
                     element:page,
                     hidden:page.props.hidden ?? false,
-                    icon:page.props.icon
+                    icon:renderIcon(page.props.icon)
                 })
       }
-    }) : routes_legacy ; // Pour rétro-compatibiltié
+    }) : routes_legacy ?? [] ; // Pour rétro-compatibiltié
 
     return (
         <QueryClientProvider client={queryClient}>
