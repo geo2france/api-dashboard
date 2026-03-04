@@ -72,7 +72,7 @@ export interface DashboardConfig {
    * Liste des routes de l'application (chaque route correspond à une page du tableau de bord).
    * @deprecated since 1.22. Use DashboardApp childrens.
   */
-  routes: RouteConfig[];
+  routes?: RouteConfig[];
 
   /**
    * Configuration du thème Ant Design (permet de personnaliser les couleurs, la typographie, etc.).
