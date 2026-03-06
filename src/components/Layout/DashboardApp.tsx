@@ -2,22 +2,24 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ConfigProvider, Layout, ThemeConfig } from "antd";
 import { HashRouter, Outlet, Route, Routes } from "react-router-dom";
 import { Partner, RouteConfig } from "../../types";
-import { generateRoutes } from "../../utils/route_utils";
+//import { generateRoutes } from "../../utils/route_utils";
 import DashboardSider from "./Sider";
 import { Content } from "antd/es/layout/layout";
 import { ErrorComponent } from "./Error";
 import { DasbhoardFooter } from "./Footer";
-import { createContext } from "react";
+import { Children, createContext, isValidElement, ReactElement, ReactNode } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import { createDatasetRegistry } from "../Dataset/hooks";
 import { DatasetRegistryContext } from "../Dataset/context";
 import { ControlContext, CreateControlesRegistry } from "../Control/Control";
-
+import slug from 'slug'
+import { generateRoutes, getFirstValidElement } from "../../utils/route_utils";
+import renderIcon from "../../utils/icon";
 //import '../../index.css' //TODO a intégrer en jsx
 
 const queryClient = new QueryClient()
 
-const default_theme:ThemeConfig = { 
+export const default_theme:ThemeConfig = { 
     token: {
       colorPrimary: "#95c11f",
       linkHoverDecoration:'underline',
@@ -42,10 +44,25 @@ interface AppContextProps {
     subtitle?: string;
     logo?: string;
 }
+
+export interface PageProps {
+  title: string
+
+  /** Icône de la page. 
+   * Composant ou nom (iconify) de l'icone */
+  icon?: ReactElement | string
+
+  hidden?: boolean
+  children?: ReactNode
+}
   
 export const AppContext = createContext<AppContextProps>({});  
 
 export interface DashboardConfig {
+  /** Pages de dashboard. La première page sera également l'index (homepage) */
+  children?: ReactElement<PageProps> | ReactElement<PageProps>[];
+
+
   /**
   * Titre principal du tableau de bord (affiché dans le header ou le titre de page).
   */
@@ -58,18 +75,20 @@ export interface DashboardConfig {
 
   /**
    * Liste des routes de l'application (chaque route correspond à une page du tableau de bord).
+   * @deprecated since 1.22. Use DashboardApp childrens.
   */
-  routes: RouteConfig[];
+  routes?: RouteConfig[];
 
   /**
    * Configuration du thème Ant Design (permet de personnaliser les couleurs, la typographie, etc.).
+   * Voir : https://ant.design/docs/react/customize-theme#theme
   */
   theme?: ThemeConfig;
 
   /**
    * URL ou chemin du logo à afficher dans le tableau de bord.
   */
-  logo: string;
+  logo?: string;
 
   /**
    * Liste optionnelle de partenaires ou marques à afficher dans le footer ou ailleurs.
@@ -87,11 +106,50 @@ export interface DashboardConfig {
   disablePoweredBy?: boolean;
 }
 
-
-const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, footerSlider, title, subtitle, disablePoweredBy=false}) => {
+/** Composant principal de l'application.
+ * 
+ * Les enfants de l'application sont les différentes pages de tableau de bord.
+ * La configuration globale de l'application (nom, style, etc.) se fait via les propriétés.
+ */
+const DashboardApp: React.FC<DashboardConfig> = ({children, theme, routes: routes_legacy, logo, brands, footerSlider, title, subtitle, disablePoweredBy=false}:DashboardConfig) => {
 
     const context_values = { title, subtitle, logo };
 
+    const pages = Children.toArray(children)
+                          .filter(isValidElement) as ReactElement<PageProps>[];
+
+    const routes:RouteConfig[] = pages.length >= 1 ? pages.map((page) => {
+      if (typeof(page.type) != 'string' && page.type.name == PagesGroup.name ){ // Groupe
+        return ({
+            label: page.props.title, 
+            path:slug(page.props.title),
+            element:undefined, // Pas de route pour les groupes
+            hidden:page.props.hidden ?? false,
+            icon: renderIcon(page.props.icon),
+            children: Children.toArray(page.props.children)?.map( (c:any) => (
+              { 
+                label: c.props.title, // A factoriser avec les pages hors groupes
+                path: slug(c.props.title),
+                element:c,
+                hidden:c.props.hidden ?? false,
+                icon:renderIcon(c.props.icon)
+              }
+            )
+            )
+        })
+      }else { //Pages directes (sans groupe)
+              return ({ 
+                    label: page.props.title,
+                    path:slug(page.props.title),
+                    element:page,
+                    hidden:page.props.hidden ?? false,
+                    icon:renderIcon(page.props.icon)
+                })
+      }
+    }) : routes_legacy ?? [] ; // Pour rétro-compatibiltié
+
+    const route_tree = generateRoutes(routes)
+    
     return (
         <QueryClientProvider client={queryClient}>
           <ConfigProvider theme={theme || default_theme /* Merger plutôt ?*/}>
@@ -115,7 +173,8 @@ const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, f
                                   </Layout>
                           }
                       >
-                      {generateRoutes(routes)}
+                      <Route index element={getFirstValidElement(route_tree) } />
+                      {route_tree}
                       <Route path="*" element={<ErrorComponent />} />
                     </Route>
                   </Routes>
@@ -130,3 +189,8 @@ const DashboardApp: React.FC<DashboardConfig> = ({routes, theme, logo, brands, f
 }
 
 export default DashboardApp;
+
+/** Regrouper des pages dans le menu */
+export const PagesGroup:React.FC<PageProps> = ({children}:PageProps) => {
+  return children
+}
