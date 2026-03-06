@@ -87,7 +87,7 @@ export interface DashboardConfig {
   /**
    * URL ou chemin du logo à afficher dans le tableau de bord.
   */
-  logo: string;
+  logo?: string;
 
   /**
    * Liste optionnelle de partenaires ou marques à afficher dans le footer ou ailleurs.
@@ -106,14 +106,14 @@ export interface DashboardConfig {
 }
 
 
-const DashboardApp: React.FC<DashboardConfig> = ({children, theme, routes: routes_legacy, logo, brands, footerSlider, title, subtitle, disablePoweredBy=false}) => {
+const DashboardApp: React.FC<DashboardConfig> = ({children, theme, routes: routes_legacy, logo, brands, footerSlider, title, subtitle, disablePoweredBy=false}:DashboardConfig) => {
 
     const context_values = { title, subtitle, logo };
 
     const pages = Children.toArray(children)
                           .filter(isValidElement) as ReactElement<PageProps>[];
 
-    const routes:RouteConfig[] = pages.length > 1 ? pages.map((page) => {
+    const routes:RouteConfig[] = pages.length >= 1 ? pages.map((page) => {
       if (typeof(page.type) != 'string' && page.type.name == PagesGroup.name ){ // Groupe
         return ({
             label: page.props.title, 
