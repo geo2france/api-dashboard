@@ -1,13 +1,14 @@
 //Retourne les routes et le menu
 
-import { NavLink, Route } from "react-router-dom";
+import { NavLink, Outlet, Route } from "react-router-dom";
 import { RouteConfig } from "../types";
 import type { MenuProps } from 'antd';
+import React from "react";
 type MenuItem = Required<MenuProps>['items'][number];
 
 export const generateRoutes = (routes: RouteConfig[]) =>
     routes.map((route) => (
-      <Route key={route.path} path={route.path} element={!route.children && route.element}>
+      <Route key={route.path} path={route.path} element={route.children ? <Outlet /> :  route.element}>
         {route.children && generateRoutes(route.children)}
       </Route>
     ));
@@ -66,4 +67,37 @@ function buildMenuTree(items: MenuItem[]): MenuItem[] {
   }
 
   return roots;
+}
+
+
+/** AI Generated,
+ * Get first "viewable" route (aka "not a group")
+ * Used for index route
+ */
+export function getFirstValidElement(
+  routes: React.ReactElement[]
+): React.ReactElement | null {
+
+  function isEmptyOutlet(el: React.ReactNode): boolean {
+    return React.isValidElement(el) && el.type === Outlet;
+  }
+  for (const route of routes) {
+    const el = route.props.element;
+
+    if (el && !isEmptyOutlet(el)) { // Page
+      return el;
+    }
+
+    //Group
+    const children = React.Children.toArray(route.props.children).filter(
+      React.isValidElement
+    ) as React.ReactElement[];
+
+    if (children.length > 0) {
+      const firstChild = getFirstValidElement(children);
+      if (firstChild) return firstChild;
+    }
+  }
+
+  return null;
 }

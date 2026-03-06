@@ -13,13 +13,13 @@ import { createDatasetRegistry } from "../Dataset/hooks";
 import { DatasetRegistryContext } from "../Dataset/context";
 import { ControlContext, CreateControlesRegistry } from "../Control/Control";
 import slug from 'slug'
-import { generateRoutes } from "../../utils/route_utils";
+import { generateRoutes, getFirstValidElement } from "../../utils/route_utils";
 import renderIcon from "../../utils/icon";
 //import '../../index.css' //TODO a intégrer en jsx
 
 const queryClient = new QueryClient()
 
-const default_theme:ThemeConfig = { 
+export const default_theme:ThemeConfig = { 
     token: {
       colorPrimary: "#95c11f",
       linkHoverDecoration:'underline',
@@ -81,6 +81,7 @@ export interface DashboardConfig {
 
   /**
    * Configuration du thème Ant Design (permet de personnaliser les couleurs, la typographie, etc.).
+   * Voir : https://ant.design/docs/react/customize-theme#theme
   */
   theme?: ThemeConfig;
 
@@ -143,6 +144,8 @@ const DashboardApp: React.FC<DashboardConfig> = ({children, theme, routes: route
       }
     }) : routes_legacy ?? [] ; // Pour rétro-compatibiltié
 
+    const route_tree = generateRoutes(routes)
+    
     return (
         <QueryClientProvider client={queryClient}>
           <ConfigProvider theme={theme || default_theme /* Merger plutôt ?*/}>
@@ -166,7 +169,8 @@ const DashboardApp: React.FC<DashboardConfig> = ({children, theme, routes: route
                                   </Layout>
                           }
                       >
-                      {generateRoutes(routes)}
+                      <Route index element={getFirstValidElement(route_tree) } />
+                      {route_tree}
                       <Route path="*" element={<ErrorComponent />} />
                     </Route>
                   </Routes>
