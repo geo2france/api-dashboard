@@ -46,7 +46,7 @@ interface AppContextProps {
 }
 
 export interface PageProps {
-  title: string
+  title?: string
 
   /** Icône de la page. 
    * Composant ou nom (iconify) de l'icone */
@@ -118,18 +118,18 @@ const DashboardApp: React.FC<DashboardConfig> = ({children, theme, routes: route
     const pages = Children.toArray(children)
                           .filter(isValidElement) as ReactElement<PageProps>[];
 
-    const routes:RouteConfig[] = pages.length >= 1 ? pages.map((page) => {
+    const routes:RouteConfig[] = pages.length >= 1 ? pages.map((page, idx) => {
       if (typeof(page.type) != 'string' && page.type.name == PagesGroup.name ){ // Groupe
         return ({
-            label: page.props.title, 
-            path:slug(page.props.title),
+            label: page.props.title ?? String(idx), 
+            path:slug(page.props.title ?? String(idx)),
             element:undefined, // Pas de route pour les groupes
             hidden:page.props.hidden ?? false,
             icon: renderIcon(page.props.icon),
-            children: Children.toArray(page.props.children)?.map( (c:any) => (
+            children: Children.toArray(page.props.children)?.map( (c:any, idx) => (
               { 
                 label: c.props.title, // A factoriser avec les pages hors groupes
-                path: slug(c.props.title),
+                path: slug(c.props.title ?? idx),
                 element:c,
                 hidden:c.props.hidden ?? false,
                 icon:renderIcon(c.props.icon)
@@ -139,8 +139,8 @@ const DashboardApp: React.FC<DashboardConfig> = ({children, theme, routes: route
         })
       }else { //Pages directes (sans groupe)
               return ({ 
-                    label: page.props.title,
-                    path:slug(page.props.title),
+                    label: page.props.title ?? String(idx),
+                    path:slug(page.props.title ?? String(idx)),
                     element:page,
                     hidden:page.props.hidden ?? false,
                     icon:renderIcon(page.props.icon)
