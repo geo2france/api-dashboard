@@ -23,7 +23,7 @@ import DashboardChart from "./components/DashboardChart/DashboardChart";
 import MapLegend from "./components/MapLegend/MapLegend";
 
 // Layout
-import DashboardApp from "./components/Layout/DashboardApp";
+import DashboardApp, { PagesGroup } from "./components/Layout/DashboardApp";
 import DashboardSider from "./components/Layout/Sider";
 import DashboardPage from "./components/DashboardPage/Page";
 import DashboardElement from "./components/DashboardElement/DashboardElement"
@@ -41,6 +41,7 @@ export {
     MapLegend,
     DashboardSider,
     DashboardApp,
+    PagesGroup,
  } 
 
 
@@ -57,6 +58,8 @@ export type { SimpleRecord, Partner, RouteConfig } from "./types"
 export type { LegendItem } from "./components/MapLegend/MapLegend" 
 export type { DashboardConfig } from "./components/Layout/DashboardApp"
 export type  { datasetInput } from "./components/Dataset/hooks";
+export type { PageProps } from "./components/Layout/DashboardApp";
+
 
 // DSL
 import * as DSL from './dsl';

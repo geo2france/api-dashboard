@@ -19,7 +19,11 @@ tags:['autodocs'],
     },
     options: {
       storySort: {
-        order: ['Documentation', ['Introduction']]
+        order: ['Documentation', ['Introduction'], 
+                'Layout', ['DashboardApp'], 
+                'Dataset', 
+                'Dataviz', 
+                'Controle', ]
       },
     },
 

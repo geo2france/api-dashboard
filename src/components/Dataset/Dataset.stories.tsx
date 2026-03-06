@@ -7,7 +7,7 @@ import { SimpleRecord } from '../..';
 
 
 const meta = {
-  title: 'Dashboard/Dataset',
+  title: 'Dataset/Dataset',
   component: Dataset,
   decorators: [
         (Story, { args }) => {
