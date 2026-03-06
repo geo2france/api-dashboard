@@ -59,7 +59,7 @@ export interface PageProps {
 export const AppContext = createContext<AppContextProps>({});  
 
 export interface DashboardConfig {
-  /** Pages de dashboard */
+  /** Pages de dashboard. La première page sera également l'index (homepage) */
   children?: ReactElement<PageProps> | ReactElement<PageProps>[];
 
 
@@ -106,7 +106,11 @@ export interface DashboardConfig {
   disablePoweredBy?: boolean;
 }
 
-
+/** Composant principal de l'application.
+ * 
+ * Les enfants de l'application sont les différentes pages de tableau de bord.
+ * La configuration globale de l'application (nom, style, etc.) se fait via les propriétés.
+ */
 const DashboardApp: React.FC<DashboardConfig> = ({children, theme, routes: routes_legacy, logo, brands, footerSlider, title, subtitle, disablePoweredBy=false}:DashboardConfig) => {
 
     const context_values = { title, subtitle, logo };
