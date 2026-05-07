@@ -1,6 +1,8 @@
 import { SimpleRecord } from "../types"
 import { from, op } from "arquero"
 
+type typeAggregate = "last" | "first" | "sum" | "lastNotNull" | "min" | "max" | "count" | "mean" | "countDistinct" | "countMissing"
+
 interface AggregatorParams {
   /** Tableau de données */
   data?: SimpleRecord[]
@@ -20,7 +22,9 @@ interface AggregatorResult {
   value?: number //ou string ? undef ?
 }
 
-/** Fonction permettant d'agréger une colonne d'un dataset */
+/** Fonction permettant d'agréger une colonne d'un dataset 
+ * Retourne une valeur, et la ligne concernée (lastNotNull, first, last)
+*/
 export const aggregator = ( {data, dataKey, aggregate}:AggregatorParams ):AggregatorResult => {
 
     if (data == undefined || dataKey == undefined || data.length < 1){
@@ -79,4 +83,32 @@ export const aggregator = ( {data, dataKey, aggregate}:AggregatorParams ):Aggreg
         return { row: undefined, value}
       }
     }
+}
+
+interface GroupByParams<T = Record<string, any>> {
+  data: T[];
+  by: (keyof T)[] | keyof T ;
+  aggregations: Partial<Record<keyof T, typeAggregate>>;
+}
+/** Aggrége un jeu de données
+ * Retourne un jeu de données
+ */
+export const groupBy = ({data, by, aggregations}:GroupByParams) => {
+
+  const keys = Array.isArray(by) ? by : [by];
+
+  if (aggregations === undefined){
+    return
+  }
+  
+  return from(data)
+    .groupby(keys)
+    .rollup(
+      Object.fromEntries(
+          Object.entries(aggregations).map(
+            ([field, opName]) => [field, (d: any) => op.sum(d)] //Factoriser avec la fonction précédente pour le lien aggregateType -> function
+          )
+      ))
+    ?.objects()
+
 }
