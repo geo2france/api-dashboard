@@ -105,7 +105,9 @@ export interface GetListResponse {
 
 export interface DataProvider {
     getApiUrl: () => string;
-    getList: (params: {
+
+    /** Fonction principale retournant les données */
+    getData: (params: {
         resource: string;
         filters?: CrudFilters;
         pagination?: Pagination;

@@ -36,7 +36,7 @@ describe("DataFair Provider", () => {
 
         const result = await queryClient.fetchQuery({
             queryKey: queryKey,
-            queryFn: () => provider.getList({
+            queryFn: () => provider.getData({
                 resource: resource, 
                 filters: filters,
                 pagination: pagination,

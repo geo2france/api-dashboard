@@ -10,7 +10,7 @@ export const dataProvider = (
   apiUrl: string,
   httpClient: AxiosInstance = axiosInstance
 ):DataProvider => ({
-  getList: async ({ resource, pagination, filters, sorters, meta }) => {
+  getData: async ({ resource, pagination, filters, sorters, meta }) => {
     const url = `${apiUrl}`;
 
     const { current = 1, pageSize = 10, mode = "off" } = pagination ?? {};

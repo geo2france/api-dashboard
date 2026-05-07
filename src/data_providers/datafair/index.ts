@@ -1,6 +1,7 @@
 import { axiosInstance, generateSort, generateFilter } from "./utils";
 import { AxiosInstance } from "axios";
 import queryString from "query-string";
+import { DataProvider } from "../types";
 
 type MethodTypes = "get" | "delete" | "head" | "options";
 
@@ -16,8 +17,8 @@ export interface GetListParams { // Reprendre les types depuis le projet refine
 export const dataProvider = (
   apiUrl: string,
   httpClient: AxiosInstance = axiosInstance
-) => ({
-  getList: async ({ resource, pagination, filters, sorters, meta }:GetListParams) => {
+):DataProvider => ({
+  getData: async ({ resource, pagination, filters, sorters, meta }:GetListParams) => {
     const url = `${apiUrl}/${resource}`; //Ajouter /line par défaut ? (si aucun autre /machin)
 
     const { current = 1, pageSize = 10, mode = "server" } = pagination ?? {};
