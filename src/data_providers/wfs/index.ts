@@ -60,8 +60,8 @@ export const dataProvider = (
     const { data, headers:_headers } = await httpClient[requestMethod](
       
       `${base_url}?${queryString.stringify({...query, sortby : undefined})}
-        &sortby=${query.sortby}
-        &${Object.entries(base_params).map(([k, v]) => `${k}=${v}`).join('&') }`, //le + de sortby et les paramètres de bases ne doivent pas être urlencode
+${query.sortby ? `&sortby=${query.sortby}` : '' }
+&${Object.entries(base_params).map(([k, v]) => `${k}=${v}`).join('&') }`, //le + de sortby et les paramètres de base (fournis dans l'URL) ne doivent pas être urlencode
       {
         headers: headersFromMeta,
       }
