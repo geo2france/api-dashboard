@@ -250,7 +250,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInpu
     : undefined;
 
     const legendItems:LegendItem[] = match?.map((e) => ({color:e.color, label:e.val})).sort((a, b) =>
-    a.label.localeCompare(b.label)) || []
+    a.label.localeCompare(b.label)) || [] // TODO : gérer la légende pour les valeurs numérique
 
 
     const layers = [];
