@@ -71,9 +71,12 @@ interface MapProps extends MapLayerProps {
 }
 
 
-export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey, 
+export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey, valueKey:valueKeyInput, 
     popup = false, popupFormatter:popupFormatterUser, 
     title, xKey, yKey}) => {
+
+    const valueKey = valueKeyInput || categoryKey;
+
     const mapRef = useRef<MapRef>(null);
     const [clickedFeature, setClickedFeature] = useState<any>(undefined);
 
@@ -85,7 +88,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey
 
     const current_row = clickedFeature?.properties
 
-    const popupFormatter = popupFormatterUser || ((row:SimpleRecord) => categoryKey ? row?.[categoryKey] : undefined)
+    const popupFormatter = popupFormatterUser || ((row:SimpleRecord) => valueKey ? row?.[valueKey] : undefined)
 
     const onMouseMoveMap = (evt:any) => {
         if (!mapRef.current) {
@@ -110,13 +113,13 @@ export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey
 
             <BaseLayer layer="osm"/>
 
-            <MapLayer dataset={dataset} color={color} type={type} paint={paint} categoryKey={categoryKey} xKey={xKey} yKey={yKey}></MapLayer>
+            <MapLayer dataset={dataset} color={color} type={type} paint={paint} valueKey={valueKey} xKey={xKey} yKey={yKey}></MapLayer>
             
-            { clickedFeature?.properties && categoryKey && popup &&
+            { clickedFeature?.properties && valueKey && popup &&
                 <Popup longitude={clickedFeature.lngLat.lng} 
                         latitude={clickedFeature.lngLat.lat} 
                         onClose={() => {setClickedFeature(null)} }>
-                    <div>{ popupFormatter(current_row) || clickedFeature?.properties[categoryKey] }</div>
+                    <div>{ popupFormatter(current_row) || clickedFeature?.properties[valueKey] }</div>
                 </Popup> 
             }
 
@@ -138,8 +141,15 @@ interface MapLayerProps {
     /** Les paint properties de maplibre cf. https://maplibre.org/maplibre-style-spec/layers/#paint */
     paint?:AnyPaint
 
-    /** Colonne contenant la variable à représenter */
+    /** Colonne contenant la variable à représenter 
+     * @deprecated
+    */
     categoryKey?: string
+
+    /** Colonne contenant la variable à représenter 
+     * Quantitative (number) ou qualitative (string)
+     */
+    valueKey?: string
 
     /** Colonne contenant la coordonnée x / longitude */
     xKey?: string
@@ -159,8 +169,10 @@ interface MapLayerProps {
  * @param { MapLayerProps } props 
  * @returns { ReactElement }
  */
-export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 'red', type='circle', paint, xKey, yKey, geomKey:geomKey_input}) => {
+export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInput, categoryKey, color = 'red', type='circle', paint, xKey, yKey, geomKey:geomKey_input}) => {
     const {current: map} = useMap();
+
+    const valueKey = valueKeyInput || categoryKey ;
     const data = useDataset(dataset)
     // src (lib proj4 pour convertir)
 
@@ -175,11 +187,15 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 
 
     const geom_type = geojson?.features?.[0] && getType(geojson?.features?.[0]);
 
-    /** Type de données dans categoryKey (string ou number) */
-    const type_value = categoryKey && typeof (data?.data?.[0]?.[categoryKey])
+    /** Type de données dans valueKey (string ou number) */
+    const type_value = valueKey && typeof (data?.data?.[0]?.[valueKey])
+
 
     /** Valeurs distinctes (si type string) */
-    const values = (type_value === 'string') && categoryKey && data?.data && from(data?.data).rollup({ a: op.array_agg_distinct(categoryKey) }).get('a',0) || undefined
+    const values = (type_value === 'string') && valueKey && data?.data && from(data?.data).rollup({ a: op.array_agg_distinct(valueKey) }).get('a',0) || undefined
+
+    const min = valueKey && type_value === 'number' ? Math.min(...data?.data?.map(d => d[valueKey]) || []) : undefined;
+    const max = valueKey &&type_value === 'number' ? Math.max(...data?.data?.map(d => d[valueKey]) || []) : undefined;
 
     /** Couleurs de la palette */
     const colors = usePalette({nColors:Array.isArray(values) ? values?.length : 1})
@@ -192,13 +208,21 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 
 
     /** Expression mapLibre qui permet de mapper les valeurs et les couleurs de la palette */
     const expression: Expression | undefined = 
-        match && categoryKey
+        match && valueKey //Qualitatif
             ? [
                 "match",
-                ["get", categoryKey],
+                ["get", valueKey],
                 ...match?.flatMap( (s) => [s.val, s.color]), 
                 "purple" // fallback
             ] as Expression
+    : min && max && valueKey ? // Quantitatif
+        [
+        "interpolate",
+        ["linear"],
+        ["get", valueKey],
+        min, "#0000ff",
+        max, "#ff0000"
+        ]
     : undefined;
 
     const legendItems:LegendItem[] = match?.map((e) => ({color:e.color, label:e.val})).sort((a, b) =>
