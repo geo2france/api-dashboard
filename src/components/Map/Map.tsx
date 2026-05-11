@@ -16,6 +16,7 @@ import { useBlockConfig } from '../DashboardPage/Block';
 import { SimpleRecord } from '../../types';
 import { parseNumber } from '../../utils/parsers';
 import { FeatureCollection } from 'geojson';
+import { scaleQuantile } from 'd3-scale';
 
 
 
@@ -194,8 +195,12 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInpu
     /** Valeurs distinctes (si type string) */
     const values = (type_value === 'string') && valueKey && data?.data && from(data?.data).rollup({ a: op.array_agg_distinct(valueKey) }).get('a',0) || undefined
 
-    const min = valueKey && type_value === 'number' ? Math.min(...data?.data?.map(d => d[valueKey]) || []) : undefined;
-    const max = valueKey &&type_value === 'number' ? Math.max(...data?.data?.map(d => d[valueKey]) || []) : undefined;
+
+    const devpalette = ["#03045e","#023e8a","#0077b6","#0096c7","#00b4d8","#48cae4","#90e0ef","#ade8f4","#caf0f8"].reverse()
+    
+
+    const scale = data?.data && valueKey ? scaleQuantile(data.data.map((d) => d[valueKey]), devpalette  ) : undefined
+    const breaks = scale?.quantiles()
 
     /** Couleurs de la palette */
     const colors = usePalette({nColors:Array.isArray(values) ? values?.length : 1})
@@ -215,13 +220,12 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInpu
                 ...match?.flatMap( (s) => [s.val, s.color]), 
                 "purple" // fallback
             ] as Expression
-    : min && max && valueKey ? // Quantitatif
+    : breaks && valueKey ? // Quantitatif
         [
-        "interpolate",
-        ["linear"],
+        "step",
         ["get", valueKey],
-        min, "#0000ff",
-        max, "#ff0000"
+        devpalette[0],
+        ...breaks.flatMap((b, i) => [b, devpalette[i + 1]])
         ]
     : undefined;
 
