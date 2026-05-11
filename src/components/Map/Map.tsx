@@ -16,11 +16,14 @@ import { useBlockConfig } from '../DashboardPage/Block';
 import { SimpleRecord } from '../../types';
 import { parseNumber } from '../../utils/parsers';
 import { FeatureCollection } from 'geojson';
-import { scaleQuantile } from 'd3-scale';
+import {  scaleLinear, scaleQuantile } from 'd3-scale';
 
 
 
 type LayerType = AnyLayer["type"]; 
+
+/** Méthode d'interpolation utilisé pour les valeurs numériques */
+type interpolationType = "linear" | "quantile" ;
 
 export const map_locale = {
     'CooperativeGesturesHandler.WindowsHelpText': 'Utilisez Ctrl + molette pour zommer sur la carte.',
@@ -72,7 +75,7 @@ interface MapProps extends MapLayerProps {
 }
 
 
-export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey, valueKey:valueKeyInput, 
+export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey, interpolationMethod, valueKey:valueKeyInput, 
     popup = false, popupFormatter:popupFormatterUser, 
     title, xKey, yKey}) => {
 
@@ -114,7 +117,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey
 
             <BaseLayer layer="osm"/>
 
-            <MapLayer dataset={dataset} color={color} type={type} paint={paint} valueKey={valueKey} xKey={xKey} yKey={yKey}></MapLayer>
+            <MapLayer dataset={dataset} color={color} type={type} paint={paint} valueKey={valueKey} xKey={xKey} yKey={yKey} interpolationMethod={interpolationMethod}></MapLayer>
             
             { clickedFeature?.properties && valueKey && popup &&
                 <Popup longitude={clickedFeature.lngLat.lng} 
@@ -152,6 +155,9 @@ interface MapLayerProps {
      */
     valueKey?: string
 
+    /** Méthode d'interpolation utilisé pour les valeurs numériques*/
+    interpolationMethod?: interpolationType
+
     /** Colonne contenant la coordonnée x / longitude */
     xKey?: string
 
@@ -170,7 +176,7 @@ interface MapLayerProps {
  * @param { MapLayerProps } props 
  * @returns { ReactElement }
  */
-export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInput, categoryKey, color = 'red', type='circle', paint, xKey, yKey, geomKey:geomKey_input}) => {
+export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInput, interpolationMethod='quantile', categoryKey, color = 'red', type='circle', paint, xKey, yKey, geomKey:geomKey_input}) => {
     const {current: map} = useMap();
 
     const valueKey = valueKeyInput || categoryKey ;
@@ -199,9 +205,23 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInpu
     const devpalette = ["#03045e","#023e8a","#0077b6","#0096c7","#00b4d8","#48cae4","#90e0ef","#ade8f4","#caf0f8"].reverse()
     
 
-    const scale = data?.data && valueKey ? scaleQuantile(data.data.map((d) => d[valueKey]), devpalette  ) : undefined
-    const breaks = scale?.quantiles()
 
+    const breaks =
+        devpalette && data?.data && valueKey
+            ? (() => {
+                switch (interpolationMethod) {
+                case "linear":
+                    return scaleLinear(data.data.map((d) => d[valueKey]), devpalette  ).ticks()
+
+                case "quantile":
+                    return scaleQuantile(data.data.map((d) => d[valueKey]), devpalette  ).quantiles()
+
+                default:
+                    return undefined;
+                }
+            })()
+            : undefined;
+ 
     /** Couleurs de la palette */
     const colors = usePalette({nColors:Array.isArray(values) ? values?.length : 1})
     const colors_labels = usePaletteLabels()
