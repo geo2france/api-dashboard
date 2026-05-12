@@ -10,7 +10,6 @@ import { AnyPaint, CirclePaint, Expression, FillPaint, LinePaint } from 'mapbox-
 import React from 'react';
 import { usePalette, usePaletteLabels } from '../Palette/Palette';
 import { from, op } from 'arquero';
-import 'maplibre-gl/dist/maplibre-gl.css';
 import { LegendControl, LegendItem } from '../MapLegend/MapLegend';
 import { useBlockConfig } from '../DashboardPage/Block';
 import { SimpleRecord } from '../../types';
