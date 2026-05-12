@@ -1,6 +1,6 @@
 // Composant carto
 import  Maplibre, { Layer, LayerProps, Source, SourceProps, useMap, Popup } from 'react-map-gl/maplibre';
-import type {MapRef, AnyLayer  } from 'react-map-gl/maplibre';
+import type { MapRef } from 'react-map-gl/maplibre';
 import { useEffect, useRef, useState } from "react"
 import { useDataset } from '../Dataset/hooks';
 import bbox from '@turf/bbox';
@@ -16,6 +16,7 @@ import { SimpleRecord } from '../../types';
 import { parseNumber } from '../../utils/parsers';
 import { FeatureCollection } from 'geojson';
 import {  scaleLinear, scaleQuantile } from 'd3-scale';
+import chroma from 'chroma-js';
 
 
 
@@ -177,7 +178,7 @@ interface MapLayerProps {
  * @param { MapLayerProps } props 
  * @returns { ReactElement }
  */
-export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInput, interpolationMethod='quantile', categoryKey, color = 'red', 
+export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInput, interpolationMethod='quantile', categoryKey, color = '#00b4d8', 
     paint, xKey, yKey, geomKey:geomKey_input}) => {
     const {current: map} = useMap();
 
@@ -204,19 +205,26 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInpu
     const values = (type_value === 'string') && valueKey && data?.data && from(data?.data).rollup({ a: op.array_agg_distinct(valueKey) }).get('a',0) || undefined
 
 
-    const devpalette = ["#03045e","#023e8a","#0077b6","#0096c7","#00b4d8","#48cae4","#90e0ef","#ade8f4","#caf0f8"].reverse()
-    
+    const colorsGradient = [
+        chroma(color).tint(0.75).hex(),
+        chroma(color).tint(0.5).hex(),
+        chroma(color).tint(0.25).hex(),
+        chroma(color).hex(),
+        chroma(color).shade(0.25).hex(),
+        chroma(color).shade(0.5).hex(),
+        chroma(color).shade(0.75).hex(),
+    ]
 
 
     const breaks =
-        devpalette && data?.data && valueKey
+        colorsGradient && data?.data && valueKey
             ? (() => {
                 switch (interpolationMethod) {
                 case "linear":
-                    return scaleLinear(data.data.map((d) => d[valueKey]), devpalette  ).ticks(devpalette.length).sort()
+                    return scaleLinear(data.data.map((d) => d[valueKey]), colorsGradient  ).ticks(colorsGradient.length -1 ).sort((a, b) => a - b)
 
                 case "quantile":
-                    return scaleQuantile(data.data.map((d) => d[valueKey]), devpalette  ).quantiles().sort()
+                    return scaleQuantile(data.data.map((d) => d[valueKey]), colorsGradient  ).quantiles().sort((a, b) => a - b)
 
                 default:
                     return undefined;
@@ -246,15 +254,15 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInpu
         [
         "step",
         ["get", valueKey],
-        devpalette[0],
-        ...breaks.flatMap((b, i) => [b, devpalette[i + 1]])
+        colorsGradient[0],
+        ...breaks.flatMap((b, i) => [b, colorsGradient[i + 1]])
         ]
     : undefined;
 
     const legendItems:LegendItem[] = type_value === "string" ? 
         match?.map((e) => ({color:e.color, label:e.val})).sort((a, b) =>
             a.label.localeCompare(b.label)) || [] 
-        : breaks?.flatMap((b, i) => ({label:b.toLocaleString(undefined, {maximumFractionDigits:0}), color:  devpalette[i + 1]})) || []
+        : breaks?.flatMap((b, i) => ({label:b.toLocaleString(undefined, {maximumFractionDigits:0}), color:  colorsGradient[i + 1]})) || []
 
 
     const layers = [];
