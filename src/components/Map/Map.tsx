@@ -16,7 +16,7 @@ import { SimpleRecord } from '../../types';
 import { parseNumber } from '../../utils/parsers';
 import { FeatureCollection } from 'geojson';
 import {  scaleLinear, scaleQuantile } from 'd3-scale';
-import chroma from 'chroma-js';
+import { generateGradient } from './utils';
 
 
 
@@ -197,24 +197,15 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInpu
 
     const geom_type = geojson?.features?.[0] && getType(geojson?.features?.[0]);
 
-    /** Type de données dans valueKey (string ou number) */
+    /* Type de données dans valueKey (string ou number) */
     const type_value = valueKey && typeof (data?.data?.[0]?.[valueKey])
 
 
-    /** Valeurs distinctes (si type string) */
+    /* Valeurs distinctes (si type string) */
     const values = (type_value === 'string') && valueKey && data?.data && from(data?.data).rollup({ a: op.array_agg_distinct(valueKey) }).get('a',0) || undefined
 
-
-    const colorsGradient = [
-        chroma(color).tint(0.75).hex(),
-        chroma(color).tint(0.5).hex(),
-        chroma(color).tint(0.25).hex(),
-        chroma(color).hex(),
-        chroma(color).shade(0.25).hex(),
-        chroma(color).shade(0.5).hex(),
-        chroma(color).shade(0.75).hex(),
-    ]
-
+    /* Gradient de couleur (si number) */
+    const colorsGradient = type_value==="number" ? generateGradient(color) : undefined ;
 
     const breaks =
         colorsGradient && data?.data && valueKey
@@ -250,7 +241,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInpu
                 ...match?.flatMap( (s) => [s.val, s.color]), 
                 "purple" // fallback
             ] as Expression
-    : breaks && valueKey ? // Quantitatif
+    : breaks && colorsGradient && type_value==="number" && valueKey ? // Quantitatif
         [
         "step",
         ["get", valueKey],
@@ -262,7 +253,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInpu
     const legendItems:LegendItem[] = type_value === "string" ? 
         match?.map((e) => ({color:e.color, label:e.val})).sort((a, b) =>
             a.label.localeCompare(b.label)) || [] 
-        : breaks?.flatMap((b, i) => ({label:b.toLocaleString(undefined, {maximumFractionDigits:0}), color:  colorsGradient[i + 1]})) || []
+        : colorsGradient && breaks?.flatMap((b, i) => ({label:b.toLocaleString(undefined, {maximumFractionDigits:0}), color:  colorsGradient[i + 1]})) || []
 
 
     const layers = [];
