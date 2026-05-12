@@ -72,7 +72,13 @@ interface MapProps extends MapLayerProps {
   title?: string;
 }
 
-
+/** _Beta_ : Un composant permettant un affichage cartographique d'un jeu de données 
+ * 
+ * Permet l'affichage de données type "Polygon".
+ * 
+ * Si `valueKey` est définie, les couleurs seront calculée à partir de la colonne indiquée (quantitative ou qualitative).
+ * 
+*/
 export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, interpolationMethod, valueKey:valueKeyInput, 
     popup = false, popupFormatter:popupFormatterUser, 
     title, xKey, yKey}) => {
@@ -153,10 +159,10 @@ interface MapLayerProps {
     /** Méthode d'interpolation utilisé pour les valeurs numériques*/
     interpolationMethod?: interpolationType
 
-    /** Colonne contenant la coordonnée x / longitude */
+    /** Colonne contenant la coordonnée x / longitude. A utiliser s'il n'y a pas de colonne de geometrie. */
     xKey?: string
 
-    /** Colonne contenant la coordonnées y / latitude */
+    /** Colonne contenant la coordonnées y / latitude. A utiliser s'il n'y a pas de colonne de geometrie. */
     yKey?: string
 
      /** Colonne contenant la geométrie au format GeoJSON(4326). Par défaut détection automatique ("geom" ou "geometry") */
