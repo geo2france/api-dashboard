@@ -210,10 +210,10 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInpu
             ? (() => {
                 switch (interpolationMethod) {
                 case "linear":
-                    return scaleLinear(data.data.map((d) => d[valueKey]), devpalette  ).ticks()
+                    return scaleLinear(data.data.map((d) => d[valueKey]), devpalette  ).ticks(devpalette.length).sort()
 
                 case "quantile":
-                    return scaleQuantile(data.data.map((d) => d[valueKey]), devpalette  ).quantiles()
+                    return scaleQuantile(data.data.map((d) => d[valueKey]), devpalette  ).quantiles().sort()
 
                 default:
                     return undefined;
