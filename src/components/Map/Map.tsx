@@ -249,8 +249,10 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInpu
         ]
     : undefined;
 
-    const legendItems:LegendItem[] = match?.map((e) => ({color:e.color, label:e.val})).sort((a, b) =>
-    a.label.localeCompare(b.label)) || [] // TODO : gérer la légende pour les valeurs numérique
+    const legendItems:LegendItem[] = type_value === "string" ? 
+        match?.map((e) => ({color:e.color, label:e.val})).sort((a, b) =>
+            a.label.localeCompare(b.label)) || [] 
+        : breaks?.flatMap((b, i) => ({label:b.toLocaleString(undefined, {maximumFractionDigits:0}), color:  devpalette[i + 1]})) || []
 
 
     const layers = [];
