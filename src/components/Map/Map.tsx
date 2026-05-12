@@ -19,7 +19,6 @@ import {  scaleLinear, scaleQuantile } from 'd3-scale';
 
 
 
-type LayerType = AnyLayer["type"]; 
 
 /** Méthode d'interpolation utilisé pour les valeurs numériques */
 type interpolationType = "linear" | "quantile" ;
@@ -74,7 +73,7 @@ interface MapProps extends MapLayerProps {
 }
 
 
-export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey, interpolationMethod, valueKey:valueKeyInput, 
+export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, interpolationMethod, valueKey:valueKeyInput, 
     popup = false, popupFormatter:popupFormatterUser, 
     title, xKey, yKey}) => {
 
@@ -116,7 +115,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey
 
             <BaseLayer layer="osm"/>
 
-            <MapLayer dataset={dataset} color={color} type={type} paint={paint} valueKey={valueKey} xKey={xKey} yKey={yKey} interpolationMethod={interpolationMethod}></MapLayer>
+            <MapLayer dataset={dataset} color={color} paint={paint} valueKey={valueKey} xKey={xKey} yKey={yKey} interpolationMethod={interpolationMethod}></MapLayer>
             
             { clickedFeature?.properties && valueKey && popup &&
                 <Popup longitude={clickedFeature.lngLat.lng} 
@@ -137,9 +136,6 @@ interface MapLayerProps {
 
     /** Couleur des symboles */
     color?:string
-
-    /** Layer Type */
-    type?:LayerType
 
     /** Les paint properties de maplibre cf. https://maplibre.org/maplibre-style-spec/layers/#paint */
     paint?:AnyPaint
@@ -175,7 +171,8 @@ interface MapLayerProps {
  * @param { MapLayerProps } props 
  * @returns { ReactElement }
  */
-export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInput, interpolationMethod='quantile', categoryKey, color = 'red', type='circle', paint, xKey, yKey, geomKey:geomKey_input}) => {
+export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInput, interpolationMethod='quantile', categoryKey, color = 'red', 
+    paint, xKey, yKey, geomKey:geomKey_input}) => {
     const {current: map} = useMap();
 
     const valueKey = valueKeyInput || categoryKey ;
@@ -258,7 +255,6 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInpu
     /** POINT */
     if (geom_type === 'Point' || geom_type === 'MultiPoint') {
         const default_paint:CirclePaint = {"circle-color": expression ?? color ?? colors![0] }
-        type = 'circle'
         layers.push(
             <Layer key={dataset} id={dataset} type="circle" paint={(paint ?? default_paint) as any}  />
         )
@@ -266,7 +262,6 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInpu
     /** POLYGON */ 
     else if (geom_type === 'Polygon' || geom_type === 'MultiPolygon') {     
         const default_paint:FillPaint = { "fill-color" : expression ?? color ?? colors![0] }
-        type = 'fill'
         layers.push(
             <Layer key={dataset} id={dataset} type="fill" paint={(paint ?? default_paint) as any}/>
         )
@@ -277,7 +272,6 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInpu
     /** LINESTRING */ 
     else if (geom_type === 'LineString' || geom_type === 'MultiLineString') {
         const default_paint:LinePaint = { "line-color": expression ?? color ?? colors![0]  }
-        type = 'line'
         layers.push(
             <Layer key={dataset} id={dataset} type="line" paint={(paint ?? default_paint) as any} />
         )
