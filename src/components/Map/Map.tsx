@@ -353,7 +353,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({
                 { layers }
             </Source> 
         }
-           <LegendControl items={legendItems} /> 
+           {legendItems.length > 0 && <LegendControl items={legendItems} /> }
        </>
     )
 }
