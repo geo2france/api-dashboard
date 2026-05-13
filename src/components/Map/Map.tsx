@@ -1,5 +1,5 @@
 // Composant carto
-import  Maplibre, { Layer, LayerProps, Source, SourceProps, useMap, Popup } from 'react-map-gl/maplibre';
+import  Maplibre, { Layer, LayerProps, Source, SourceProps, useMap, Popup, NavigationControl } from 'react-map-gl/maplibre';
 import type { MapRef } from 'react-map-gl/maplibre';
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useDataset } from '../Dataset/hooks';
@@ -147,7 +147,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
           initialViewState={{latitude:latitude, longitude:longitude, zoom:zoom}}
           style={{ width: '100%', height:'500px' }} 
           >
-
+            <NavigationControl showCompass={false} showZoom={true}/>
             <BaseLayer layer="osm"/>
 
             <MapLayer 
