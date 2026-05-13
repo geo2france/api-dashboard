@@ -1,7 +1,7 @@
 // Composant carto
 import  Maplibre, { Layer, LayerProps, Source, SourceProps, useMap, Popup } from 'react-map-gl/maplibre';
 import type { MapRef } from 'react-map-gl/maplibre';
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useDataset } from '../Dataset/hooks';
 import bbox from '@turf/bbox';
 import { getType} from '@turf/invariant'
@@ -218,9 +218,25 @@ export const MapLayer:React.FC<MapLayerProps> = ({
     const geomKey = [geomKey_input,"geom","geometry"].find(c => c && keys?.includes(c))
 
     // Si x et y sont definie, on construit le geojson
-    const geojson = xKey && yKey && data?.data ? 
-        build_geojson({data:data.data, xKey:xKey, yKey:yKey})
-        :  data?.data && build_geojson({data:data?.data, geomKey:geomKey})
+    const geojson = useMemo(() => {
+        if (xKey && yKey && data?.data) {
+            return build_geojson({
+                data: data.data,
+                xKey,
+                yKey
+            });
+        }
+
+        if (data?.data) {
+            return build_geojson({
+                data: data.data,
+                geomKey
+            });
+        }
+
+        return undefined;
+
+    }, [data?.data, xKey, yKey, geomKey]);
 
     const geom_type = geojson?.features?.[0] && getType(geojson?.features?.[0]);
 
@@ -234,6 +250,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({
     /* Gradient de couleur (si number) */
     const colorsGradient = type_value==="number" ? generateGradient(color) : undefined ;
 
+    //devnote : ajouter un usememo pour limiter ?
     const breaks =
         colorsGradient && data?.data && valueKey
             ? (() => {
