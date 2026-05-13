@@ -98,11 +98,6 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
     const valueKey = valueKeyInput || categoryKey;
 
     const mapRef = useRef<MapRef>(null);
-    const [viewState, setViewState] = useState({
-      longitude: longitude,
-      latitude: latitude,
-      zoom: zoom,
-    });
 
 
     const [clickedFeature, setClickedFeature] = useState<any>(undefined);
@@ -136,8 +131,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
           interactiveLayerIds={[dataset]} 
           onClick={onClickMap}  
           onMouseMove={onMouseMoveMap}
-          {...viewState}
-          onMove={evt => setViewState(evt.viewState)}
+          initialViewState={{latitude:latitude, longitude:longitude, zoom:zoom}}
           style={{ width: '100%', height:'500px' }} 
           >
 
