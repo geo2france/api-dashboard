@@ -71,6 +71,16 @@ interface MapProps extends MapLayerProps {
 
   /** Titre du graphique */
   title?: string;
+
+  /** Longitude du centre de la carte */
+  longitude?: number;
+
+  /** Latitude du centre de la carte */
+  latitude?: number;
+
+  /** Zoom initial */
+  zoom?: number;
+
 }
 
 /** _Beta_ : Un composant permettant un affichage cartographique d'un jeu de données 
@@ -81,12 +91,20 @@ interface MapProps extends MapLayerProps {
  * 
 */
 export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, interpolationMethod, valueKey:valueKeyInput, 
-    popup = false, popupFormatter:popupFormatterUser, 
-    title, xKey, yKey}) => {
+        popup = false, popupFormatter:popupFormatterUser, 
+        title, xKey, yKey,
+        latitude=0, longitude=0, zoom=0, fitToData}) => {
 
     const valueKey = valueKeyInput || categoryKey;
 
     const mapRef = useRef<MapRef>(null);
+    const [viewState, setViewState] = useState({
+      longitude: longitude,
+      latitude: latitude,
+      zoom: zoom,
+    });
+
+
     const [clickedFeature, setClickedFeature] = useState<any>(undefined);
 
     useBlockConfig({title:title})
@@ -117,12 +135,18 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
           ref={mapRef} 
           interactiveLayerIds={[dataset]} 
           onClick={onClickMap}  
-          onMouseMove={onMouseMoveMap} 
-          style={{ width: '100%', height:'500px' }} >
+          onMouseMove={onMouseMoveMap}
+          {...viewState}
+          onMove={evt => setViewState(evt.viewState)}
+          style={{ width: '100%', height:'500px' }} 
+          >
 
             <BaseLayer layer="osm"/>
 
-            <MapLayer dataset={dataset} color={color} paint={paint} valueKey={valueKey} xKey={xKey} yKey={yKey} interpolationMethod={interpolationMethod}></MapLayer>
+            <MapLayer 
+                dataset={dataset} fitToData={fitToData}
+                color={color} paint={paint} interpolationMethod={interpolationMethod}
+                valueKey={valueKey} xKey={xKey} yKey={yKey} />
             
             { clickedFeature?.properties && valueKey && popup &&
                 <Popup longitude={clickedFeature.lngLat.lng} 
@@ -169,6 +193,10 @@ interface MapLayerProps {
 
      /** Colonne contenant la geométrie au format GeoJSON(4326). Par défaut détection automatique ("geom" ou "geometry") */
     geomKey?: string
+
+    /** Centrer automatiquement la carte sur les données (true) */
+    fitToData?: boolean;
+
 }
 
 
@@ -179,8 +207,12 @@ interface MapLayerProps {
  * @param { MapLayerProps } props 
  * @returns { ReactElement }
  */
-export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInput, interpolationMethod='quantile', categoryKey, color = '#00b4d8', 
-    paint, xKey, yKey, geomKey:geomKey_input}) => {
+export const MapLayer:React.FC<MapLayerProps> = ({
+        dataset, valueKey:valueKeyInput, categoryKey,
+        interpolationMethod='quantile', color = '#00b4d8', paint, 
+        xKey, yKey, geomKey:geomKey_input,
+        fitToData=true }) => {
+
     const {current: map} = useMap();
 
     const valueKey = valueKeyInput || categoryKey ;
@@ -286,11 +318,11 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, valueKey:valueKeyInpu
     //devnote : regarder la colonne contenant les valeurs pour proposer une représentation (catégorie ou choroplèthe)
 
     useEffect( () => {
-        if(geojson && geojson.features.length > 0){ // do not fitbound if no features
+        if(fitToData && geojson && geojson.features.length > 0){ // do not fitbound if no features
             const box = bbox(geojson).slice(0,4) as [number, number, number, number]
-            map?.fitBounds(box, {padding: 20 })
+            map?.fitBounds(box, {padding: 20, animate: false })
         }
-    }, [geojson, map])
+    }, [geojson, map, fitToData])
 
     return (
        <>
