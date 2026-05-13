@@ -90,7 +90,7 @@ interface MapProps extends MapLayerProps {
  * Si `valueKey` est définie, les couleurs seront calculée à partir de la colonne indiquée (quantitative ou qualitative).
  * 
 */
-export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, interpolationMethod, valueKey:valueKeyInput, 
+export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, interpolationMethod, valueKey:valueKeyInput, labelKey,
         popup = false, popupFormatter:popupFormatterUser, 
         title, xKey, yKey,
         latitude=0, longitude=0, zoom=0, fitToData}) => {
@@ -135,6 +135,13 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
             mapRef.current.getCanvasContainer().style.cursor = 'grab'
         }
   }
+    
+    const mapStyle = useMemo(() => ({
+        version: 8 as const,
+        glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",  //devnote : intégrer le pbf dans le projet ?
+        sources: {},
+        layers: []
+    }), [])
 
     return (
         <Maplibre 
@@ -145,6 +152,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
           onClick={onClickMap}  
           onMouseMove={onMouseMoveMap}
           initialViewState={{latitude:latitude, longitude:longitude, zoom:zoom}}
+          mapStyle={mapStyle}
           style={{ width: '100%', height:'500px' }} 
           >
             <NavigationControl showCompass={false} showZoom={true}/>
@@ -153,7 +161,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
             <MapLayer 
                 dataset={dataset} fitToData={fitToData}
                 color={color} paint={paint} interpolationMethod={interpolationMethod}
-                valueKey={valueKey} xKey={xKey} yKey={yKey} />
+                valueKey={valueKey} labelKey={labelKey} xKey={xKey} yKey={yKey} />
             
             { clickedFeature?.properties && popup &&
                 <Popup longitude={clickedFeature.lngLat.lng} 
@@ -189,6 +197,9 @@ interface MapLayerProps {
      */
     valueKey?: string
 
+    /** Colonne contenant l'étiquette */
+    labelKey?: string
+
     /** Méthode d'interpolation utilisé pour les valeurs numériques*/
     interpolationMethod?: interpolationType
 
@@ -215,7 +226,7 @@ interface MapLayerProps {
  * @returns { ReactElement }
  */
 export const MapLayer:React.FC<MapLayerProps> = ({
-        dataset, valueKey:valueKeyInput, categoryKey,
+        dataset, valueKey:valueKeyInput, categoryKey, labelKey,
         interpolationMethod='quantile', color = '#00b4d8', paint, 
         xKey, yKey, geomKey:geomKey_input,
         fitToData=true }) => {
@@ -330,6 +341,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({
         layers.push(
             <Layer key={dataset + '_line'}id={dataset + '_line'} type='line' paint={{"line-width":0.5,"line-color":'#fff'}}/>
         )
+
     } 
     /** LINESTRING */ 
     else if (geom_type === 'LineString' || geom_type === 'MultiLineString') {
@@ -337,6 +349,27 @@ export const MapLayer:React.FC<MapLayerProps> = ({
         layers.push(
             <Layer key={dataset} id={dataset} type="line" paint={(paint ?? default_paint) as any} />
         )
+    }
+
+    if(labelKey) {
+        layers.push(
+         <Layer
+            key={dataset + '_label'}
+            id={dataset + '_label'}
+            type="symbol"
+            layout={{
+                "text-field": ["coalesce", ["get", labelKey], ""],
+                "text-size": 12,
+                "text-anchor": "center",
+                "text-allow-overlap": false
+            }}
+            paint={{
+                "text-color": "#000",
+                "text-halo-color": "#fff",
+                "text-halo-width": 1
+            }}
+        />
+       )
     }
 
     useEffect( () => {
