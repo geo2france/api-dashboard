@@ -110,7 +110,20 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
 
     const current_row = clickedFeature?.properties
 
-    const popupFormatter = popupFormatterUser || ((row:SimpleRecord) => valueKey ? row?.[valueKey] : undefined)
+    const popupFormatter =
+        popupFormatterUser || // user definied function
+        // or show all props (fallback)
+        ((row: Record<string, any>) => ( 
+            <>
+            {Object.entries(row)
+            .filter(([key]) => !["geometry", "geom", "id", "geometry_name", "bbox"].includes(key))
+            .map(([key, value]) => (
+                <div key={key}>
+                <strong>{key}</strong> : {String(value)}
+                </div>
+            ))}
+            </>
+        ));
 
     const onMouseMoveMap = (evt:any) => {
         if (!mapRef.current) {
@@ -142,12 +155,12 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
                 color={color} paint={paint} interpolationMethod={interpolationMethod}
                 valueKey={valueKey} xKey={xKey} yKey={yKey} />
             
-            { clickedFeature?.properties && valueKey && popup &&
+            { clickedFeature?.properties && popup &&
                 <Popup longitude={clickedFeature.lngLat.lng} 
                         latitude={clickedFeature.lngLat.lat} 
                         closeOnClick={false}
                         onClose={() => {setClickedFeature(null)} }>
-                    <div>{ popupFormatter(current_row) || clickedFeature?.properties[valueKey] }</div>
+                    <div>{ popupFormatter(current_row) }</div>
                 </Popup> 
             }
 
@@ -325,8 +338,6 @@ export const MapLayer:React.FC<MapLayerProps> = ({
             <Layer key={dataset} id={dataset} type="line" paint={(paint ?? default_paint) as any} />
         )
     }
-
-    //devnote : regarder la colonne contenant les valeurs pour proposer une représentation (catégorie ou choroplèthe)
 
     useEffect( () => {
         if(fitToData && geojson && geojson.features.length > 0){ // do not fitbound if no features
