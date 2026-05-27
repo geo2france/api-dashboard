@@ -90,7 +90,7 @@ interface MapProps extends MapLayerProps {
  * Si `valueKey` est définie, les couleurs seront calculée à partir de la colonne indiquée (quantitative ou qualitative).
  * 
 */
-export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, interpolationMethod, valueKey:valueKeyInput, labelKey,
+export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, interpolationMethod, nClasses, valueKey:valueKeyInput, labelKey,
         popup = false, popupFormatter:popupFormatterUser, 
         title, xKey, yKey,
         latitude=0, longitude=0, zoom=0, fitToData}) => {
@@ -148,7 +148,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
           cooperativeGestures
           locale={map_locale}
           ref={mapRef} 
-          interactiveLayerIds={[dataset]} 
+          interactiveLayerIds={['dataset']} 
           onClick={onClickMap}  
           onMouseMove={onMouseMoveMap}
           initialViewState={{latitude:latitude, longitude:longitude, zoom:zoom}}
@@ -160,7 +160,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
 
             <MapLayer 
                 dataset={dataset} fitToData={fitToData}
-                color={color} paint={paint} interpolationMethod={interpolationMethod}
+                color={color} paint={paint} interpolationMethod={interpolationMethod} nClasses={nClasses}
                 valueKey={valueKey} labelKey={labelKey} xKey={xKey} yKey={yKey} />
             
             { clickedFeature?.properties && popup &&
@@ -179,7 +179,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
 
 interface MapLayerProps {
     /** Identifiant du jeu de données */
-    dataset: string
+    dataset: string | SimpleRecord[]
 
     /** Couleur des symboles */
     color?:string
@@ -202,6 +202,9 @@ interface MapLayerProps {
 
     /** Méthode d'interpolation utilisé pour les valeurs numériques*/
     interpolationMethod?: interpolationType
+
+    /** Nombre de classes (pour les valeurs numériques) */
+    nClasses?: number
 
     /** Colonne contenant la coordonnée x / longitude. A utiliser s'il n'y a pas de colonne de geometrie. */
     xKey?: string
@@ -227,7 +230,7 @@ interface MapLayerProps {
  */
 export const MapLayer:React.FC<MapLayerProps> = ({
         dataset, valueKey:valueKeyInput, categoryKey, labelKey,
-        interpolationMethod='quantile', color = '#00b4d8', paint, 
+        interpolationMethod='quantile', nClasses, color = '#00b4d8', paint, 
         xKey, yKey, geomKey:geomKey_input,
         fitToData=true }) => {
 
@@ -272,7 +275,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({
     const values = (type_value === 'string') && valueKey && data?.data && from(data?.data).rollup({ a: op.array_agg_distinct(valueKey) }).get('a',0) || undefined
 
     /* Gradient de couleur (si number) */
-    const colorsGradient = type_value==="number" ? generateGradient(color) : undefined ;
+    const colorsGradient = type_value==="number" ? generateGradient(color, nClasses) : undefined ;
 
     //devnote : ajouter un usememo pour limiter ?
     const breaks =
@@ -329,17 +332,17 @@ export const MapLayer:React.FC<MapLayerProps> = ({
     if (geom_type === 'Point' || geom_type === 'MultiPoint') {
         const default_paint:CirclePaint = {"circle-color": expression ?? color ?? colors![0] }
         layers.push(
-            <Layer key={dataset} id={dataset} type="circle" paint={(paint ?? default_paint) as any}  />
+            <Layer key={'dataset'} id={'dataset'} type="circle" paint={(paint ?? default_paint) as any}  />
         )
     }
     /** POLYGON */ 
     else if (geom_type === 'Polygon' || geom_type === 'MultiPolygon') {     
         const default_paint:FillPaint = { "fill-color" : expression ?? color ?? colors![0] }
         layers.push(
-            <Layer key={dataset} id={dataset} type="fill" paint={(paint ?? default_paint) as any}/>
+            <Layer key={'dataset'} id={'dataset'} type="fill" paint={(paint ?? default_paint) as any}/>
         )
         layers.push(
-            <Layer key={dataset + '_line'}id={dataset + '_line'} type='line' paint={{"line-width":0.5,"line-color":'#fff'}}/>
+            <Layer key={'dataset' + '_line'}id={'dataset' + '_line'} type='line' paint={{"line-width":0.5,"line-color":'#fff'}}/>
         )
 
     } 
@@ -347,15 +350,15 @@ export const MapLayer:React.FC<MapLayerProps> = ({
     else if (geom_type === 'LineString' || geom_type === 'MultiLineString') {
         const default_paint:LinePaint = { "line-color": expression ?? color ?? colors![0]  }
         layers.push(
-            <Layer key={dataset} id={dataset} type="line" paint={(paint ?? default_paint) as any} />
+            <Layer key={'dataset'} id={'dataset'} type="line" paint={(paint ?? default_paint) as any} />
         )
     }
 
     if(labelKey) {
         layers.push(
          <Layer
-            key={dataset + '_label'}
-            id={dataset + '_label'}
+            key={'dataset' + '_label'}
+            id={'dataset' + '_label'}
             type="symbol"
             layout={{
                 "text-field": ["coalesce", ["get", labelKey], ""],
