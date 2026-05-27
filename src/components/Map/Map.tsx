@@ -1,7 +1,7 @@
 // Composant carto
-import  Maplibre, { Layer, LayerProps, Source, SourceProps, useMap, Popup } from 'react-map-gl/maplibre';
-import type {MapRef, AnyLayer  } from 'react-map-gl/maplibre';
-import { useEffect, useRef, useState } from "react"
+import  Maplibre, { Layer, LayerProps, Source, SourceProps, useMap, Popup, NavigationControl } from 'react-map-gl/maplibre';
+import type { MapRef } from 'react-map-gl/maplibre';
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useDataset } from '../Dataset/hooks';
 import bbox from '@turf/bbox';
 import { getType} from '@turf/invariant'
@@ -10,16 +10,19 @@ import { AnyPaint, CirclePaint, Expression, FillPaint, LinePaint } from 'mapbox-
 import React from 'react';
 import { usePalette, usePaletteLabels } from '../Palette/Palette';
 import { from, op } from 'arquero';
-import 'maplibre-gl/dist/maplibre-gl.css';
 import { LegendControl, LegendItem } from '../MapLegend/MapLegend';
 import { useBlockConfig } from '../DashboardPage/Block';
 import { SimpleRecord } from '../../types';
 import { parseNumber } from '../../utils/parsers';
 import { FeatureCollection } from 'geojson';
+import {  scaleLinear, scaleQuantile } from 'd3-scale';
+import { generateGradient } from './utils';
 
 
 
-type LayerType = AnyLayer["type"]; 
+
+/** Méthode d'interpolation utilisé pour les valeurs numériques */
+type interpolationType = "linear" | "quantile" ;
 
 export const map_locale = {
     'CooperativeGesturesHandler.WindowsHelpText': 'Utilisez Ctrl + molette pour zommer sur la carte.',
@@ -68,13 +71,35 @@ interface MapProps extends MapLayerProps {
 
   /** Titre du graphique */
   title?: string;
+
+  /** Longitude du centre de la carte */
+  longitude?: number;
+
+  /** Latitude du centre de la carte */
+  latitude?: number;
+
+  /** Zoom initial */
+  zoom?: number;
+
 }
 
+/** _Beta_ : Un composant permettant un affichage cartographique d'un jeu de données 
+ * 
+ * Permet l'affichage de données type "Polygon".
+ * 
+ * Si `valueKey` est définie, les couleurs seront calculée à partir de la colonne indiquée (quantitative ou qualitative).
+ * 
+*/
+export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, interpolationMethod, valueKey:valueKeyInput, labelKey,
+        popup = false, popupFormatter:popupFormatterUser, 
+        title, xKey, yKey,
+        latitude=0, longitude=0, zoom=0, fitToData}) => {
 
-export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey, 
-    popup = false, popupFormatter:popupFormatterUser, 
-    title, xKey, yKey}) => {
+    const valueKey = valueKeyInput || categoryKey;
+
     const mapRef = useRef<MapRef>(null);
+
+
     const [clickedFeature, setClickedFeature] = useState<any>(undefined);
 
     useBlockConfig({title:title})
@@ -85,7 +110,20 @@ export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey
 
     const current_row = clickedFeature?.properties
 
-    const popupFormatter = popupFormatterUser || ((row:SimpleRecord) => categoryKey ? row?.[categoryKey] : undefined)
+    const popupFormatter =
+        popupFormatterUser || // user definied function
+        // or show all props (fallback)
+        ((row: Record<string, any>) => ( 
+            <>
+            {Object.entries(row)
+            .filter(([key]) => !["geometry", "geom", "id", "geometry_name", "bbox"].includes(key))
+            .map(([key, value]) => (
+                <div key={key}>
+                <strong>{key}</strong> : {String(value)}
+                </div>
+            ))}
+            </>
+        ));
 
     const onMouseMoveMap = (evt:any) => {
         if (!mapRef.current) {
@@ -97,6 +135,13 @@ export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey
             mapRef.current.getCanvasContainer().style.cursor = 'grab'
         }
   }
+    
+    const mapStyle = useMemo(() => ({
+        version: 8 as const,
+        glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",  //devnote : intégrer le pbf dans le projet ?
+        sources: {},
+        layers: []
+    }), [])
 
     return (
         <Maplibre 
@@ -105,18 +150,25 @@ export const Map:React.FC<MapProps> = ({dataset, color, type, paint, categoryKey
           ref={mapRef} 
           interactiveLayerIds={[dataset]} 
           onClick={onClickMap}  
-          onMouseMove={onMouseMoveMap} 
-          style={{ width: '100%', height:'500px' }} >
-
+          onMouseMove={onMouseMoveMap}
+          initialViewState={{latitude:latitude, longitude:longitude, zoom:zoom}}
+          mapStyle={mapStyle}
+          style={{ width: '100%', height:'500px' }} 
+          >
+            <NavigationControl showCompass={false} showZoom={true}/>
             <BaseLayer layer="osm"/>
 
-            <MapLayer dataset={dataset} color={color} type={type} paint={paint} categoryKey={categoryKey} xKey={xKey} yKey={yKey}></MapLayer>
+            <MapLayer 
+                dataset={dataset} fitToData={fitToData}
+                color={color} paint={paint} interpolationMethod={interpolationMethod}
+                valueKey={valueKey} labelKey={labelKey} xKey={xKey} yKey={yKey} />
             
-            { clickedFeature?.properties && categoryKey && popup &&
+            { clickedFeature?.properties && popup &&
                 <Popup longitude={clickedFeature.lngLat.lng} 
                         latitude={clickedFeature.lngLat.lat} 
+                        closeOnClick={false}
                         onClose={() => {setClickedFeature(null)} }>
-                    <div>{ popupFormatter(current_row) || clickedFeature?.properties[categoryKey] }</div>
+                    <div>{ popupFormatter(current_row) }</div>
                 </Popup> 
             }
 
@@ -132,23 +184,37 @@ interface MapLayerProps {
     /** Couleur des symboles */
     color?:string
 
-    /** Layer Type */
-    type?:LayerType
-
     /** Les paint properties de maplibre cf. https://maplibre.org/maplibre-style-spec/layers/#paint */
     paint?:AnyPaint
 
-    /** Colonne contenant la variable à représenter */
+    /** Colonne contenant la variable à représenter 
+     * @deprecated
+    */
     categoryKey?: string
 
-    /** Colonne contenant la coordonnée x / longitude */
+    /** Colonne contenant la variable à représenter 
+     * Quantitative (number) ou qualitative (string)
+     */
+    valueKey?: string
+
+    /** Colonne contenant l'étiquette */
+    labelKey?: string
+
+    /** Méthode d'interpolation utilisé pour les valeurs numériques*/
+    interpolationMethod?: interpolationType
+
+    /** Colonne contenant la coordonnée x / longitude. A utiliser s'il n'y a pas de colonne de geometrie. */
     xKey?: string
 
-    /** Colonne contenant la coordonnées y / latitude */
+    /** Colonne contenant la coordonnées y / latitude. A utiliser s'il n'y a pas de colonne de geometrie. */
     yKey?: string
 
      /** Colonne contenant la geométrie au format GeoJSON(4326). Par défaut détection automatique ("geom" ou "geometry") */
     geomKey?: string
+
+    /** Centrer automatiquement la carte sur les données (true) */
+    fitToData?: boolean;
+
 }
 
 
@@ -159,8 +225,15 @@ interface MapLayerProps {
  * @param { MapLayerProps } props 
  * @returns { ReactElement }
  */
-export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 'red', type='circle', paint, xKey, yKey, geomKey:geomKey_input}) => {
+export const MapLayer:React.FC<MapLayerProps> = ({
+        dataset, valueKey:valueKeyInput, categoryKey, labelKey,
+        interpolationMethod='quantile', color = '#00b4d8', paint, 
+        xKey, yKey, geomKey:geomKey_input,
+        fitToData=true }) => {
+
     const {current: map} = useMap();
+
+    const valueKey = valueKeyInput || categoryKey ;
     const data = useDataset(dataset)
     // src (lib proj4 pour convertir)
 
@@ -169,18 +242,55 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 
     const geomKey = [geomKey_input,"geom","geometry"].find(c => c && keys?.includes(c))
 
     // Si x et y sont definie, on construit le geojson
-    const geojson = xKey && yKey && data?.data ? 
-        build_geojson({data:data.data, xKey:xKey, yKey:yKey})
-        :  data?.data && build_geojson({data:data?.data, geomKey:geomKey})
+    const geojson = useMemo(() => {
+        if (xKey && yKey && data?.data) {
+            return build_geojson({
+                data: data.data,
+                xKey,
+                yKey
+            });
+        }
+
+        if (data?.data) {
+            return build_geojson({
+                data: data.data,
+                geomKey
+            });
+        }
+
+        return undefined;
+
+    }, [data?.data, xKey, yKey, geomKey]);
 
     const geom_type = geojson?.features?.[0] && getType(geojson?.features?.[0]);
 
-    /** Type de données dans categoryKey (string ou number) */
-    const type_value = categoryKey && typeof (data?.data?.[0]?.[categoryKey])
+    /* Type de données dans valueKey (string ou number) */
+    const type_value = valueKey && typeof (data?.data?.[0]?.[valueKey])
 
-    /** Valeurs distinctes (si type string) */
-    const values = (type_value === 'string') && categoryKey && data?.data && from(data?.data).rollup({ a: op.array_agg_distinct(categoryKey) }).get('a',0) || undefined
 
+    /* Valeurs distinctes (si type string) */
+    const values = (type_value === 'string') && valueKey && data?.data && from(data?.data).rollup({ a: op.array_agg_distinct(valueKey) }).get('a',0) || undefined
+
+    /* Gradient de couleur (si number) */
+    const colorsGradient = type_value==="number" ? generateGradient(color) : undefined ;
+
+    //devnote : ajouter un usememo pour limiter ?
+    const breaks =
+        colorsGradient && data?.data && valueKey
+            ? (() => {
+                switch (interpolationMethod) {
+                case "linear":
+                    return scaleLinear(data.data.map((d) => d[valueKey]), colorsGradient  ).ticks(colorsGradient.length -1 ).sort((a, b) => a - b)
+
+                case "quantile":
+                    return scaleQuantile(data.data.map((d) => d[valueKey]), colorsGradient  ).quantiles().sort((a, b) => a - b)
+
+                default:
+                    return undefined;
+                }
+            })()
+            : undefined;
+ 
     /** Couleurs de la palette */
     const colors = usePalette({nColors:Array.isArray(values) ? values?.length : 1})
     const colors_labels = usePaletteLabels()
@@ -192,24 +302,32 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 
 
     /** Expression mapLibre qui permet de mapper les valeurs et les couleurs de la palette */
     const expression: Expression | undefined = 
-        match && categoryKey
+        match && valueKey //Qualitatif
             ? [
                 "match",
-                ["get", categoryKey],
+                ["get", valueKey],
                 ...match?.flatMap( (s) => [s.val, s.color]), 
                 "purple" // fallback
             ] as Expression
+    : breaks && colorsGradient && type_value==="number" && valueKey ? // Quantitatif
+        [
+        "step",
+        ["get", valueKey],
+        colorsGradient[0],
+        ...breaks.flatMap((b, i) => [b, colorsGradient[i + 1]])
+        ]
     : undefined;
 
-    const legendItems:LegendItem[] = match?.map((e) => ({color:e.color, label:e.val})).sort((a, b) =>
-    a.label.localeCompare(b.label)) || []
+    const legendItems:LegendItem[] = type_value === "string" ? 
+        match?.map((e) => ({color:e.color, label:e.val})).sort((a, b) =>
+            a.label.localeCompare(b.label)) || [] 
+        : colorsGradient && breaks?.flatMap((b, i) => ({label:b.toLocaleString(undefined, {maximumFractionDigits:0}), color:  colorsGradient[i + 1]})) || []
 
 
     const layers = [];
     /** POINT */
     if (geom_type === 'Point' || geom_type === 'MultiPoint') {
         const default_paint:CirclePaint = {"circle-color": expression ?? color ?? colors![0] }
-        type = 'circle'
         layers.push(
             <Layer key={dataset} id={dataset} type="circle" paint={(paint ?? default_paint) as any}  />
         )
@@ -217,31 +335,49 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 
     /** POLYGON */ 
     else if (geom_type === 'Polygon' || geom_type === 'MultiPolygon') {     
         const default_paint:FillPaint = { "fill-color" : expression ?? color ?? colors![0] }
-        type = 'fill'
         layers.push(
             <Layer key={dataset} id={dataset} type="fill" paint={(paint ?? default_paint) as any}/>
         )
         layers.push(
             <Layer key={dataset + '_line'}id={dataset + '_line'} type='line' paint={{"line-width":0.5,"line-color":'#fff'}}/>
         )
+
     } 
     /** LINESTRING */ 
     else if (geom_type === 'LineString' || geom_type === 'MultiLineString') {
         const default_paint:LinePaint = { "line-color": expression ?? color ?? colors![0]  }
-        type = 'line'
         layers.push(
             <Layer key={dataset} id={dataset} type="line" paint={(paint ?? default_paint) as any} />
         )
     }
 
-    //devnote : regarder la colonne contenant les valeurs pour proposer une représentation (catégorie ou choroplèthe)
+    if(labelKey) {
+        layers.push(
+         <Layer
+            key={dataset + '_label'}
+            id={dataset + '_label'}
+            type="symbol"
+            layout={{
+                "text-field": ["coalesce", ["get", labelKey], ""],
+                "text-size": 12,
+                "text-anchor": "center",
+                "text-allow-overlap": false
+            }}
+            paint={{
+                "text-color": "#000",
+                "text-halo-color": "#fff",
+                "text-halo-width": 1
+            }}
+        />
+       )
+    }
 
     useEffect( () => {
-        if(geojson && geojson.features.length > 0){ // do not fitbound if no features
+        if(fitToData && geojson && geojson.features.length > 0){ // do not fitbound if no features
             const box = bbox(geojson).slice(0,4) as [number, number, number, number]
-            map?.fitBounds(box, {padding: 20 })
+            map?.fitBounds(box, {padding: 20, animate: false })
         }
-    }, [geojson, map])
+    }, [geojson, map, fitToData])
 
     return (
        <>
@@ -250,7 +386,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({dataset, categoryKey, color = 
                 { layers }
             </Source> 
         }
-           <LegendControl items={legendItems} /> 
+           {legendItems.length > 0 && <LegendControl items={legendItems} /> }
        </>
     )
 }
