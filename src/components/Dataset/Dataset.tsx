@@ -28,6 +28,9 @@ interface IDatasetProps {
      */
     resource:string
 
+    /** Nom de la colonne permettant de trier les données */
+    sortBy?:string
+
     /**
      * ⚠️ deprecated
      */
@@ -60,6 +63,7 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
   url:providerUrl, 
   resource, 
   pageSize, 
+  sortBy,
   meta}) => {
 
 
@@ -137,7 +141,13 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
         })
       }) 
 
-    const {data, isFetching, isError } = useApi({dataProvider:provider, resource:resource, filters: filters, pagination:{pageSize:pageSize}, meta:meta})
+    const {data, isFetching, isError } = useApi({
+      dataProvider:provider, 
+      resource:resource, 
+      filters: filters, 
+      pagination:{pageSize:pageSize},
+      sorters: sortBy ? [{field:sortBy, order:'asc' }] : undefined, // only one sort field is supported
+      meta:meta})
 
     const dep_dataset_id:string[] = [] // Dependencies
 
