@@ -18,8 +18,8 @@ interface MapLegendProps {
 const default_style:CSSProperties = {
     backgroundColor: 'rgba(256,256,256,0.8)',
     padding: '10px',
-    borderRadius: '4px',
-    border:'1px solid grey', 
+    borderRadius: '8px',
+    border:'2px solid #dddddd', 
     margin:8
 }
 
@@ -28,7 +28,7 @@ const MapLegend: React.FC<MapLegendProps> = ({ items, style }) => {
     return (
         <div style={divStyle}>
             {items.map((item, index) => (
-                <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+                <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '4px', width: 'max-content', }}>
                     <div style={{
                         width: '16px',
                         height: '16px',
@@ -36,7 +36,7 @@ const MapLegend: React.FC<MapLegendProps> = ({ items, style }) => {
                         borderRadius: '2px',
                         marginRight: '8px'
                     }}></div>
-                    <span>{item.label}</span>
+                    <span style={{ whiteSpace: 'nowrap' }}>{item.label}</span>
                 </div>
             ))}
     </div>
@@ -74,7 +74,7 @@ export const LegendControl: React.FC<LegendControlProps> = ({ items }) => {
 
       return control;
     },
-    { position: "top-right" } 
+    { position: "top-left" } 
   );
 
     useEffect(() => {

@@ -5,7 +5,7 @@ import { SimpleRecord } from "../../types"
 import { useMemo, useState } from "react"
 import { Segmented } from "antd"
 
-export const MapIndicator:React.FC<any> = ({dataset:dataset_input}) => {
+export const MapIndicator:React.FC<any> = ({dataset:dataset_input, interpolationMethod="jenks", nClasses=4}) => {
 
     const [level, setLevel] = useState<'commune' | 'epci'>('commune')
 
@@ -20,7 +20,7 @@ export const MapIndicator:React.FC<any> = ({dataset:dataset_input}) => {
 
 
     const joined = useMemo( () => data && data_ref && alasql(` 
-        SELECT geo.[code_insee], geo.[nom_officiel], geo.[codes_siren_des_epci], geo.[geometry], COALESCE(SUM(d.[puissance_nominale]), 0) as valeur
+        SELECT geo.[code_insee], geo.[nom_officiel], geo.[codes_siren_des_epci], geo.[geometry], COALESCE(SUM(d.[valeur]), 0) as valeur
         FROM ? d
         RIGHT JOIN ? geo ON geo.code_insee = d.code_insee
         GROUP BY geo.[code_insee], geo.[nom_officiel], geo.[codes_siren_des_epci], geo.[geometry]
@@ -50,7 +50,7 @@ export const MapIndicator:React.FC<any> = ({dataset:dataset_input}) => {
                     setLevel(value); // string
                 }}
             />
-        <Map dataset={level == 'commune' ? joined : agg_epci} valueKey="valeur" interpolationMethod="linear" nClasses={7} popup/>
+        <Map dataset={level == 'commune' ? joined : agg_epci} valueKey="valeur" interpolationMethod={interpolationMethod} nClasses={nClasses} popup/>
         </div>
     )
 }

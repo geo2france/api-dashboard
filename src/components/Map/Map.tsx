@@ -15,14 +15,15 @@ import { useBlockConfig } from '../DashboardPage/Block';
 import { SimpleRecord } from '../../types';
 import { parseNumber } from '../../utils/parsers';
 import { FeatureCollection } from 'geojson';
-import {  scaleLinear, scaleQuantile } from 'd3-scale';
+import {  scaleLinear } from 'd3-scale';
 import { generateGradient } from './utils';
 
+import {  jenks, quantileSorted } from 'simple-statistics';
 
 
 
 /** Méthode d'interpolation utilisé pour les valeurs numériques */
-type interpolationType = "linear" | "quantile" ;
+type interpolationType = "linear" | "quantile" | "jenks" ;
 
 export const map_locale = {
     'CooperativeGesturesHandler.WindowsHelpText': 'Utilisez Ctrl + molette pour zommer sur la carte.',
@@ -230,7 +231,7 @@ interface MapLayerProps {
  */
 export const MapLayer:React.FC<MapLayerProps> = ({
         dataset, valueKey:valueKeyInput, categoryKey, labelKey,
-        interpolationMethod='quantile', nClasses, color = '#00b4d8', paint, 
+        interpolationMethod='quantile', nClasses = 5, color = '#00b4d8', paint, 
         xKey, yKey, geomKey:geomKey_input,
         fitToData=true }) => {
 
@@ -282,11 +283,14 @@ export const MapLayer:React.FC<MapLayerProps> = ({
         colorsGradient && data?.data && valueKey
             ? (() => {
                 switch (interpolationMethod) {
-                case "linear":
-                    return scaleLinear(data.data.map((d) => d[valueKey]), colorsGradient  ).ticks(colorsGradient.length -1 ).sort((a, b) => a - b)
+                case "linear": // A vérifier
+                    return scaleLinear(data.data.map((d) => d[valueKey]), colorsGradient  ).ticks(colorsGradient.length).sort((a, b) => a - b)
 
-                case "quantile":
-                    return scaleQuantile(data.data.map((d) => d[valueKey]), colorsGradient  ).quantiles().sort((a, b) => a - b)
+                case "quantile": // A vérifier
+                    return quantileBreaks(data.data.map((d) => d[valueKey]), nClasses  )
+
+                case "jenks":
+                    return jenks(data?.data?.map((d:any) => d[valueKey]), nClasses)
 
                 default:
                     return undefined;
@@ -317,15 +321,22 @@ export const MapLayer:React.FC<MapLayerProps> = ({
         "step",
         ["get", valueKey],
         colorsGradient[0],
-        ...breaks.flatMap((b, i) => [b, colorsGradient[i + 1]])
+        ...breaks.slice(1,-1).flatMap((b, i) => [b, colorsGradient[i + 1]])
         ]
     : undefined;
 
-    const legendItems:LegendItem[] = type_value === "string" ? 
-        match?.map((e) => ({color:e.color, label:e.val})).sort((a, b) =>
-            a.label.localeCompare(b.label)) || [] 
-        : colorsGradient && breaks?.flatMap((b, i) => ({label:b.toLocaleString(undefined, {maximumFractionDigits:0}), color:  colorsGradient[i + 1]})) || []
+    console.log( nClasses, 'breaks', breaks, colorsGradient, generateGradient(color, nClasses) )
 
+    const legendItems:LegendItem[] = type_value === "string" ? 
+        match?.map((e) => ({color:e.color, label:e.val})).sort((a, b) => // Qualit
+            a.label.localeCompare(b.label)) || [] 
+        : colorsGradient && breaks?.slice(0,-1).map((b, i) => // Quanti
+            ({
+                label:`${b.toLocaleString(undefined, { maximumFractionDigits: 0 })} - ${breaks[i + 1].toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
+                color:  colorsGradient[i]
+            })) || []
+
+    console.log(legendItems)
 
     const layers = [];
     /** POINT */
@@ -439,4 +450,14 @@ export const BaseLayer: React.FC<IMapBaseLayerProps> = ({ layer, tileSize=256 })
             <Layer {...layer_raster} />
           </Source>
       );
-    }
+}
+
+function quantileBreaks(data: number[], k: number): number[] {
+  const sorted = [...data].sort((a, b) => a - b);
+  const breaks = [sorted[0]];
+  for (let i = 1; i < k; i++) {
+    breaks.push(quantileSorted(sorted, i / k));
+  }
+  breaks.push(sorted[sorted.length - 1]);
+  return breaks;
+}
