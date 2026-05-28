@@ -287,10 +287,10 @@ export const MapLayer:React.FC<MapLayerProps> = ({
                     return scaleLinear(data.data.map((d) => d[valueKey]), colorsGradient  ).ticks(colorsGradient.length).sort((a, b) => a - b)
 
                 case "quantile": // A vérifier
-                    return quantileBreaks(data.data.map((d) => d[valueKey]), nClasses  )
+                    return quantileBreaks(data.data.map((d) => d[valueKey]).filter( e => e), nClasses  )
 
                 case "jenks":
-                    return jenks(data?.data?.map((d:any) => d[valueKey]), nClasses)
+                    return jenks(data?.data?.map((d:any) => d[valueKey]).filter( e => e), nClasses)
 
                 default:
                     return undefined;
@@ -318,10 +318,15 @@ export const MapLayer:React.FC<MapLayerProps> = ({
             ] as Expression
     : breaks && colorsGradient && type_value==="number" && valueKey ? // Quantitatif
         [
-        "step",
-        ["get", valueKey],
-        colorsGradient[0],
-        ...breaks.slice(1,-1).flatMap((b, i) => [b, colorsGradient[i + 1]])
+        "case",
+        ["==", ["get", valueKey], null],
+        "#d8d7d7",  // couleur null
+        [
+            "step",
+            ["get", valueKey],
+            colorsGradient[0],
+            ...breaks.slice(1, -1).flatMap((b, i) => [b, colorsGradient[i + 1]])
+        ]
         ]
     : undefined;
 
@@ -336,7 +341,6 @@ export const MapLayer:React.FC<MapLayerProps> = ({
                 color:  colorsGradient[i]
             })) || []
 
-    console.log(legendItems)
 
     const layers = [];
     /** POINT */
