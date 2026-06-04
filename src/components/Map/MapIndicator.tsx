@@ -55,6 +55,7 @@ export const MapIndicator:React.FC<any> = ({dataset:dataset_input, interpolation
             <Segmented
                 value={level}
                 options={['commune', 'epci','département']}
+                style={{margin:8}}
                 onChange={(value) => {
                     //@ts-ignore
                     setLevel(value); // string
