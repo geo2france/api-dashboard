@@ -4,21 +4,47 @@ import { Map } from "./Map"
 import { SimpleRecord } from "../../types"
 import { useMemo, useState } from "react"
 import { Segmented } from "antd"
+import { useApi } from "../../utils/useApi"
+import { getProviderFromType } from "../Dataset/Provider"
 
 export const MapIndicator:React.FC<any> = ({dataset:dataset_input, interpolationMethod="jenks", nClasses=4, color}) => {
 
     const [level, setLevel] = useState<'commune' | 'epci' | 'département'>('commune')
 
+
+    const qr_ref_commune = useApi({
+        dataProvider: getProviderFromType("wfs")("https://data.geopf.fr/wfs/ows"),
+        resource:"ADMINEXPRESS-COG-CARTO-PE.LATEST:commune",
+        filters:[{operator:'eq', value:'32', field:'code_insee_de_la_region'}]
+    })
+
+    const qr_ref_epci = useApi({
+        dataProvider: getProviderFromType("wfs")("https://data.geopf.fr/wfs/ows"),
+        resource:"ADMINEXPRESS-COG-CARTO-PE.LATEST:epci",
+    })
+
+    const qr_ref_dep = useApi({
+        dataProvider: getProviderFromType("wfs")("https://data.geopf.fr/wfs/ows"),
+        resource:"ADMINEXPRESS-COG-CARTO-PE.LATEST:departement",
+        filters:[{operator:'eq', value:'32', field:'code_insee_de_la_region'}]
+    })
+
     const dataset = useDataset(dataset_input)
-    const dataset_ref_commune = useDataset("ref_commune")
-    const dataset_ref_epci = useDataset("ref_epci")
-    const dataset_ref_dep = useDataset("ref_departement")
+    //const dataset_ref_commune = useDataset("ref_commune")
+    //const dataset_ref_epci = useDataset("ref_epci")
+    //const dataset_ref_dep = useDataset("ref_departement")
 
 
     const data = dataset?.data
-    const data_ref = dataset_ref_commune?.data
-    const data_ref_epci = dataset_ref_epci?.data
-    const data_ref_dep = dataset_ref_dep?.data
+    //const data_ref = dataset_ref_commune?.data
+    const data_ref = qr_ref_commune.data?.data
+    //const data_ref_epci = dataset_ref_epci?.data
+    const data_ref_epci = qr_ref_epci.data?.data?.filter(r => {
+                    const codes = String(r.codes_insee_des_departements_membres ?? "");
+                    return ["02", "59", "60", "62", "80"].some(c => codes.includes(c));
+                })
+
+    const data_ref_dep = qr_ref_dep?.data?.data
 
 
     const joined = useMemo( () => data && data_ref && alasql(` 
