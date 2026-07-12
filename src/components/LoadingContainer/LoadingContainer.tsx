@@ -2,6 +2,7 @@ import React from 'react'
 import { useEffect, useRef, useState } from "react";
 import { Empty, Spin, theme } from 'antd';
 import { Icon } from '@iconify/react';
+import { useBrandForeground, WCAG_CONTRAST } from '../../theme';
 
 interface LoadingContainerProps {
     isFetching: boolean;
@@ -21,6 +22,7 @@ interface LoadingContainerProps {
 const LoadingContainer:React.FC<LoadingContainerProps> = ({isFetching, children, blurRadius='10px', delay=500, noData}) =>
 {
     const { token } = theme.useToken();
+    const brandFg = useBrandForeground();
     const [blur, setBlur] = useState(false);
     const timeoutRef = useRef<number | null>(null); //Le timeout permet que le blur ne s'affiche pas si le chargement est plus court que delay (éviter effet clignotement)
 
@@ -47,7 +49,7 @@ const LoadingContainer:React.FC<LoadingContainerProps> = ({isFetching, children,
             {noData && <Empty 
                         style={{position:"relative", top:"50%", right:"50%", marginBottom:50, transform: "translate(50%, -50%)"}} 
                         description="Pas de données disponibles"
-                        image={<Icon icon="ph:empty-fill" width={80} color={token.colorPrimary}/>} />
+                        image={<Icon icon="ph:empty-fill" width={80} color={brandFg(token.colorBgContainer, WCAG_CONTRAST.UI)}/>} />
             }
             { blur ? <Spin size="large" style={{position:'absolute', left:'50%', top:'50%' }}/> : <></>}
         </>

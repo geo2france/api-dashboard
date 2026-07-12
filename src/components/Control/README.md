@@ -65,16 +65,16 @@ Les propriétés initiales des composants [Radio.Group](https://ant.design/compo
 
 ### Slider
 
-A venir
+À venir
 
 ### NextPrevSelect
 
-A venir
+À venir
 
 ### SelectYear
 
-A venir
+À venir
 
 ### Swith / Checkbox
 
-A venir
+À venir

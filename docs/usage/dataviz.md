@@ -159,7 +159,7 @@ N'importe quel bibliothèque peut-être utilisée, ou même du HTML.
 Api-dashboard fourni un composant `<ChartEcharts>` permettant de faciliter la création de graphiques Echarts.
 
 Il suffit de fournir un objet de configuration ECharts via la propriété `options`.
-Pour un usage plus avancé, la propriété `ref` permet de récupérer l'instance ECharts (réagir à des évenements, déclencher des actions sur le graphique).
+Pour un usage plus avancé, la propriété `ref` permet de récupérer l'instance ECharts (réagir à des événements, déclencher des actions sur le graphique).
 
 
 

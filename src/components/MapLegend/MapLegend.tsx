@@ -2,6 +2,7 @@ import { CSSProperties, useEffect, useRef } from "react"
 import { createRoot, Root } from "react-dom/client";
 import { useControl } from "react-map-gl/maplibre";
 import type { Map as MaplibreMap } from "maplibre-gl";
+import { theme } from "antd";
 
 
 export interface LegendItem {
@@ -15,15 +16,17 @@ interface MapLegendProps {
     style?:CSSProperties
 }
 
-const default_style:CSSProperties = {
-    backgroundColor: 'rgba(256,256,256,0.8)',
-    padding: '10px',
-    borderRadius: '4px',
-    border:'1px solid grey', 
-    margin:8
-}
-
 const MapLegend: React.FC<MapLegendProps> = ({ items, style }) => {
+    const { token } = theme.useToken();
+
+    const default_style:CSSProperties = {
+        backgroundColor: token.colorBgElevated,
+        padding: token.paddingSM,
+        borderRadius: token.borderRadius,
+        border: `1px solid ${token.colorBorderSecondary}`,
+        margin: token.marginXS,
+    };
+
     const divStyle = {...default_style, ...style}
     return (
         <div style={divStyle}>

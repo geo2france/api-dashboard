@@ -5,7 +5,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # Page
 
-Une page est de tableau de bord est rendue par le composant `<Dasbhoard>`.
+Une page de tableau de bord est rendue par le composant `<Dashboard>`.
 
 Cette page va contenir :
 
@@ -14,7 +14,7 @@ Cette page va contenir :
 - Et bien sûr des _dataviz_ et/ou cartographies !
 
 ```jsx
-// Exemple minimaliste. On affiche un camenbert à partir d'un jeu de données 
+// Exemple minimaliste. On affiche un camembert à partir d'un jeu de données
 // proposé par l'ADEME sur son portail open-data
 
 import  { Dashboard, Dataset, Control, ChartPie } from "@geo2france/api-dashboard"
@@ -78,10 +78,10 @@ Les graphiques utilisent ensuite des couleurs réparties de façon optimale le l
 La palette s'applique à l'ensemble de la page.
 
 ```tsx
-<Dasbhoard>
+<Dashboard>
       <Palette steps={['#95c11f','#ed1c24','#0f4496']} />
       {/* ... */}
-</Dasbboard>
+</Dashboard>
 ```
 
 

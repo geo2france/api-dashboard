@@ -5,7 +5,7 @@ import { Icon } from "@iconify/react";
 import { ProducersFooter } from "../Dataset/Producer";
 import { MoreOutlined } from '@ant-design/icons';
 import { ErrorBoundary } from "../Layout/Error";
-import { cardStyles } from "../../utils/cardStyles";
+import { useCardStyles } from "../../utils/cardStyles";
 import { useDataset } from "../../dsl";
 
 
@@ -30,6 +30,7 @@ export const DSL_ChartBlock:React.FC<IChartBlockProps> = ({children}) => {
     const id = useId()
     const [config, setConfig] = useState<ChartBlockConfig>({})
     const {token} = useToken()
+    const cardStyles = useCardStyles()
 
     const dataset = useDataset(children.props.dataset)
 
