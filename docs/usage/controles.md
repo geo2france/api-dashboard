@@ -64,7 +64,7 @@ Les propriétés initiales des composants [Radio.Group](https://ant.design/compo
 
 ## Développer vos contrôles
 
-Il est possible de dévélopper vos contrôles où d'utiliser des éléments de formulaires de [AntDesign](https://ant.design/components/form).
+Il est possible de développer vos contrôles où d'utiliser des éléments de formulaires de [AntDesign](https://ant.design/components/form).
 Il est nécessaire de fournir un [Form.Item](https://ant.design/components/form#formitem) au composant `Controle`, **avec un nom**.
 
 ```tsx
@@ -91,17 +91,17 @@ import { Form, Slider, Switch } from "antd"
 
 ### Slider
 
-A venir
+À venir
 
 ### NextPrevSelect
 
-A venir
+À venir
 
 ### SelectYear
 
-A venir
+À venir
 
 ### Swith / Checkbox
 
-A venir
+À venir
 

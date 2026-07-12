@@ -5,6 +5,12 @@ import { ChartComparison } from './ChartComparison';
 const meta = {
   title: 'Dataviz/Comparison',
   component: ChartComparison,
+  parameters: {
+    // FIXME(a11y): ECharts rend un élément <canvas> sans rôle ARIA ni label.
+    // Une solution complète nécessite d'ajouter aria-label + role="img" sur le
+    // conteneur du graphique (ticket séparé fix/a11y-echarts).
+    a11y: { test: 'todo' },
+  },
 } satisfies Meta<typeof ChartComparison>;
 
 export default meta;

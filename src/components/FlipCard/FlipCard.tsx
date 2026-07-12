@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { Button, Card, Typography } from "antd"
 import { CSSProperties, ReactElement, useState } from "react"
-import { cardStyles } from "../../utils/cardStyles";
+import { useCardStyles } from "../../utils/cardStyles";
 import { InfoCircleFilled, InfoCircleOutlined } from "@ant-design/icons"
 const { Text } = Typography;
 
@@ -20,6 +20,7 @@ const FlipCard: React.FC<FlipCardProps> = ({ title, information, children }) => 
     const [flipped, setFlipped] = useState(false);
     const toggleFlipped = () => setFlipped(!flipped);
     const cardARef = useRef<HTMLDivElement>(null);
+    const cardStyles = useCardStyles();
 
     const height = cardARef.current ? cardARef.current.clientHeight : undefined; // Forcer la hauteur à celle de la card "Recto"
 

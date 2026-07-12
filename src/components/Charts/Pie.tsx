@@ -8,6 +8,7 @@ import { ChartEcharts } from "./ChartEcharts";
 import { merge_others } from "../..";
 import { useBlockConfig } from "../DashboardPage/Block"
 import deepMerge from "../../utils/deepmerge";
+import { theme } from "antd";
 
 
 export interface IChartPieProps {
@@ -49,6 +50,7 @@ export interface IChartPieProps {
 export const ChartPie = ({dataset:dataset_id, nameKey, dataKey, unit, title, donut=false, other=5, labelFormatter, precision=1, option:customOption = {}}:IChartPieProps) => {
     const dataset = useDataset(dataset_id)
     const data = dataset?.data
+    const { token } = theme.useToken();
 
     useBlockConfig({ 
       title: title,
@@ -81,7 +83,7 @@ export const ChartPie = ({dataset:dataset_id, nameKey, dataKey, unit, title, don
         color:usePalette({nColors:chart_data?.length}),
         itemStyle:{
           /* Use label's color if any, otherwise fallback to Echarts calculated color */
-          color:(p) => colors_labels.find( i => i.label.toLowerCase() === p.name.toLowerCase())?.color ?? colors?.[p.dataIndex] ?? '#000'
+          color:(p) => colors_labels.find( i => i.label.toLowerCase() === p.name.toLowerCase())?.color ?? colors?.[p.dataIndex] ?? token.colorTextBase
         }, 
         data:chart_data,
         radius : donut ? ['40%','75%'] : [0, '75%'],
@@ -102,7 +104,7 @@ export const ChartPie = ({dataset:dataset_id, nameKey, dataKey, unit, title, don
           text: `${total.toLocaleString(undefined,{maximumFractionDigits:precision})} ${unit}`, 
           fontSize: 24,
           fontWeight: 'bold',
-          fill: '#333',
+          fill: token.colorText,
         }
       }
     }

@@ -1,7 +1,8 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { DashboardApp, PageProps, PagesGroup } from '../..';
 import { DSL_DashboardPage as DashboardPage} from '../DashboardPage/Page';
-import { default_theme } from './DashboardApp';
+import type { ThemeName } from '../../theme';
 
 const meta = {
   title: 'Layout/DashboardApp',
@@ -17,6 +18,16 @@ const DemoPage:React.FC<PageProps> = ({})=> (
 )
 
 export const Default: Story = {
+  decorators: [
+    (Story, context) => (
+      <Story
+        args={{
+          ...context.args,
+          theme: (context.globals.themeName as ThemeName) ?? 'geo2france',
+        }}
+      />
+    ),
+  ],
   args:{
         title:"Mon tableau de bord",
         logo:"https://www.geo2france.fr/public/logo-g2f.png",
@@ -27,9 +38,8 @@ export const Default: Story = {
                  </PagesGroup>,
                 <DemoPage title="Dashboard 3" icon="icon-park-solid:web-page" />
         ],
-        theme: default_theme,
-        brands:[{name:"Acme", logo:"https://static.wikia.nocookie.net/fictionalcompanies/images/c/c2/ACME_Corporation.png/revision/latest?cb=20230628025220"},
-            {name:"WB", url:"https://www.warnerbros.com/", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Warner_Bros._logo_2023.svg/langfr-960px-Warner_Bros._logo_2023.svg.png"}
+        brands:[{name:"Acme", logo:"https://static.wikia.nocookie.net/fictionalcompanies/images/c/c2/ACME_Corporation.png/revision/latest?cb=20230628025220", height: 56},
+            {name:"WB", url:"https://www.warnerbros.com/", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Warner_Bros._logo_2023.svg/langfr-960px-Warner_Bros._logo_2023.svg.png", height: 40}
         ],
         footerSlider: false,
         disablePoweredBy: false
@@ -38,6 +48,10 @@ export const Default: Story = {
     children: {
         control: { disabled: true },
         table: { readonly: true }
+    },
+    theme: {
+        table: { disable: true },
+        control: { disabled: true },
     },
     routes: { // Deprecated
         table: { disable: true },

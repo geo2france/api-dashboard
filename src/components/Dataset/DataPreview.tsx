@@ -1,5 +1,5 @@
-import Table, { ColumnsType } from "antd/es/table";
-import { Badge } from "antd";
+import { Table, Badge } from "antd";
+import type { TableProps } from "antd";
 import { useDataset } from "./hooks";
 
 interface DatasetBadgeStatusProps {
@@ -25,7 +25,7 @@ export const DSL_DataPreview:React.FC<DSL_DataPreviewProps> = ({dataset: dataset
     }
 
 
-    const columns: ColumnsType<any> = Object.keys(data[0] || {}).map((key) => ({
+    const columns: TableProps<any>["columns"] = Object.keys(data[0] || {}).map((key) => ({
         title: key,
         dataIndex: key,
         key,

@@ -17,6 +17,7 @@ import { parseNumber } from '../../utils/parsers';
 import { FeatureCollection } from 'geojson';
 import {  scaleLinear, scaleQuantile } from 'd3-scale';
 import { generateGradient } from './utils';
+import { theme } from 'antd';
 
 
 
@@ -235,6 +236,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({
 
     const valueKey = valueKeyInput || categoryKey ;
     const data = useDataset(dataset)
+    const { token } = theme.useToken();
     // src (lib proj4 pour convertir)
 
     const keys = data?.data?.[0] ? Object.keys(data?.data?.[0]) : undefined
@@ -339,7 +341,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({
             <Layer key={dataset} id={dataset} type="fill" paint={(paint ?? default_paint) as any}/>
         )
         layers.push(
-            <Layer key={dataset + '_line'}id={dataset + '_line'} type='line' paint={{"line-width":0.5,"line-color":'#fff'}}/>
+            <Layer key={dataset + '_line'}id={dataset + '_line'} type='line' paint={{"line-width":0.5,"line-color": token.colorBgContainer}}/>
         )
 
     } 

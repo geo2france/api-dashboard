@@ -4,6 +4,7 @@ import { ChartEcharts, useBlockConfig, usePalette, usePaletteLabels } from "../.
 import { SimpleRecord } from "../../types";
 import { from, op } from "arquero";
 import deepMerge from "../../utils/deepmerge";
+import { theme } from "antd";
 
 type labelType = "percent" | "value" | "category" | "none" 
 
@@ -52,6 +53,7 @@ option:custom_option={}}:ChartComparisonProps) => {
 
     const dataset = useDataset(dataset_id)
     const data = dataset?.data
+    const { token } = theme.useToken();
 
     useBlockConfig({ 
         title: title,
@@ -75,7 +77,7 @@ option:custom_option={}}:ChartComparisonProps) => {
         : [];
 
     const colors_libels = usePaletteLabels()
-    const colors_palette = usePalette({nColors:chart_data1.length})  || ['#d4d4d4']
+    const colors_palette = usePalette({nColors:chart_data1.length})  || [token.colorBorderSecondary]
 
     // Total, utilisé pour les pourcentage
     const total = chart_data1?.reduce((sum, item) => sum + item[1], 0);

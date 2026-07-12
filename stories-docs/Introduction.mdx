@@ -5,18 +5,20 @@ import { Canvas, Meta } from '@storybook/addon-docs/blocks';
 
 # Introduction
 
+`@geo2france/api-dashboard` est une bibliothèque React pour construire des tableaux de bord data avec une structure prête à l'emploi (layout, navigation, theming, composants de dataviz).
 
+Cette documentation s'adresse en priorité aux intégrateurs externes qui veulent démarrer rapidement, puis personnaliser progressivement l'apparence et le comportement de leur tableau de bord.
 
 ## Installation & mise en route
 
 ### Installer nvm et Node.js
 
 - Sur Windows : [https://github.com/coreybutler/nvm-windows?tab=readme-ov-file#install-nvm-windows](https://github.com/coreybutler/nvm-windows?tab=readme-ov-file#install-nvm-windows)
-- Sur Linux : `apt install nvm`
+- Sur Linux : suivez l'installation officielle de `nvm` : [https://github.com/nvm-sh/nvm#installing-and-updating](https://github.com/nvm-sh/nvm#installing-and-updating)
 
 Ensuite, depuis un terminal ([Powershell](https://learn.microsoft.com/fr-fr/powershell/scripting/install/install-powershell-on-windows?view=powershell-7.5) ou autre) : 
 ```bash
-# Installer la dernière vers LTS de Node.js
+# Installer la dernière version LTS de Node.js
 nvm install --lts
 ```
 
@@ -35,10 +37,77 @@ npm run dev
 
 ### Gestion des pages
 
-Le fichier `config.ts` peut-être édité pour personnaliser l'application : thème graphique, titre, routes, etc.
+Le fichier `config.ts` peut être édité pour personnaliser l'application : apparence, titre, routes, etc.
 
 ### Personnalisation
 
-Theme, titre, footer, etc.
+Le fichier `config.ts` expose plusieurs propriétés pour adapter l'apparence du tableau de bord.
 
-*Rédaction en cours*
+Trois propriétés travaillent ensemble :
+
+- `theme` choisit la palette de couleurs (`geo2france` ou `neutral`).
+- `themeMode` choisit le mode d'affichage (`light`, `dark` ou `auto`).
+- `visualIdentity` permet de définir une identité visuelle complète (couleurs, logo, typographie) pour un projet sur mesure.
+
+Pour la plupart des projets Geo2France, les réglages par défaut suffisent.
+
+Exemple de configuration :
+
+```ts
+// config.ts
+export const config: DashboardConfig = {
+  title: "Mon tableau de bord",
+
+  // Palette de couleurs : 'geo2france' (défaut) ou 'neutral'
+  theme: "geo2france",
+
+  // Mode d'affichage : 'auto' (suit l'OS), 'light' ou 'dark'
+  themeMode: "auto",
+
+  // Identité visuelle complète (optionnel)
+  // visualIdentity: { name: "mon-projet", primary: "#1677ff" },
+
+  // ... autres options (routes, footer, etc.)
+};
+```
+
+<table>
+  <thead>
+    <tr>
+      <th>Propriété</th>
+      <th>Type</th>
+      <th>Défaut</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>theme</code></td>
+      <td><code>'geo2france' | 'neutral'</code></td>
+      <td><code>'geo2france'</code></td>
+      <td>Preset de couleurs</td>
+    </tr>
+    <tr>
+      <td><code>themeMode</code></td>
+      <td><code>'auto' | 'light' | 'dark'</code></td>
+      <td><code>'auto'</code></td>
+      <td>Mode d'affichage (clair, sombre ou automatique)</td>
+    </tr>
+    <tr>
+      <td><code>visualIdentity</code></td>
+      <td><code>VisualIdentityTokens | VisualIdentityShorthand | VisualIdentityThemeBundle</code></td>
+      <td><code>undefined</code></td>
+      <td>Identité visuelle personnalisée (prioritaire sur <code>theme</code>)</td>
+    </tr>
+  </tbody>
+</table>
+
+- **Valeurs de `theme`** : `geo2france` (palette officielle Geo2France) ou `neutral` (palette bleue Ant Design générique).
+- **Valeurs de `themeMode`** : `auto` (détecte la préférence système), `light` ou `dark`.
+- **`visualIdentity`** : personnalise complètement l'identité visuelle. Si `visualIdentity` est fourni, il est prioritaire sur `theme`.
+
+Pour en savoir plus sur les palettes et les tokens, consultez la page **[Theming](?path=/docs/documentation-theming--docs)**.
+
+Pour tout ce qui concerne le mode sombre (comportement, bonnes pratiques), consultez la page **[Dark Mode](?path=/docs/documentation-dark-mode--docs)**.
+
+Pour personnaliser une identité visuelle complète (couleurs, logo, typographie), consultez la page **[Identité Visuelle](?path=/docs/documentation-identite-visuelle--docs)**.
