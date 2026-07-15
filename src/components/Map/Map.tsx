@@ -88,7 +88,7 @@ interface MapProps extends MapLayerProps {
  * 
  * Permet l'affichage de données type "Polygon".
  * 
- * Si `valueKey` est définie, les couleurs seront calculée à partir de la colonne indiquée (quantitative ou qualitative).
+ * Si `valueKey` est définie, les couleurs seront calculées à partir de la colonne indiquée (quantitative ou qualitative).
  * 
 */
 export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, interpolationMethod, valueKey:valueKeyInput, labelKey,
