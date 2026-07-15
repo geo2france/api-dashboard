@@ -10,7 +10,7 @@ export const dataProvider = (
   apiUrl: string,
   httpClient: AxiosInstance = axiosInstance
 ):DataProvider => ({
-  getList: async ({ resource, pagination, filters, sorters, meta }) => {
+  getData: async ({ resource, pagination, filters, sorters, meta }) => {
     const url = `${apiUrl}`;
 
     const { current = 1, pageSize = 10, mode = "off" } = pagination ?? {};
@@ -60,8 +60,8 @@ export const dataProvider = (
     const { data, headers:_headers } = await httpClient[requestMethod](
       
       `${base_url}?${queryString.stringify({...query, sortby : undefined})}
-        &sortby=${query.sortby}
-        &${Object.entries(base_params).map(([k, v]) => `${k}=${v}`).join('&') }`, //le + de sortby et les paramètres de bases ne doivent pas être urlencode
+${query.sortby ? `&sortby=${query.sortby}` : '' }
+&${Object.entries(base_params).map(([k, v]) => `${k}=${v}`).join('&') }`, //le + de sortby et les paramètres de base (fournis dans l'URL) ne doivent pas être urlencode
       {
         headers: headersFromMeta,
       }

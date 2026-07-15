@@ -15,4 +15,5 @@ export type Partner = {
     logo: string;
     name: string;
     url?: string;
+    height?: number;
 }

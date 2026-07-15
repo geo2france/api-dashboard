@@ -10,7 +10,7 @@ import React, { ReactElement, ReactNode, createContext, useEffect, useState } fr
 import Attribution, { SourceMakerProps, SourceProps } from "../Attributions/Attributions";
 import { useChartExport } from "../../utils/usechartexports";
 import LoadingContainer from "../LoadingContainer/LoadingContainer";
-import { cardStyles } from "../../utils/cardStyles";
+import { useCardStyles } from "../../utils/cardStyles";
 import { License } from "../../types";
 
 const { useToken } = theme;
@@ -56,6 +56,7 @@ const DashboardElement: React.FC<IDashboardElementProps> = ({
   virtual = false,
 }) => {
   const { token } = useToken();
+  const cardStyles = useCardStyles();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [chartRef, setchartRef] = useState(undefined);
   const [data, setData] = useState(undefined);

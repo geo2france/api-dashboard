@@ -45,7 +45,7 @@ console.log(data.data);
 
 ### useChartEvents
 
-Le hook `useChartEvents` permet de définir des fonctions callback à executer au click (_onClick_) ou au survol (_onFocus_) des graphiques.
+Le hook `useChartEvents` permet de définir des fonctions callback à exécuter au click (_onClick_) ou au survol (_onFocus_) des graphiques.
 Le callback reçoit comme paramètres un objet qui contient des informations sur l'élément qui l'a déclanché (nom de la série, données, etc.). La structure de l'objet varie selon le type de graphique.
 La fonction _onFocus_ est également appelée lorsque le pointeur **quitte** l'élément (_mouse-out_) avec un paramètre _null_.
 
@@ -55,11 +55,11 @@ Généralement, le callback sera une fonction qui va modifier un état (_state_)
 Exemple :
 ```tsx
 
- const [focus, setFocus] = useState<string | undefined>(undefined) // Etat qui stock le nom de la catégorie sur laquelle le focus est porté
+ const [focus, setFocus] = useState<string | undefined>(undefined) // État qui stock le nom de la catégorie sur laquelle le focus est porté
 
 
  const MyChart: React.FC = ({onFocus}) => {
-    useChartEvents({chartRef:chartRef, onFocus:onFocus}) // Lors du survol, la fonction onFocus est appelée et met à jour l'etat.
+    useChartEvents({chartRef:chartRef, onFocus:onFocus}) // Lors du survol, la fonction onFocus est appelée et met à jour l'état.
 
     [...]
     return(
@@ -76,7 +76,7 @@ Exemple :
 ### useChartActionHightlight
 
 Le hook `useChartActionHightlight` permet de manuellement mettre en évidence (_highlight_) une portion du graphique.
-L'élement à éclairer peut-être défini par son nom ou le nom de sa série (ou plus rarement son index).
+L'élément à éclairer peut-être défini par son nom ou le nom de sa série (ou plus rarement son index).
 
 TODO : Exemple concret avec _bar_ et _pie_ et cas d'usage.
 
@@ -86,7 +86,7 @@ Le _hilight_ sera plus souvent utilisé pour mettre un évidence un élément si
 
 ### useSearchParamsState
 
-Récuperer des états depuis l'URL et met à jours l'URL en cas de modification des états. C'est l'équivalent de [useState](https://react.dev/reference/react/useState) mais avec synchronisation de l'URL. 
+Récupérer des états depuis l'URL et met à jours l'URL en cas de modification des états. C'est l'équivalent de [useState](https://react.dev/reference/react/useState) mais avec synchronisation de l'URL. 
 Utile pour permettre aux utilisateurs de partager un tableau de bord avec ces états (filtres, etc.).
 
 Exemple :

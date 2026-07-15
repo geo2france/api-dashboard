@@ -1,0 +1,290 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Identite Visuelle" />
+
+# Identité Visuelle
+
+La `visualIdentity` permet de définir l'identité visuelle complète d'un projet : couleurs, logo et typographie.
+
+Utilisez-la quand votre tableau de bord doit respecter une charte graphique spécifique. Si `visualIdentity` et `theme` sont fournis ensemble, `visualIdentity` prime (détaillé dans la section « Priorité entre `theme` et `visualIdentity` » plus bas).
+
+---
+
+## Démarrage rapide
+
+Pour un premier niveau de personnalisation, vous pouvez fournir un objet court (`VisualIdentityShorthand`) :
+
+```ts
+// config.ts
+import type { DashboardConfig } from '@geo2france/api-dashboard';
+
+export const config: DashboardConfig = {
+  visualIdentity: {
+    name: 'mon-projet',
+    primary: '#1677ff',
+  },
+  themeMode: 'auto',
+};
+```
+
+La couleur `primary` alimente `light.colorPrimary` ; le mode sombre en est automatiquement dérivé. Pour distinguer les couleurs claires et sombres, ou ajouter typographie, logo et rayon des angles, passez à la **configuration détaillée** ci-dessous.
+
+---
+
+## Configuration détaillée
+
+Pour définir finement les couleurs, la typo et le logo, utilisez `VisualIdentityTokens` :
+
+```ts
+// config.ts
+import type { DashboardConfig } from '@geo2france/api-dashboard';
+
+export const config: DashboardConfig = {
+  visualIdentity: {
+    name: 'mon-projet',
+    light: {
+      colorPrimary: '#0055cc',
+      colorLink: '#0055cc',
+    },
+    dark: {
+      colorPrimary: '#7aa6ff',
+      colorLink: '#7aa6ff',
+    },
+    typography: {
+      fontFamily: "'Marianne', Inter, system-ui, sans-serif",
+    },
+    borderRadius: 6,
+    logo: {
+      src: '/logo.svg',
+      srcDark: '/logo-dark.svg',
+      alt: 'Mon organisation',
+      height: 32,
+    },
+  },
+  themeMode: 'auto',
+};
+```
+
+---
+
+## Utiliser `createVisualIdentity()`
+
+Vous pouvez aussi préparer votre identité visuelle avec `createVisualIdentity()` puis la passer à `DashboardApp`.
+
+`createVisualIdentity()` n'est **pas un niveau de configuration supplémentaire** : la fonction accepte exactement les mêmes entrées que les sections précédentes (`VisualIdentityShorthand` ou `VisualIdentityTokens`) et produit le **même résultat**. Passer l'objet brut à `visualIdentity` est équivalent, car le `ThemeProvider` l'enveloppe automatiquement pour vous. Construisez le bundle vous-même uniquement pour le **réutiliser** (plusieurs apps, Storybook, tests), garder une **référence stable** hors du rendu, ou **inspecter le `ThemeConfig`** généré avant de le passer.
+
+```tsx
+import { DashboardApp, createVisualIdentity } from '@geo2france/api-dashboard';
+
+const monIdentiteVisuelle = createVisualIdentity({
+  name: 'mon-projet',
+  light: {
+    colorPrimary: '#FF6B35',
+  },
+  typography: {
+    fontFamily: "'MaPolice', Inter, system-ui, sans-serif",
+  },
+  logo: {
+    src: '/logo.svg',
+    srcDark: '/logo-dark.svg',
+    alt: 'Mon organisation',
+  },
+});
+
+export default function App() {
+  return <DashboardApp visualIdentity={monIdentiteVisuelle} themeMode="auto" />;
+}
+```
+
+---
+
+## Couleur de marque & contraste
+
+**Problème.** Une primaire à faible contraste sur la surface du conteneur (couleur claire ou saturée) est illisible en texte ou en icône — elle échoue [WCAG 1.4.3](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum) (texte, 4.5:1) et [1.4.11](https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast) (UI, 3:1).
+
+**Comportement.** La bibliothèque n'utilise jamais `colorPrimary` en **avant-plan** (texte, icône, bordure, focus) là où le contraste échoue : elle substitue un neutre accessible (`colorText`), **par mode**, mesuré contre la surface résolue. `colorPrimary` reste utilisé en **remplissage** (boutons pleins, fond de l'item de menu sélectionné) et en avant-plan partout où le contraste passe — typiquement en mode sombre. Conséquence attendue : un libellé de marque peut apparaître neutre en mode clair et coloré en mode sombre.
+
+**En dev.** Un `console.warn` liste les modes où la substitution s'applique, avec le nom de l'identité visuelle concernée.
+
+> **Pourquoi seulement `colorPrimary` et `colorLink` ?**
+> `VisualIdentityColors` accepte deux couleurs : `colorPrimary` et `colorLink` (optionnelle). Tout le reste en **découle automatiquement** : Ant Design dérive de vos couleurs et du mode les tokens comme `colorLinkHover`, `colorTextBase` ou `colorSuccess`, que les composants consomment — vous n'avez pas à les définir. `colorLinkHover` se dérive de `colorLink` ; `colorTextBase` est la fondation de l'échelle de texte, dont dépendent les garanties de contraste.
+>
+> Pour un contrôle fin (cas expert), vous pouvez définir n'importe quel token via le `ConfigProvider` natif d'Ant Design — sans la substitution automatique décrite plus haut.
+
+---
+
+## Logo
+
+### Configuration de base
+
+Le logo principal se configure dans `visualIdentity.logo` avec :
+- `src` : logo principal (obligatoire)
+- `alt` : texte alternatif (obligatoire, descriptif)
+- `srcDark` : version mode sombre (optionnelle)
+- `width` / `height` : dimensions explicites (optionnelles)
+
+```ts
+visualIdentity: {
+  name: 'mon-projet',
+  primary: '#1677ff',
+  logo: {
+    src: '/logo.svg',
+    srcDark: '/logo-dark.svg',
+    alt: 'Logo Mon Projet',
+    height: 32,
+  },
+}
+```
+
+### Formats recommandés
+
+- **SVG recommandé** : léger, net à toutes les tailles, adapté au dark mode.
+- **PNG acceptable** : utile pour des logos complexes ou avec textures/dégradés.
+- Évitez les images trop lourdes (optimiser avant publication).
+
+### Dimensions et rendu
+
+Dans le `Sider`, le logo est affiché avec une hauteur de référence de `52px` (`object-fit: contain`).  
+Pour un rendu stable, privilégiez un logo horizontal avec fond transparent.
+
+### Accessibilité
+
+- Renseignez toujours `alt` avec un texte clair (`Logo <organisation>`).
+- N'utilisez pas de `alt` vide pour le logo principal.
+
+### Dark mode
+
+- Si `srcDark` est fourni, il est utilisé automatiquement en mode sombre.
+- Sinon, `src` est réutilisé.
+- Alternatives possibles pour des besoins avancés : SVG avec `currentColor`, ou filtre CSS conditionnel.
+
+### Priorité de résolution du logo
+
+Le logo affiché dans la barre latérale suit cette cascade :
+1. `logo` passé directement à `DashboardSider`
+2. `visualIdentity.logo`
+3. `logo` de `DashboardApp` (fallback legacy)
+
+---
+
+## Priorité entre `theme` et `visualIdentity`
+
+Règle simple :
+- Si vous fournissez uniquement `theme`, la palette choisie est appliquée.
+- Si vous fournissez `theme` et `visualIdentity`, c'est `visualIdentity` qui est appliqué.
+
+---
+
+## Référence API
+
+### `VisualIdentityShorthand`
+
+<table>
+  <thead>
+    <tr>
+      <th>Propriété</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>name</code></td>
+      <td><code>string</code></td>
+      <td>Nom interne de l'identité visuelle</td>
+    </tr>
+    <tr>
+      <td><code>primary</code></td>
+      <td><code>string</code></td>
+      <td>Couleur principale</td>
+    </tr>
+    <tr>
+      <td><code>logo</code></td>
+      <td><code>string | VisualIdentityLogo</code></td>
+      <td>Logo optionnel</td>
+    </tr>
+  </tbody>
+</table>
+
+### `VisualIdentityTokens`
+
+<table>
+  <thead>
+    <tr>
+      <th>Propriété</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>name</code></td>
+      <td><code>string</code></td>
+      <td>Nom interne de l'identité visuelle</td>
+    </tr>
+    <tr>
+      <td><code>light</code></td>
+      <td><code>VisualIdentityColors</code></td>
+      <td>Couleurs en mode clair</td>
+    </tr>
+    <tr>
+      <td><code>dark</code></td>
+      <td><code>VisualIdentityColors</code></td>
+      <td>Couleurs en mode sombre (optionnel)</td>
+    </tr>
+    <tr>
+      <td><code>typography</code></td>
+      <td><code>VisualIdentityTypography</code></td>
+      <td>Typographie (optionnel)</td>
+    </tr>
+    <tr>
+      <td><code>borderRadius</code></td>
+      <td><code>number</code></td>
+      <td>Rayon des angles (optionnel)</td>
+    </tr>
+    <tr>
+      <td><code>logo</code></td>
+      <td><code>string | VisualIdentityLogo</code></td>
+      <td>Logo (optionnel)</td>
+    </tr>
+  </tbody>
+</table>
+
+### `VisualIdentityLogo`
+
+<table>
+  <thead>
+    <tr>
+      <th>Propriété</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>src</code></td>
+      <td><code>string</code></td>
+      <td>Chemin du logo principal</td>
+    </tr>
+    <tr>
+      <td><code>srcDark</code></td>
+      <td><code>string</code></td>
+      <td>Chemin du logo pour le mode sombre (optionnel)</td>
+    </tr>
+    <tr>
+      <td><code>alt</code></td>
+      <td><code>string</code></td>
+      <td>Texte alternatif descriptif</td>
+    </tr>
+    <tr>
+      <td><code>width</code></td>
+      <td><code>number</code></td>
+      <td>Largeur optionnelle</td>
+    </tr>
+    <tr>
+      <td><code>height</code></td>
+      <td><code>number</code></td>
+      <td>Hauteur optionnelle</td>
+    </tr>
+  </tbody>
+</table>

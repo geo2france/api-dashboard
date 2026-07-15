@@ -5,8 +5,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # Données
 
-La première étape dans la réalisation du tableau de bord consiste à définir les données qui seront utilisés.
-La biblithièque supporte de manière standard différents [fournisseurs](https://github.com/geo2france/api-dashboard/tree/main/src/data_providers).
+La première étape dans la réalisation du tableau de bord consiste à définir les données qui seront utilisées.
+La bibliothèque supporte de manière standard différents [fournisseurs](https://github.com/geo2france/api-dashboard/tree/main/src/data_providers).
 Certaines opérations sont génériques (`<Filter>`), alors que d'autres exploitent des capacités 
 spécifiques à un fournisseur (propriété _meta_ de `<Dataset>`).
 
@@ -33,18 +33,18 @@ On peut également ajouter des métadonnées (producteurs), qui s'afficheront so
 </Dashboard>
 ```
 
-### Filter les données
+### Filtrer les données
 
 Il s'agit de filtres **envoyés à l'API du fournisseur de données**.
 Il utilise des opérateurs standards (`eq`, `ne`, `contains`, etc.) qui sont ensuite automatiquement 
-traduits dans le format attendu par le fournisseur de données. Voir la [liste des opérateur](https://github.com/geo2france/api-dashboard/blob/b9c1ddb511f6bf722704b4935160eacdcfe33cc2/src/data_providers/types.ts#L23-L45). Attention, les fournisseurs ne supportent pas toujours tous les opérateurs.
+traduits dans le format attendu par le fournisseur de données. Voir la [liste des opérateurs](https://github.com/geo2france/api-dashboard/blob/b9c1ddb511f6bf722704b4935160eacdcfe33cc2/src/data_providers/types.ts#L23-L45). Attention, les fournisseurs ne supportent pas toujours tous les opérateurs.
 
 ```jsx
-<Filter field='L_REGION'>Hauts-de-France</Filter> // operateur eq (égalité) par défaut
+<Filter field='L_REGION'>Hauts-de-France</Filter> // opérateur eq (égalité) par défaut
 <Filter field='L_TYP_REG_DECHET' operator='ne'>Encombrants</Filter>
 ```
 
-### Fournisseurs diposnibles
+### Fournisseurs disponibles
 
 - WFS 1.1
 - DataFair
@@ -116,17 +116,17 @@ s'appliquera sur le produit de la jointure.
 
 
 
-## Performances et eco-conception 🌱
+## Performances et éco-conception 🌱
 
 La bibliothèque va systématiquement éviter de lancer plusieurs fois la même requête.
 Il est donc important de différencier les opérations s'appliquant côté fournisseur de données de celles effectuées par le client.
 
 ### Provider WFS
 
-Le WFS permet d'alléger les requêtes en ne demandant que les champs nécessaire (https://docs.geoserver.org/main/en/user/services/wfs/reference.html#getfeature).
+Le WFS permet d'alléger les requêtes en ne demandant que les champs nécessaires (https://docs.geoserver.org/main/en/user/services/wfs/reference.html#getfeature).
 Cette fonctionnalité (non standard entre les différents fournisseurs), peut être utilisée en utilisant la propriété _meta_ de `<Dataset>`.
 
-Idéalement, on utilisera la même propriété meta pour les dataset lié au même fournisseur, afin de réduire le nombre de requête sur le serveur.
+Idéalement, on utilisera la même propriété meta pour les datasets liés au même fournisseur, afin de réduire le nombre de requêtes sur le serveur.
 
 ```jsx
 <Dataset

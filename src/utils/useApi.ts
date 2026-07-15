@@ -14,7 +14,7 @@ interface useApiProps {
 export const useApi = ({dataProvider, resource, filters, pagination, sorters, meta, enabled = true }:useApiProps) => (
     useQuery({
         queryKey:[dataProvider.getApiUrl, resource, filters, pagination, sorters, meta],
-        queryFn: () => dataProvider.getList(
+        queryFn: () => dataProvider.getData(
             {
                 resource:resource, 
                 filters:filters,

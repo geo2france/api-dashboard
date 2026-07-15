@@ -15,7 +15,7 @@ Il permet de disposer d'une mise en page standard et responsive :
 
 
 ```tsx
-import { WfsProvider, DatafairProvider, DashboardApp } from "api-dashboard";
+import { WfsProvider, DatafairProvider, DashboardApp, createVisualIdentity } from "api-dashboard";
 import { Partner, RouteConfig } from "api-dashboard/src/types";
 import { HomePage } from './pages/home';
 import MyLogo from '/img/logo.svg?url';
@@ -54,11 +54,18 @@ const route_config:RouteConfig[] = [
 ];
 
 const App: React.FC = () => {
+  const visualIdentity = createVisualIdentity({
+    name: "demo",
+    primary: "#1677ff",
+    logo: MyLogo,
+  });
+
   return(
     <DashboardApp
       title="Api-dashboard"
       subtitle="Tableau de bord de demo - Template"
-      route_config={route_config}
+      routes={route_config}
+      visualIdentity={visualIdentity}
       logo={MyLogo}
       brands={partenaires}
      />

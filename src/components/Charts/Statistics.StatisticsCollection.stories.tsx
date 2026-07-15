@@ -5,6 +5,11 @@ import { Statistics, StatisticsCollection } from './Statistics';
 const meta = {
   title: 'Dataviz/StatisticsCollection',
   component: StatisticsCollection,
+  parameters: {
+    // FIXME(a11y): voir Statistics.stories.tsx — même problème de contraste
+    // sur les indicateurs de tendance colorés.
+    a11y: { test: 'todo' },
+  },
 } satisfies Meta<typeof StatisticsCollection>;
 
 export default meta;

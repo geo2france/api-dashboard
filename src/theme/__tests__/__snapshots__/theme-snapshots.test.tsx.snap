@@ -1,0 +1,651 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FlipCard snapshots geo2france-light : rendu initial (recto visible) 1`] = `
+<div
+  style="position: relative; height: 100%;"
+>
+  <div
+    class="ant-card ant-card-bordered css-dev-only-do-not-override-1d8anct css-var-r3"
+    style="position: static; height: 100%; transition: transform 0.8s; width: 100%;"
+  >
+    <div
+      class="ant-card-head"
+      style="padding: 4px 4px 4px 12px; font-size: 12px; min-height: 35px;"
+    >
+      <div
+        class="ant-card-head-wrapper"
+      >
+        <div
+          class="ant-card-head-title"
+        >
+          Titre
+        </div>
+        <div
+          class="ant-card-extra"
+        >
+          <button
+            aria-label="info"
+            class="ant-btn css-dev-only-do-not-override-1d8anct css-var-r3 ant-btn-circle ant-btn-text ant-btn-color-default ant-btn-variant-text"
+            type="button"
+          >
+            <span
+              aria-label="info-circle"
+              class="anticon anticon-info-circle"
+              role="img"
+            >
+              <svg
+                aria-hidden="true"
+                data-icon="info-circle"
+                fill="currentColor"
+                focusable="false"
+                height="1em"
+                viewBox="64 64 896 896"
+                width="1em"
+              >
+                <path
+                  d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                />
+                <path
+                  d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"
+                />
+              </svg>
+            </span>
+          </button>
+           
+        </div>
+      </div>
+    </div>
+    <div
+      class="ant-card-body"
+      style="padding: 0px; height: 100%;"
+    >
+      <span>
+        Contenu recto
+      </span>
+    </div>
+  </div>
+  <div
+    class="ant-card ant-card-bordered css-dev-only-do-not-override-1d8anct css-var-r3"
+    style="transform: rotateY(180deg); top: 0px; position: absolute; overflow: auto; transition: transform 0.8s; width: 100%;"
+  >
+    <div
+      class="ant-card-head"
+      style="padding: 4px 4px 4px 12px; font-size: 12px; min-height: 35px;"
+    >
+      <div
+        class="ant-card-head-wrapper"
+      >
+        <div
+          class="ant-card-head-title"
+        >
+          Titre
+        </div>
+        <div
+          class="ant-card-extra"
+        >
+          <button
+            aria-label="info"
+            class="ant-btn css-dev-only-do-not-override-1d8anct css-var-r3 ant-btn-circle ant-btn-text ant-btn-color-default ant-btn-variant-text"
+            type="button"
+          >
+            <span
+              aria-label="info-circle"
+              class="anticon anticon-info-circle"
+              role="img"
+            >
+              <svg
+                aria-hidden="true"
+                data-icon="info-circle"
+                fill="currentColor"
+                focusable="false"
+                height="1em"
+                viewBox="64 64 896 896"
+                width="1em"
+              >
+                <path
+                  d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                />
+                <path
+                  d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="ant-card-body"
+      style="padding: 0px; height: 100%;"
+    >
+      <div
+        style="margin: 10px;"
+      >
+        <span
+          class="ant-typography ant-typography-secondary css-dev-only-do-not-override-1d8anct css-var-r3"
+        >
+          <i>
+            Description verso
+          </i>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`FlipCard snapshots neutral-dark : rendu initial (recto visible) 1`] = `
+<div
+  style="position: relative; height: 100%;"
+>
+  <div
+    class="ant-card ant-card-bordered css-dev-only-do-not-override-1d8anct css-var-r4"
+    style="position: static; height: 100%; transition: transform 0.8s; width: 100%;"
+  >
+    <div
+      class="ant-card-head"
+      style="padding: 4px 4px 4px 12px; font-size: 12px; min-height: 35px;"
+    >
+      <div
+        class="ant-card-head-wrapper"
+      >
+        <div
+          class="ant-card-head-title"
+        >
+          Titre
+        </div>
+        <div
+          class="ant-card-extra"
+        >
+          <button
+            aria-label="info"
+            class="ant-btn css-dev-only-do-not-override-1d8anct css-var-r4 ant-btn-circle ant-btn-text ant-btn-color-default ant-btn-variant-text"
+            type="button"
+          >
+            <span
+              aria-label="info-circle"
+              class="anticon anticon-info-circle"
+              role="img"
+            >
+              <svg
+                aria-hidden="true"
+                data-icon="info-circle"
+                fill="currentColor"
+                focusable="false"
+                height="1em"
+                viewBox="64 64 896 896"
+                width="1em"
+              >
+                <path
+                  d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                />
+                <path
+                  d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"
+                />
+              </svg>
+            </span>
+          </button>
+           
+        </div>
+      </div>
+    </div>
+    <div
+      class="ant-card-body"
+      style="padding: 0px; height: 100%;"
+    >
+      <span>
+        Contenu recto
+      </span>
+    </div>
+  </div>
+  <div
+    class="ant-card ant-card-bordered css-dev-only-do-not-override-1d8anct css-var-r4"
+    style="transform: rotateY(180deg); top: 0px; position: absolute; overflow: auto; transition: transform 0.8s; width: 100%;"
+  >
+    <div
+      class="ant-card-head"
+      style="padding: 4px 4px 4px 12px; font-size: 12px; min-height: 35px;"
+    >
+      <div
+        class="ant-card-head-wrapper"
+      >
+        <div
+          class="ant-card-head-title"
+        >
+          Titre
+        </div>
+        <div
+          class="ant-card-extra"
+        >
+          <button
+            aria-label="info"
+            class="ant-btn css-dev-only-do-not-override-1d8anct css-var-r4 ant-btn-circle ant-btn-text ant-btn-color-default ant-btn-variant-text"
+            type="button"
+          >
+            <span
+              aria-label="info-circle"
+              class="anticon anticon-info-circle"
+              role="img"
+            >
+              <svg
+                aria-hidden="true"
+                data-icon="info-circle"
+                fill="currentColor"
+                focusable="false"
+                height="1em"
+                viewBox="64 64 896 896"
+                width="1em"
+              >
+                <path
+                  d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                />
+                <path
+                  d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="ant-card-body"
+      style="padding: 0px; height: 100%;"
+    >
+      <div
+        style="margin: 10px;"
+      >
+        <span
+          class="ant-typography ant-typography-secondary css-dev-only-do-not-override-1d8anct css-var-r4"
+        >
+          <i>
+            Description verso
+          </i>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`KeyFigure snapshots geo2france-light : rendu sans crash 1`] = `
+<div
+  style="position: relative; height: 100%;"
+>
+  <div
+    class="ant-card ant-card-bordered css-dev-only-do-not-override-1d8anct css-var-r0"
+    style="position: static; height: 100%; transition: transform 0.8s; width: 100%;"
+  >
+    <div
+      class="ant-card-head"
+      style="padding: 4px 4px 4px 12px; font-size: 12px; min-height: 35px;"
+    >
+      <div
+        class="ant-card-head-wrapper"
+      >
+        <div
+          class="ant-card-head-title"
+        >
+          Population
+        </div>
+        <div
+          class="ant-card-extra"
+        >
+           
+        </div>
+      </div>
+    </div>
+    <div
+      class="ant-card-body"
+      style="padding: 0px; height: 100%;"
+    >
+      <div
+        style="text-align: center; margin-top: 10px;"
+      >
+        <span
+          style="font-size: 24px;"
+        >
+           
+          42,000
+           
+          hab.
+        </span>
+         
+        <span
+          style="font-size: 18px;"
+        >
+          <br />
+          <span
+            class="ant-typography ant-typography-secondary css-dev-only-do-not-override-1d8anct css-var-r0"
+          >
+             
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="ant-card ant-card-bordered css-dev-only-do-not-override-1d8anct css-var-r0"
+    style="transform: rotateY(180deg); top: 0px; position: absolute; overflow: auto; transition: transform 0.8s; width: 100%;"
+  >
+    <div
+      class="ant-card-head"
+      style="padding: 4px 4px 4px 12px; font-size: 12px; min-height: 35px;"
+    >
+      <div
+        class="ant-card-head-wrapper"
+      >
+        <div
+          class="ant-card-head-title"
+        >
+          Population
+        </div>
+        <div
+          class="ant-card-extra"
+        >
+          <button
+            aria-label="info"
+            class="ant-btn css-dev-only-do-not-override-1d8anct css-var-r0 ant-btn-circle ant-btn-text ant-btn-color-default ant-btn-variant-text"
+            type="button"
+          >
+            <span
+              aria-label="info-circle"
+              class="anticon anticon-info-circle"
+              role="img"
+            >
+              <svg
+                aria-hidden="true"
+                data-icon="info-circle"
+                fill="currentColor"
+                focusable="false"
+                height="1em"
+                viewBox="64 64 896 896"
+                width="1em"
+              >
+                <path
+                  d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                />
+                <path
+                  d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="ant-card-body"
+      style="padding: 0px; height: 100%;"
+    />
+  </div>
+</div>
+`;
+
+exports[`KeyFigure snapshots geo2france-light avec description (FlipCard) : rendu sans crash 1`] = `
+<div
+  style="position: relative; height: 100%;"
+>
+  <div
+    class="ant-card ant-card-bordered css-dev-only-do-not-override-1d8anct css-var-r2"
+    style="position: static; height: 100%; transition: transform 0.8s; width: 100%;"
+  >
+    <div
+      class="ant-card-head"
+      style="padding: 4px 4px 4px 12px; font-size: 12px; min-height: 35px;"
+    >
+      <div
+        class="ant-card-head-wrapper"
+      >
+        <div
+          class="ant-card-head-title"
+        >
+          Superficie
+        </div>
+        <div
+          class="ant-card-extra"
+        >
+          <button
+            aria-label="info"
+            class="ant-btn css-dev-only-do-not-override-1d8anct css-var-r2 ant-btn-circle ant-btn-text ant-btn-color-default ant-btn-variant-text"
+            type="button"
+          >
+            <span
+              aria-label="info-circle"
+              class="anticon anticon-info-circle"
+              role="img"
+            >
+              <svg
+                aria-hidden="true"
+                data-icon="info-circle"
+                fill="currentColor"
+                focusable="false"
+                height="1em"
+                viewBox="64 64 896 896"
+                width="1em"
+              >
+                <path
+                  d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                />
+                <path
+                  d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"
+                />
+              </svg>
+            </span>
+          </button>
+           
+        </div>
+      </div>
+    </div>
+    <div
+      class="ant-card-body"
+      style="padding: 0px; height: 100%;"
+    >
+      <div
+        style="text-align: center; margin-top: 10px;"
+      >
+        <span
+          style="font-size: 24px;"
+        >
+           
+          1,234
+           
+          km²
+        </span>
+         
+        <span
+          style="font-size: 18px;"
+        >
+          <br />
+          <span
+            class="ant-typography ant-typography-secondary css-dev-only-do-not-override-1d8anct css-var-r2"
+          >
+             
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="ant-card ant-card-bordered css-dev-only-do-not-override-1d8anct css-var-r2"
+    style="transform: rotateY(180deg); top: 0px; position: absolute; overflow: auto; transition: transform 0.8s; width: 100%;"
+  >
+    <div
+      class="ant-card-head"
+      style="padding: 4px 4px 4px 12px; font-size: 12px; min-height: 35px;"
+    >
+      <div
+        class="ant-card-head-wrapper"
+      >
+        <div
+          class="ant-card-head-title"
+        >
+          Superficie
+        </div>
+        <div
+          class="ant-card-extra"
+        >
+          <button
+            aria-label="info"
+            class="ant-btn css-dev-only-do-not-override-1d8anct css-var-r2 ant-btn-circle ant-btn-text ant-btn-color-default ant-btn-variant-text"
+            type="button"
+          >
+            <span
+              aria-label="info-circle"
+              class="anticon anticon-info-circle"
+              role="img"
+            >
+              <svg
+                aria-hidden="true"
+                data-icon="info-circle"
+                fill="currentColor"
+                focusable="false"
+                height="1em"
+                viewBox="64 64 896 896"
+                width="1em"
+              >
+                <path
+                  d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                />
+                <path
+                  d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="ant-card-body"
+      style="padding: 0px; height: 100%;"
+    >
+      <div
+        style="margin: 10px;"
+      >
+        <span
+          class="ant-typography ant-typography-secondary css-dev-only-do-not-override-1d8anct css-var-r2"
+        >
+          <i>
+            Surface totale du territoire
+          </i>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`KeyFigure snapshots neutral-dark : rendu sans crash 1`] = `
+<div
+  style="position: relative; height: 100%;"
+>
+  <div
+    class="ant-card ant-card-bordered css-dev-only-do-not-override-1d8anct css-var-r1"
+    style="position: static; height: 100%; transition: transform 0.8s; width: 100%;"
+  >
+    <div
+      class="ant-card-head"
+      style="padding: 4px 4px 4px 12px; font-size: 12px; min-height: 35px;"
+    >
+      <div
+        class="ant-card-head-wrapper"
+      >
+        <div
+          class="ant-card-head-title"
+        >
+          Population
+        </div>
+        <div
+          class="ant-card-extra"
+        >
+           
+        </div>
+      </div>
+    </div>
+    <div
+      class="ant-card-body"
+      style="padding: 0px; height: 100%;"
+    >
+      <div
+        style="text-align: center; margin-top: 10px;"
+      >
+        <span
+          style="font-size: 24px;"
+        >
+           
+          42,000
+           
+          hab.
+        </span>
+         
+        <span
+          style="font-size: 18px;"
+        >
+          <br />
+          <span
+            class="ant-typography ant-typography-secondary css-dev-only-do-not-override-1d8anct css-var-r1"
+          >
+             
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="ant-card ant-card-bordered css-dev-only-do-not-override-1d8anct css-var-r1"
+    style="transform: rotateY(180deg); top: 0px; position: absolute; overflow: auto; transition: transform 0.8s; width: 100%;"
+  >
+    <div
+      class="ant-card-head"
+      style="padding: 4px 4px 4px 12px; font-size: 12px; min-height: 35px;"
+    >
+      <div
+        class="ant-card-head-wrapper"
+      >
+        <div
+          class="ant-card-head-title"
+        >
+          Population
+        </div>
+        <div
+          class="ant-card-extra"
+        >
+          <button
+            aria-label="info"
+            class="ant-btn css-dev-only-do-not-override-1d8anct css-var-r1 ant-btn-circle ant-btn-text ant-btn-color-default ant-btn-variant-text"
+            type="button"
+          >
+            <span
+              aria-label="info-circle"
+              class="anticon anticon-info-circle"
+              role="img"
+            >
+              <svg
+                aria-hidden="true"
+                data-icon="info-circle"
+                fill="currentColor"
+                focusable="false"
+                height="1em"
+                viewBox="64 64 896 896"
+                width="1em"
+              >
+                <path
+                  d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                />
+                <path
+                  d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="ant-card-body"
+      style="padding: 0px; height: 100%;"
+    />
+  </div>
+</div>
+`;

@@ -16,7 +16,7 @@ export const dataProvider = (
     const { httpClient = axiosInstance, processData } = options || {};
 
     return {
-      getList: async ({ resource, pagination, filters, sorters, meta }) => {
+      getData: async ({ resource, pagination, filters, sorters, meta }) => {
       const url = `${apiUrl}/${resource}`; // (ressource = url + nom du fichier + extension)
 
       const { headers: headersFromMeta, method } = meta ?? {};
