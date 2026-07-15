@@ -149,7 +149,7 @@ option:custom_option={}}:ChartComparisonProps) => {
     const option:EChartsOption = {
         tooltip:{
             show: true,
-            valueFormatter: (v) => `${v?.toLocaleString(undefined, {maximumFractionDigits:0})} t`
+            valueFormatter: (v) => `${v?.toLocaleString(undefined, {maximumFractionDigits:0})} ${unit}`
         },
         yAxis: {show: chartType == 'bar', type: 'category' },
         xAxis: { show: chartType == 'bar', type:'value', axisLabel:{formatter: (v:any) => `${(v).toLocaleString()} ${unit}` } },
