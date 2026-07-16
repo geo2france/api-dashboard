@@ -152,7 +152,9 @@ option:custom_option={}}:ChartComparisonProps) => {
             valueFormatter: (v) => `${v?.toLocaleString(undefined, {maximumFractionDigits:0})} ${unit || ''}`
         },
         yAxis: {show: chartType == 'bar', type: 'category' },
-        xAxis: { show: chartType == 'bar', type:'value', axisLabel:{formatter: (v:any) => `${(v).toLocaleString()} ${unit || ''}` } },
+        xAxis: { show: chartType == 'bar', type:'value', 
+                    name: unit && `(${unit})`,  nameLocation:'middle',
+                    axisLabel:{formatter: (v:any) => `${(v).toLocaleString()}` } },
         series: [ serie ],
     }
 

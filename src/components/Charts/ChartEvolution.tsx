@@ -122,7 +122,9 @@ option:custom_option={}}:ChartEvolutionProps) => {
                 label:{formatter: yearMode ? (p) => String(new Date(p.value).getUTCFullYear()) ?? `` : undefined }}, 
             valueFormatter: (v) => `${v?.toLocaleString(undefined, {maximumFractionDigits:0})} ${unit ?? ''}`
         },
-        yAxis: {show: true, type: 'value', axisLabel:{formatter: (v:any) => `${(v).toLocaleString()} ${unit || ''}` } },
+        yAxis: {show: true, type: 'value', 
+                name: unit && `(${unit})`,  nameLocation:'middle',
+                axisLabel:{formatter: (v:any) => `${(v).toLocaleString()} ` } },
         xAxis: {show: true, type: 'time' },
         series:  series ,
     }

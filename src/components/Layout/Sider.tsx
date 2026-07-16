@@ -248,7 +248,7 @@ const DashboardSider: React.FC<DbSiderProps> = ({style, logo, route_config, powe
               height: 40,
               display: "flex",
               alignItems: "center",
-              paddingInline: 16,
+              paddingInline: 12,
               marginTop: 12,
               animation: prefersReducedMotion
                 ? undefined
