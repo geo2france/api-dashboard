@@ -5,10 +5,11 @@ import { SimpleRecord } from "../../types";
 import { from, op } from "arquero";
 import deepMerge from "../../utils/deepmerge";
 import { theme } from "antd";
+import { BaseChartProps } from "../DashboardPage/Block";
 
 type labelType = "percent" | "value" | "category" | "none" 
 
-export interface ChartComparisonProps {
+export interface ChartComparisonProps extends BaseChartProps  {
     /** Identifiant du dataset */
     dataset?:datasetInput;
 

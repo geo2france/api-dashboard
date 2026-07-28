@@ -7,14 +7,31 @@ import { MoreOutlined } from '@ant-design/icons';
 import { ErrorBoundary } from "../Layout/Error";
 import { useCardStyles } from "../../utils/cardStyles";
 import { useDataset } from "../../dsl";
+import { datasetInput } from "../Dataset/hooks";
 
 
 const { useToken } = theme;
 
+/**Propriétés de bases partagés par les block de dataviz */
+export interface BaseChartProps {
+  /** Identifiant du jeu de données, ou tableau de données */
+  dataset? : datasetInput
+
+  /** Titre du graphique. */
+  title?: string
+
+  /** Nombre  de colonnes occupées par le graphique.
+   * Peut être un nombre décimal. 
+   */
+  size?: number
+}
 
 export interface ChartBlockConfig {
     title?: string,
     dataExport?: SimpleRecord[]
+
+    /** Nombre de colonnes occupés par le block */
+    size?: number
 }
 type ChartBlockContextType = {
     config: ChartBlockConfig;

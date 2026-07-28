@@ -90,6 +90,7 @@ export type { LegendItem } from "./components/MapLegend/MapLegend"
 export type { DashboardConfig } from "./components/Layout/DashboardApp"
 export type  { datasetInput } from "./components/Dataset/hooks";
 export type { PageProps } from "./components/Layout/DashboardApp";
+export type { BaseChartProps } from "./components/DashboardPage/Block";
 
 
 // DSL
