@@ -23,7 +23,7 @@ const MapLegend: React.FC<MapLegendProps> = ({ items, style }) => {
     const { token } = theme.useToken();
 
     const default_style:CSSProperties = {
-        backgroundColor: token.colorBgElevated,
+        backgroundColor: token.colorBgContainer,
         padding: token.paddingSM,
         borderRadius: token.borderRadius,
         border: `1px solid ${token.colorBorderSecondary}`,
