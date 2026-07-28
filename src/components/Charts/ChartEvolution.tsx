@@ -2,12 +2,12 @@ import { SimpleRecord } from "../../types";
 import { from, op } from "arquero";
 import deepMerge from "../../utils/deepmerge";
 import { EChartsOption, SeriesOption } from "echarts";
-import { useBlockConfig } from "../DashboardPage/Block";
+import { BaseChartProps, useBlockConfig } from "../DashboardPage/Block";
 import { ChartEcharts, useDataset } from "../../dsl";
 import { datasetInput } from "../Dataset/hooks";
 
 
-export interface ChartEvolutionProps {
+export interface ChartEvolutionProps extends BaseChartProps {
     /** Identifiant du dataset */
     dataset?:datasetInput;
 

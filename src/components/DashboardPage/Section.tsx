@@ -22,11 +22,18 @@ export const Section: FC<SectionProps> = ({ children, columns=2 }) => {
   const childrenArray = Children.toArray(children).filter(isValidElement);
   return (
     <Row gutter={[8, 8]} style={{ margin: 0 }}>
-      {childrenArray.map((component, idx) => (
-        <Col xl={24 / columns} xs={24} key={idx}>
-          <DSL_ChartBlock>{component}</DSL_ChartBlock>
-        </Col>
-      ))}
+      {childrenArray.map((component, idx) => {
+        const size = isValidElement(component) && typeof (component.props as { size?: unknown }).size === "number" ? 
+            (component.props as { size?: number }).size! : 1;
+        const children_size =  Math.min(columns, size )
+        const span = Math.round( (24 / columns) * children_size )
+        
+        return (
+            <Col xl={ span } xs={24} key={idx}>
+              <DSL_ChartBlock>{component}</DSL_ChartBlock>
+            </Col>
+          )
+      })}
     </Row>
   );
 };

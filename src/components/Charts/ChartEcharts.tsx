@@ -4,6 +4,7 @@ import { EChartsOption } from "echarts"
 import EChartsReact, { EChartsReactProps } from "echarts-for-react"
 import { usePalette } from "../Palette/Palette"
 import deepMerge from "../../utils/deepmerge"
+import { useThemeContext } from '../../theme';
 
 const { useToken } = theme;
 
@@ -43,6 +44,7 @@ export const ChartEcharts = forwardRef<EChartsReact, ChartEchartsProps>(({ optio
     return (
         <EChartsReact 
             option={ deepMerge({}, default_option, option) } 
+            theme={ useThemeContext().resolvedMode === 'dark' ? 'dark': undefined }
             ref={innerRef}
             {...restProps}
         />
