@@ -5,6 +5,16 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # Créer son composant graphique
 
+🚧 Page en cours de rédaction.
+
+## Fonctions et hook utiles  : 
+
+- `usePalette` : récupérer les couleurs de la page
+- `useThemeContext().resolvedMode` : mode appliqué (`dark` ou `light`).
+- `useDataset` 
+- `useBlockConfig` : configurer le contenant du graphique (titre et données disponibles dans le menu contextuel)
+
+
 ## À partir d'un graphique api-dashboard
 
 Partir d'un graphique générique et personnaliser les propriétés.
@@ -17,10 +27,10 @@ Modèle pour créer un composant ECharts :
 ```tsx
 import { ChartEcharts, useBlockConfig, useDataset } from "@geo2france/api-dashboard/dsl"
 import { EChartsOption } from "echarts"
-import { datasetInput } from "@geo2france/api-dashboard"
+import { datasetInput, BaseChartProps } from "@geo2france/api-dashboard"
 
 
-export interface MyDatavizProps {
+export interface MyDatavizProps extends BaseChartsProps {
     /** Jeu de données */
     dataset: datasetInput
 
