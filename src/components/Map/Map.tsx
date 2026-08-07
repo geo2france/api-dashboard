@@ -94,7 +94,7 @@ export interface MapProps extends MapLayerProps {
 */
 export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, interpolationMethod, nClasses, valueKey:valueKeyInput, labelKey,
         popup = false, popupFormatter:popupFormatterUser, 
-        highlight,
+        highlightFeature,
         title, xKey, yKey,
         latitude=0, longitude=0, zoom=0, fitToData}) => {
 
@@ -163,7 +163,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
 
             <MapLayer 
                 dataset={dataset} fitToData={fitToData}
-                color={color} paint={paint} interpolationMethod={interpolationMethod} nClasses={nClasses} highlight={highlight}
+                color={color} paint={paint} interpolationMethod={interpolationMethod} nClasses={nClasses} highlightFeature={highlightFeature}
                 valueKey={valueKey} labelKey={labelKey} xKey={xKey} yKey={yKey} />
             
             { clickedFeature?.properties && popup &&
@@ -221,10 +221,11 @@ interface MapLayerProps {
     /** Centrer automatiquement la carte sur les données (true) */
     fitToData?: boolean;
 
-    /**
-     * Feature à mettre en surbrillance
-     */
-    highlight?: { property: string; value: string | number; };
+    /** Feature à mettre en surbrillance */
+    highlightFeature?: { property: string; value: string | number; };
+
+    /** Couleur de subrillance */
+    highlightColor?: string
 }
 
 
@@ -237,9 +238,9 @@ interface MapLayerProps {
  */
 export const MapLayer:React.FC<MapLayerProps> = ({
         dataset, valueKey:valueKeyInput, categoryKey, labelKey,
-        interpolationMethod='quantile', nClasses = 5, color = '#00b4d8', paint, 
+        interpolationMethod='quantile', nClasses = 5, color, paint, 
         xKey, yKey, geomKey:geomKey_input,
-        highlight,
+        highlightFeature, highlightColor,
         fitToData=true }) => {
 
     const {current: map} = useMap();
@@ -284,7 +285,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({
     const values = (type_value === 'string') && valueKey && data?.data && from(data?.data).rollup({ a: op.array_agg_distinct(valueKey) }).get('a',0) || undefined
 
     /* Gradient de couleur (si number) */
-    const colorsGradient = type_value==="number" ? generateGradient(color, nClasses) : undefined ;
+    const colorsGradient = type_value==="number" ? generateGradient(color || token.colorPrimary, nClasses) : undefined ;
 
     //devnote : ajouter un usememo pour limiter ?
     const breaks =
@@ -338,7 +339,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({
         ]
     : undefined;
 
-    console.log( nClasses, 'breaks', breaks, colorsGradient, generateGradient(color, nClasses) )
+    //console.log( nClasses, 'breaks', breaks, colorsGradient, generateGradient(color, nClasses) )
 
     const legendItems:LegendItem[] = type_value === "string" ? 
         match?.map((e) => ({color:e.color, label:e.val})).sort((a, b) => // Qualit
@@ -365,21 +366,29 @@ export const MapLayer:React.FC<MapLayerProps> = ({
             <Layer key={'dataset'} id={'dataset'} type="fill" paint={(paint ?? default_paint) as any}/>
         )
         layers.push(
-            <Layer key={dataset + '_line'} id={'dataset' + '_line'} 
+            <Layer key={'dataset' + '_line'} id={'dataset' + '_line'} 
                 type='line' 
                 paint={{
-                    "line-width": highlight?.value ? [
-                        "case",
-                        ["==", ["get", highlight?.property], highlight?.value],
-                        3, // épaisseur du highlight
-                        0.5
-                    ] : 0.5,
-                    "line-color": highlight?.value ? [
-                        "case",
-                        ["==", ["get", highlight?.property], highlight?.value],
-                        token.colorWarningTextActive,
-                        token.colorBgContainer
-                    ] : token.colorBgContainer
+                    "line-width": 0.5,
+                    "line-color": token.colorBgContainer
+                    }}
+            />
+        )
+
+        layers.push(
+            <Layer key={'dataset' + '_hightline'} id={'dataset' + '_hightline'} 
+                type='line' 
+                filter={ highlightFeature?.value ? 
+                            [
+                                "==",
+                                ["get", highlightFeature.property ],
+                                highlightFeature.value,
+                            ]
+                            : ["literal", false] //No hilight : filter all entities
+                }
+                paint={{
+                    "line-width":3,
+                    "line-color": highlightColor || token.colorPrimaryActive,
                     }}
             />
         )

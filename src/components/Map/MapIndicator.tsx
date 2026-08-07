@@ -11,7 +11,7 @@ import { datasetInput } from "../Dataset/hooks"
 
 type GeoLevel = 'commune' | 'epci' | 'département'
 
-interface MapIndicatorProps extends Pick<MapProps, 'highlight'> {
+interface MapIndicatorProps extends Pick<MapProps, 'highlightFeature'> {
     /** Jeu de données en entrée. Il doit contenir : 
      * - Un colonne "code_insee" (commune) ou "geocode_epci" (epci)
      * - Une colonne "valeur" numérique
@@ -35,7 +35,7 @@ export const MapIndicator:React.FC<MapIndicatorProps> = ({
     interpolationMethod="jenks", 
     nClasses=4, 
     color, 
-    highlight,
+    highlightFeature: highlight,
     dataLevel='auto'}) => {
 
     const [level, setLevel] = useState<GeoLevel>( dataLevel === 'auto' ? 'commune' : dataLevel)
@@ -134,7 +134,7 @@ export const MapIndicator:React.FC<MapIndicatorProps> = ({
             interpolationMethod={interpolationMethod} 
             nClasses={nClasses} 
             color={color}
-            highlight={highlight}
+            highlightFeature={highlight}
             popup/>
         </div>
     )
