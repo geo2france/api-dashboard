@@ -64,7 +64,7 @@ const build_geojson = (params: {
  * 
  *  */
 
-interface MapProps extends MapLayerProps {
+export interface MapProps extends MapLayerProps {
   /** Afficher une popup après un click sur la carte */
   popup?: boolean;
 
@@ -94,6 +94,7 @@ interface MapProps extends MapLayerProps {
 */
 export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, interpolationMethod, nClasses, valueKey:valueKeyInput, labelKey,
         popup = false, popupFormatter:popupFormatterUser, 
+        highlight,
         title, xKey, yKey,
         latitude=0, longitude=0, zoom=0, fitToData}) => {
 
@@ -162,7 +163,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
 
             <MapLayer 
                 dataset={dataset} fitToData={fitToData}
-                color={color} paint={paint} interpolationMethod={interpolationMethod} nClasses={nClasses}
+                color={color} paint={paint} interpolationMethod={interpolationMethod} nClasses={nClasses} highlight={highlight}
                 valueKey={valueKey} labelKey={labelKey} xKey={xKey} yKey={yKey} />
             
             { clickedFeature?.properties && popup &&
@@ -220,6 +221,10 @@ interface MapLayerProps {
     /** Centrer automatiquement la carte sur les données (true) */
     fitToData?: boolean;
 
+    /**
+     * Feature à mettre en surbrillance
+     */
+    highlight?: { property: string; value: string | number; };
 }
 
 
@@ -234,6 +239,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({
         dataset, valueKey:valueKeyInput, categoryKey, labelKey,
         interpolationMethod='quantile', nClasses = 5, color = '#00b4d8', paint, 
         xKey, yKey, geomKey:geomKey_input,
+        highlight,
         fitToData=true }) => {
 
     const {current: map} = useMap();
@@ -359,7 +365,23 @@ export const MapLayer:React.FC<MapLayerProps> = ({
             <Layer key={'dataset'} id={'dataset'} type="fill" paint={(paint ?? default_paint) as any}/>
         )
         layers.push(
-            <Layer key={dataset + '_line'}id={dataset + '_line'} type='line' paint={{"line-width":0.5,"line-color": token.colorBgContainer}}/>
+            <Layer key={dataset + '_line'} id={'dataset' + '_line'} 
+                type='line' 
+                paint={{
+                    "line-width": highlight ? [
+                        "case",
+                        ["==", ["get", highlight?.property], highlight?.value],
+                        3, // épaisseur du highlight
+                        0.5
+                    ] : 0.5,
+                    "line-color": highlight ? [
+                        "case",
+                        ["==", ["get", highlight?.property], highlight?.value],
+                        token.colorWarningTextActive,
+                        token.colorBgContainer
+                    ] : token.colorBgContainer
+                    }}
+            />
         )
 
     } 

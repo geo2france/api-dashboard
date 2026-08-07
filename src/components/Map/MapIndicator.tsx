@@ -1,6 +1,6 @@
 import alasql from "alasql"
 import { useDataset } from "../../dsl"
-import { interpolationType, Map } from "./Map"
+import { interpolationType, Map, MapProps } from "./Map"
 import { SimpleRecord } from "../../types"
 import { useMemo, useState } from "react"
 import { Segmented } from "antd"
@@ -11,7 +11,7 @@ import { datasetInput } from "../Dataset/hooks"
 
 type GeoLevel = 'commune' | 'epci' | 'département'
 
-interface MapIndicatorProps {
+interface MapIndicatorProps extends Pick<MapProps, 'highlight'> {
     /** Jeu de données en entrée. Il doit contenir : 
      * - Un colonne "code_insee" (commune) ou "geocode_epci" (epci)
      * - Une colonne "valeur" numérique
@@ -35,6 +35,7 @@ export const MapIndicator:React.FC<MapIndicatorProps> = ({
     interpolationMethod="jenks", 
     nClasses=4, 
     color, 
+    highlight,
     dataLevel='auto'}) => {
 
     const [level, setLevel] = useState<GeoLevel>( dataLevel === 'auto' ? 'commune' : dataLevel)
@@ -92,10 +93,10 @@ export const MapIndicator:React.FC<MapIndicatorProps> = ({
         ` ,[joined, data_ref_epci]) as SimpleRecord[] || []
         :
         data && data_ref_epci && alasql(`
-            SELECT geo.[code_siren], geo.[nom_officiel], geo.[geometry], SUM( j.[valeur] ) as valeur
+            SELECT j.[geocode_epci], geo.[nom_officiel], geo.[geometry], SUM( j.[valeur] ) as valeur
             FROM ? j
             RIGHT JOIN ? geo ON geo.[code_siren] = j.[geocode_epci]
-            GROUP BY geo.[code_siren], geo.[nom_officiel], geo.[geometry]
+            GROUP BY j.[geocode_epci], geo.[nom_officiel], geo.[geometry]
             `, [data, data_ref_epci]) as SimpleRecord[] || []
     ,[data, joined, data_ref_epci])
 
@@ -133,6 +134,7 @@ export const MapIndicator:React.FC<MapIndicatorProps> = ({
             interpolationMethod={interpolationMethod} 
             nClasses={nClasses} 
             color={color}
+            highlight={highlight}
             popup/>
         </div>
     )
