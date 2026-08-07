@@ -24,7 +24,7 @@ import {  jenks, quantileSorted } from 'simple-statistics';
 
 
 /** Méthode d'interpolation utilisé pour les valeurs numériques */
-type interpolationType = "linear" | "quantile" | "jenks" ;
+export type interpolationType = "linear" | "quantile" | "jenks" ;
 
 export const map_locale = {
     'CooperativeGesturesHandler.WindowsHelpText': 'Utilisez Ctrl + molette pour zommer sur la carte.',
