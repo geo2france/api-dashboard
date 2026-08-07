@@ -86,17 +86,17 @@ export const MapIndicator:React.FC<MapIndicatorProps> = ({
     const agg_epci = useMemo( () =>
         // Niveau de départ n'est pas EPCI
         dataLevel !== 'epci' ? joined.length > 0 && data_ref_epci && alasql(`
-            SELECT geo.[code_siren], geo.[nom_officiel], geo.[geometry], SUM(j.[valeur] ) as valeur
+            SELECT geo.[code_siren] as geocode_epci, geo.[nom_officiel], geo.[geometry], SUM(j.[valeur] ) as valeur
             FROM ? j
             RIGHT JOIN ? geo ON geo.[code_siren] = j.[codes_siren_des_epci]
             GROUP BY geo.[code_siren], geo.[nom_officiel], geo.[geometry]
         ` ,[joined, data_ref_epci]) as SimpleRecord[] || []
         :
         data && data_ref_epci && alasql(`
-            SELECT j.[geocode_epci], geo.[nom_officiel], geo.[geometry], SUM( j.[valeur] ) as valeur
+            SELECT geo.[code_siren] as geocode_epci, geo.[nom_officiel], geo.[geometry], SUM( j.[valeur] ) as valeur
             FROM ? j
             RIGHT JOIN ? geo ON geo.[code_siren] = j.[geocode_epci]
-            GROUP BY j.[geocode_epci], geo.[nom_officiel], geo.[geometry]
+            GROUP BY geo.[code_siren], geo.[nom_officiel], geo.[geometry]
             `, [data, data_ref_epci]) as SimpleRecord[] || []
     ,[data, joined, data_ref_epci])
 
@@ -108,9 +108,9 @@ export const MapIndicator:React.FC<MapIndicatorProps> = ({
         `,[data, data_ref_dep]) as SimpleRecord[] || []
     ,[joined, data_ref_dep])
     
-    console.log('com', joined)
-    console.log('epci', agg_epci)
-    console.log('dep', agg_dep)
+   // console.log('com', joined)
+   // console.log('epci', agg_epci)
+    //console.log('dep', agg_dep)
     
 
     return (
