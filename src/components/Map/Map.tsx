@@ -17,6 +17,7 @@ import { parseNumber } from '../../utils/parsers';
 import { FeatureCollection } from 'geojson';
 import {  scaleLinear } from 'd3-scale';
 import { generateGradient } from './utils';
+import { theme } from 'antd';
 
 import {  jenks, quantileSorted } from 'simple-statistics';
 
@@ -88,7 +89,7 @@ interface MapProps extends MapLayerProps {
  * 
  * Permet l'affichage de données type "Polygon".
  * 
- * Si `valueKey` est définie, les couleurs seront calculée à partir de la colonne indiquée (quantitative ou qualitative).
+ * Si `valueKey` est définie, les couleurs seront calculées à partir de la colonne indiquée (quantitative ou qualitative).
  * 
 */
 export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, interpolationMethod, nClasses, valueKey:valueKeyInput, labelKey,
@@ -239,6 +240,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({
 
     const valueKey = valueKeyInput || categoryKey ;
     const data = useDataset(dataset)
+    const { token } = theme.useToken();
     // src (lib proj4 pour convertir)
 
     const keys = data?.data?.[0] ? Object.keys(data?.data?.[0]) : undefined
@@ -357,7 +359,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({
             <Layer key={'dataset'} id={'dataset'} type="fill" paint={(paint ?? default_paint) as any}/>
         )
         layers.push(
-            <Layer key={'dataset' + '_line'}id={'dataset' + '_line'} type='line' paint={{"line-width":0.5,"line-color":'#fff'}}/>
+            <Layer key={dataset + '_line'}id={dataset + '_line'} type='line' paint={{"line-width":0.5,"line-color": token.colorBgContainer}}/>
         )
 
     } 

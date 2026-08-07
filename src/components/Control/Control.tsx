@@ -1,4 +1,5 @@
-import { Descriptions, DescriptionsProps, Form, Layout } from "antd";
+import { Descriptions, DescriptionsProps, Form, Layout, theme } from "antd";
+import { Z_INDEX } from "../../utils/zIndex";
 import React, { createContext, CSSProperties, ReactElement, useCallback, useContext, useEffect, useState } from "react";
 
 const { Header } = Layout;
@@ -12,17 +13,18 @@ interface IControlProps {
  * Composant destiné à recevoir un Form avec les contrôles de la page
  */
 const Control: React.FC<IControlProps> = ({ children, style = {} }) => {
+  const { token } = theme.useToken();
   return (
     <Header
       style={{
         padding: 12,
         position: "sticky",
         top: 0,
-        zIndex: 600, // maplibre top zIndex if 500
-        backgroundColor: "#fff",
+        zIndex: Z_INDEX.CONTROL,
+        backgroundColor: token.colorBgContainer,
         height: "auto",
         width: "100%",
-        borderBottom: "1px solid #ccc", 
+        borderBottom: `1px solid ${token.colorBorder}`,
         ...style,
       }}
     >
@@ -83,6 +85,7 @@ interface IControlProps {
 export const DSL_Control: React.FC<IControlProps> = ({ children }) => {
   const context_controls = useContext(ControlContext);
   const [form] = Form.useForm();
+  const { token } = theme.useToken();
 
   useEffect(() => {
     handleChange(form?.getFieldsValue(true)); // Appliquer les valeurs par défaut au contexte lors de l'initialisation du composant
@@ -110,7 +113,13 @@ export const DSL_Control: React.FC<IControlProps> = ({ children }) => {
 
 
   return (
-    <Form onValuesChange={handleChange} layout="inline" initialValues={initialValues} form={form}>
+    <Form
+      onValuesChange={handleChange}
+      layout="inline"
+      initialValues={initialValues}
+      form={form}
+      style={{ columnGap: token.marginMD, rowGap: token.marginSM }}
+    >
       {children}
     </Form>
   );

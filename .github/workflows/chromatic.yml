@@ -1,0 +1,46 @@
+name: Chromatic — Visual Regression Tests
+
+on:
+  push:
+    branches-ignore:
+      - main  # Couvert par deploy-storybook.yml ; Chromatic tourne sur toutes les branches de travail
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  chromatic:
+    name: Run Chromatic
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Chromatic a besoin de tout l'historique git pour calculer les diffs correctement
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Chromatic publie le Storybook et compare visuellement chaque story
+      # avec la baseline approuvée. Les diffs sont détectables dans l'UI Chromatic
+      # et bloquent la PR si de nouvelles modifications visuelles sont trouvées.
+      - name: Run Chromatic
+        uses: chromaui/action@latest
+        with:
+          # Token du projet Chromatic (à créer sur https://www.chromatic.com et
+          # à ajouter dans Settings > Secrets > CHROMATIC_PROJECT_TOKEN)
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          # Quitte avec un code d'erreur si des changements visuels non approuvés
+          # sont détectés (bloquant pour les PR)
+          exitOnceUploaded: false
+          exitZeroOnChanges: false
+          # Seuil de tolérance pour éviter les faux positifs liés à l'anti-aliasing
+          # (en pourcentage de pixels différents par story, 0.2 = 0.2%)
+          diffThreshold: 0.2

@@ -8,7 +8,7 @@ export { useMapControl } from "./utils/useMapControl";
 
 // Helpers
 export { BaseRecordToGeojsonPoint } from "./utils/baserecordtogeojsonpoint"
-export {cardStyles} from "./utils/cardStyles"
+export {useCardStyles} from "./utils/cardStyles"
 export { merge_others } from "./utils/merge_others"
 export { aggregator } from "./utils/aggregator"
 
@@ -53,12 +53,44 @@ import {dataProvider as FileProvider } from "./data_providers/file"
 export {WfsProvider, DatafairProvider, FileProvider}
 
 
+// Theme system
+export {
+  ThemeProvider,
+  ThemeToggle,
+  ThemeContext,
+  useThemeContext,
+  usePreferredColorScheme,
+  useThemeMode,
+  geo2franceLightTheme,
+  geo2franceDarkTheme,
+  neutralLightTheme,
+  neutralDarkTheme,
+  baseTokens,
+  geo2francePalette,
+  neutralPalette,
+  createVisualIdentity,
+  useVisualIdentityLogo,
+} from './theme';
+export type {
+  ThemeName,
+  ThemeMode,
+  ThemeContextValue,
+  ThemeProviderProps,
+  VisualIdentityColors,
+  VisualIdentityTypography,
+  VisualIdentityLogo,
+  VisualIdentityTokens,
+  VisualIdentityShorthand,
+  VisualIdentityThemeBundle,
+} from './theme';
+
 // Types
 export type { SimpleRecord, Partner, RouteConfig } from "./types"
 export type { LegendItem } from "./components/MapLegend/MapLegend" 
 export type { DashboardConfig } from "./components/Layout/DashboardApp"
 export type  { datasetInput } from "./components/Dataset/hooks";
 export type { PageProps } from "./components/Layout/DashboardApp";
+export type { BaseChartProps } from "./components/DashboardPage/Block";
 
 
 // DSL

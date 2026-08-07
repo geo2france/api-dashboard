@@ -8,7 +8,7 @@ cd mon-nouveau-projet
 npm install
 ```
 
-Utiliser `npm run dev` pour lancer un environnement de devéloppement, et `npm run build` pour générer l'application (dans `/dist/`).
+Utiliser `npm run dev` pour lancer un environnement de développement, et `npm run build` pour générer l'application (dans `/dist/`).
 
 ## Gestion des pages
 

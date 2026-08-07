@@ -57,8 +57,7 @@ export const Default: Story = {
         dataset:"quartiers",
         popup:true,
         popupFormatter : (row) => `Elu de quartier : ${row.elu_de_quartier}`,
-        //valueKey:"elu_de_quartier",
-        color:"#201f1fee",
+        color:"#84a380",
         title: "Roubaix :Les élus de quartier"
     },
     argTypes:{

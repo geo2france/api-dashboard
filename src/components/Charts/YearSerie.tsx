@@ -1,7 +1,4 @@
 
-/**
- * Graphique standard pour afficher des données annuelles
- */
 
 import { from, op } from "arquero"
 import { useDataset, datasetInput } from "../Dataset/hooks"
@@ -36,6 +33,12 @@ export interface IYearSerieProps {
     /* Options Echarts addtionnelles */
     options?:Partial<EChartsOption>
 }
+
+
+/**
+ * Graphique standard pour afficher des données annuelles
+ *  @deprecated Utiliser `ChartEvolution` à la place.
+ */
 export const ChartYearSerie:React.FC<IYearSerieProps> = ({dataset:dataset_id, categoryKey, valueKey, secondaryValueKey, yearKey, yearMark, stack:stack_input, title, type:chart_type='bar', normalize=false, seriesSort, options:custom_options={}}) => {
     const stack = stack_input || chart_type == 'line' ? false : true ; // Pas de stack par défaut pour le type line
     const dataset = useDataset(dataset_id)

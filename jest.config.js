@@ -3,7 +3,9 @@ module.exports = {
   testEnvironment: 'jsdom',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',  },
+    '^.+\\.(ts|tsx)$': 'ts-jest',
+  },
+  setupFiles: ['<rootDir>/jest.setup.js'],
   //setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect'],
   testMatch: ['**/?(*.)+(test).(ts|tsx)'],
   moduleNameMapper: {

@@ -3,7 +3,7 @@ import { Avatar, Card, Col, Flex, Row, Tooltip, Typography } from "antd"
 import { Children, ReactElement } from "react";
 import { useDataset, datasetInput } from "../Dataset/hooks";
 import { Icon } from "@iconify/react";
-import { useBlockConfig } from "../DashboardPage/Block";
+import { BaseChartProps, useBlockConfig } from "../DashboardPage/Block";
 import { SimpleRecord } from "../../types";
 import { aggregator } from "../../utils/aggregator";
 import CountUp from "react-countup";
@@ -29,7 +29,7 @@ interface ICallbackParams {
     compareValue: number ;
 }
 
-export interface StatisticsProps {
+export interface StatisticsProps extends BaseChartProps {
     /** Identifiant du jeu de données ou tableau de valeurs */
     dataset:datasetInput, 
 
@@ -187,7 +187,7 @@ export const Statistics: React.FC<StatisticsProps> = ({
 }
 
 
-export interface StatisticsCollectionProps {
+export interface StatisticsCollectionProps extends BaseChartProps {
   /**
    * Un ou plusieurs composants `<Statistics>`.
    */

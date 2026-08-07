@@ -1,4 +1,5 @@
 import { Button, Col, Dropdown, Empty, Flex, Grid, Layout, Radio, Row, RowProps, Tabs, theme } from "antd";
+import { Z_INDEX } from "../../utils/zIndex";
 import type { TabsProps } from 'antd';
 import DashboardElement, {IDashboardElementProps} from "../DashboardElement/DashboardElement";
 import React, { isValidElement, ReactElement, useState, useEffect, useContext, ReactNode } from "react";
@@ -207,8 +208,8 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
                         padding: 12,
                         position: "sticky",
                         top: 0,
-                        zIndex: 600, // maplibre top zIndex if 500
-                        backgroundColor: "#fff",
+                        zIndex: Z_INDEX.CONTROL,
+                        backgroundColor: token.colorBgContainer,
                         height: "auto",
                         width: "100%",
                     }}>

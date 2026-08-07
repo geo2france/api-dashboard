@@ -4,10 +4,12 @@ import { ChartEcharts, useBlockConfig, usePalette, usePaletteLabels } from "../.
 import { SimpleRecord } from "../../types";
 import { from, op } from "arquero";
 import deepMerge from "../../utils/deepmerge";
+import { theme } from "antd";
+import { BaseChartProps } from "../DashboardPage/Block";
 
 type labelType = "percent" | "value" | "category" | "none" 
 
-export interface ChartComparisonProps {
+export interface ChartComparisonProps extends BaseChartProps  {
     /** Identifiant du dataset */
     dataset?:datasetInput;
 
@@ -52,6 +54,7 @@ option:custom_option={}}:ChartComparisonProps) => {
 
     const dataset = useDataset(dataset_id)
     const data = dataset?.data
+    const { token } = theme.useToken();
 
     useBlockConfig({ 
         title: title,
@@ -75,7 +78,7 @@ option:custom_option={}}:ChartComparisonProps) => {
         : [];
 
     const colors_libels = usePaletteLabels()
-    const colors_palette = usePalette({nColors:chart_data1.length})  || ['#d4d4d4']
+    const colors_palette = usePalette({nColors:chart_data1.length})  || [token.colorBorderSecondary]
 
     // Total, utilisé pour les pourcentage
     const total = chart_data1?.reduce((sum, item) => sum + item[1], 0);
@@ -147,10 +150,12 @@ option:custom_option={}}:ChartComparisonProps) => {
     const option:EChartsOption = {
         tooltip:{
             show: true,
-            valueFormatter: (v) => `${v?.toLocaleString(undefined, {maximumFractionDigits:0})} t`
+            valueFormatter: (v) => `${v?.toLocaleString(undefined, {maximumFractionDigits:0})} ${unit || ''}`
         },
         yAxis: {show: chartType == 'bar', type: 'category' },
-        xAxis: { show: chartType == 'bar', type:'value', axisLabel:{formatter: (v:any) => `${(v).toLocaleString()} ${unit}` } },
+        xAxis: { show: chartType == 'bar', type:'value', 
+                    name: unit && `(${unit})`,  nameLocation:'middle',
+                    axisLabel:{formatter: (v:any) => `${(v).toLocaleString()}` } },
         series: [ serie ],
     }
 

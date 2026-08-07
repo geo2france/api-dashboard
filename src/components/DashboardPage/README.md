@@ -6,12 +6,12 @@ Il prend pour enfant des composants [DashboardElement](../DashboardElement/) et 
 Si au moins un des [DashboardElement](../DashboardElement/) a une pripriété `section`, le composant `DashboardPage` propose à l'utilisateur
 des boutons permettants de naviguer entre les sections, en ajoutant une éventuelle section _Autres_.
 
-Il est possible de lui passer une propriété `controle` contenant des **éléments de formulaire** (choix de l'année ou autres paramètres).
+Il est possible de lui passer une propriété `contrôle` contenant des **éléments de formulaire** (choix de l'année ou autres paramètres).
 Ceux-ci seront affichées dans une barre en haut de la page.
 ![TODO](https://img.shields.io/badge/TODO-A%20compléter-orange)
 
 La propriété `sections` est optionnelle :
-- Si elle est omise, un bouton radio sera crée pour chaque section différente trouvée dans les `DashboardElement` enfants.
+- Si elle est omise, un bouton radio sera créé pour chaque section différente trouvée dans les `DashboardElement` enfants.
 - Une liste de _string_ permet de forcer un certain ordre. Si une section est nommé 'Autres', elle contiendra également les enfants dont aucune section n'est spécifiée.
 - Une liste d'objets ayant les propriété _key_, _libel?_ et _order?_ : permet de personnalisé l'ordre et le libellé de chaque section.
 

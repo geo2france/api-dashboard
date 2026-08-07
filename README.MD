@@ -14,7 +14,7 @@ Demo :
 - ✅ **Traitements** de données possibles (filtres, agréations, etc. via SQL ou JavaScript),
 - ✅ Créez vos dataviz en utilisants [Apache ECharts](https://echarts.apache.org/) ou n'importe quelle bibliothèque web,
 - ✅ Application cliente : peut-être mise à disposition des utilisateurs via un **simple server web** (HTTP/HTTPS) sans configuration particulière,
-- ✅ Ecriture des tableaux de bord en **JSX/TSX** : combiner la clarté du XML avec la souplesse et puissance du JavaScript/TypeScript.
+- ✅ Écriture des tableaux de bord en **JSX/TSX** : combiner la clarté du XML avec la souplesse et puissance du JavaScript/TypeScript.
 
 
 ## Installation
@@ -43,4 +43,35 @@ npm run dev
 
 Consulter la [documentation](https://geo2france.github.io/api-dashboard/) du projet.
 
+## Custom visual identity
+
+Personnalisez l'apparence de votre dashboard sans modifier la lib :
+
+```tsx
+// Forme courte (1 ligne) — démarrage rapide
+<DashboardApp
+  visualIdentity={{ name: 'mon-projet', primary: '#FF6B35', logo: '/logo.svg' }}
+  mode="auto"
+/>
+```
+
+Pour un contrôle plus fin (couleurs multiples, typographie, dark mode explicite), utilisez `createVisualIdentity()` :
+
+```ts
+import { createVisualIdentity } from '@geo2france/api-dashboard';
+
+export const myVisualIdentity = createVisualIdentity({
+  name: 'mon-projet',
+  light: { colorPrimary: '#FF6B35', colorLink: '#0046AD' },
+  typography: { fontFamily: 'Inter, sans-serif' },
+  borderRadius: 8,
+  logo: { src: '/logo.svg', alt: 'Mon Projet', srcDark: '/logo-white.svg' },
+});
+```
+
+```tsx
+<DashboardApp visualIdentity={myVisualIdentity} mode="auto" />
+```
+
+Voir le [CHANGELOG](./CHANGELOG.md) pour le guide de migration complet.
 

@@ -31,17 +31,17 @@ export const aggregator = ( {data, dataKey, aggregate}:AggregatorParams ):Aggreg
     switch (aggregate) {
       case "last": {
         const row = data.slice(-1)[0]
-        return { row, value: Number(row[dataKey]) }
+        return { row, value: Number(row[dataKey] ?? undefined) }
       }
 
       case "first": {
         const row = data[0]
-        return { row, value: Number(row[dataKey]) }
+        return { row, value: Number(row[dataKey] ?? undefined ) }
       }
 
       case "lastNotNull":{
         const row = data.filter( r => r[dataKey] != null).slice(-1)?.[0]
-        return { row, value: Number(row?.[dataKey]) }
+        return { row, value: Number(row[dataKey] ?? undefined ) }
       }
 
       case "sum":{

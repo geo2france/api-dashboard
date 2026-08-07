@@ -2,12 +2,12 @@ import { SimpleRecord } from "../../types";
 import { from, op } from "arquero";
 import deepMerge from "../../utils/deepmerge";
 import { EChartsOption, SeriesOption } from "echarts";
-import { useBlockConfig } from "../DashboardPage/Block";
+import { BaseChartProps, useBlockConfig } from "../DashboardPage/Block";
 import { ChartEcharts, useDataset } from "../../dsl";
 import { datasetInput } from "../Dataset/hooks";
 
 
-export interface ChartEvolutionProps {
+export interface ChartEvolutionProps extends BaseChartProps {
     /** Identifiant du dataset */
     dataset?:datasetInput;
 
@@ -122,7 +122,9 @@ option:custom_option={}}:ChartEvolutionProps) => {
                 label:{formatter: yearMode ? (p) => String(new Date(p.value).getUTCFullYear()) ?? `` : undefined }}, 
             valueFormatter: (v) => `${v?.toLocaleString(undefined, {maximumFractionDigits:0})} ${unit ?? ''}`
         },
-        yAxis: {show: true, type: 'value' },
+        yAxis: {show: true, type: 'value', 
+                name: unit && `(${unit})`,  nameLocation:'middle',
+                axisLabel:{formatter: (v:any) => `${(v).toLocaleString()} ` } },
         xAxis: {show: true, type: 'time' },
         series:  series ,
     }
