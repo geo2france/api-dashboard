@@ -9,7 +9,7 @@ interface AggregatorParams {
   dataKey?: string
 
   /** Agregat */
-  aggregate: "last" | "first" | "sum" | "lastNotNull" | "min" | "max" | "count" | "mean" | "countDistinct" | "countMissing"
+  aggregate: "last" | "first" | "sum" | "lastNotNull" | "min" | "max" | "count" | "mean" | "median" | "countDistinct" | "countMissing"
 }
 
 interface AggregatorResult {
@@ -66,6 +66,11 @@ export const aggregator = ( {data, dataKey, aggregate}:AggregatorParams ):Aggreg
 
       case "mean":{
         const value = (from(data).rollup({value: op.average(dataKey) }).object() as SimpleRecord).value 
+        return { row: undefined, value}
+      }
+
+      case "median": {
+        const value = (from(data).rollup({value: op.median(dataKey) }).object() as SimpleRecord).value 
         return { row: undefined, value}
       }
 

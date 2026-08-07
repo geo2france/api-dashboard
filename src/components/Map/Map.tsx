@@ -95,7 +95,7 @@ export interface MapProps extends MapLayerProps {
 export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, interpolationMethod, nClasses, valueKey:valueKeyInput, labelKey,
         popup = false, popupFormatter:popupFormatterUser, 
         highlightFeature,
-        title, xKey, yKey,
+        title, xKey, yKey, unit,
         latitude=0, longitude=0, zoom=0, fitToData}) => {
 
     const valueKey = valueKeyInput || categoryKey;
@@ -164,7 +164,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
             <MapLayer 
                 dataset={dataset} fitToData={fitToData}
                 color={color} paint={paint} interpolationMethod={interpolationMethod} nClasses={nClasses} highlightFeature={highlightFeature}
-                valueKey={valueKey} labelKey={labelKey} xKey={xKey} yKey={yKey} />
+                valueKey={valueKey} labelKey={labelKey} xKey={xKey} yKey={yKey} unit={unit} />
             
             { clickedFeature?.properties && popup &&
                 <Popup longitude={clickedFeature.lngLat.lng} 
@@ -199,6 +199,9 @@ interface MapLayerProps {
      * Quantitative (number) ou qualitative (string)
      */
     valueKey?: string
+
+    /** Unité de la valeur */
+    unit?: string
 
     /** Colonne contenant l'étiquette */
     labelKey?: string
@@ -239,7 +242,7 @@ interface MapLayerProps {
 export const MapLayer:React.FC<MapLayerProps> = ({
         dataset, valueKey:valueKeyInput, categoryKey, labelKey,
         interpolationMethod='quantile', nClasses = 5, color, paint, 
-        xKey, yKey, geomKey:geomKey_input,
+        xKey, yKey, geomKey:geomKey_input, unit,
         highlightFeature, highlightColor,
         fitToData=true }) => {
 
@@ -437,7 +440,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({
                 { layers }
             </Source> 
         }
-           {legendItems.length > 0 && <LegendControl items={legendItems} /> }
+           {legendItems.length > 0 && <LegendControl items={legendItems} unit={unit} /> }
        </>
     )
 }
