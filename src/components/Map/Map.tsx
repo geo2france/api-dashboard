@@ -368,13 +368,13 @@ export const MapLayer:React.FC<MapLayerProps> = ({
             <Layer key={dataset + '_line'} id={'dataset' + '_line'} 
                 type='line' 
                 paint={{
-                    "line-width": highlight ? [
+                    "line-width": highlight?.value ? [
                         "case",
                         ["==", ["get", highlight?.property], highlight?.value],
                         3, // épaisseur du highlight
                         0.5
                     ] : 0.5,
-                    "line-color": highlight ? [
+                    "line-color": highlight?.value ? [
                         "case",
                         ["==", ["get", highlight?.property], highlight?.value],
                         token.colorWarningTextActive,
