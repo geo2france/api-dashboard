@@ -20,7 +20,7 @@ import { generateGradient } from './utils';
 import { theme } from 'antd';
 
 import {  jenks, quantileSorted } from 'simple-statistics';
-import { useHighlight } from '../../utils/useHighlight';
+import { useHighlight, useSetHighlight } from '../../utils/useHighlight';
 
 
 
@@ -84,6 +84,9 @@ export interface MapProps extends MapLayerProps {
   /** Zoom initial */
   zoom?: number;
 
+  /** Propriété à faire remonter lors du survol */
+  highlightProperty?: string
+
 }
 
 /** _Beta_ : Un composant permettant un affichage cartographique d'un jeu de données 
@@ -95,13 +98,14 @@ export interface MapProps extends MapLayerProps {
 */
 export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, interpolationMethod, nClasses, valueKey:valueKeyInput, labelKey,
         popup = false, popupFormatter:popupFormatterUser, 
-        title, xKey, yKey, unit,
+        title, xKey, yKey, unit, highlightProperty,
         latitude=0, longitude=0, zoom=0, fitToData}) => {
 
     const valueKey = valueKeyInput || categoryKey;
 
     const mapRef = useRef<MapRef>(null);
 
+    const sethilighted = useSetHighlight()
 
     const [clickedFeature, setClickedFeature] = useState<any>(undefined);
 
@@ -128,7 +132,13 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
             </>
         ));
 
-    const onMouseMoveMap = (evt:any) => {
+
+    const onMouseMoveMap = (evt:any) => { // Attention, déclenché plusieurs dizaines de fois par seconde
+
+        if(highlightProperty) {
+            sethilighted({property:highlightProperty, value:evt.features[0]?.properties?.[highlightProperty]})
+        }
+
         if (!mapRef.current) {
             return
         }

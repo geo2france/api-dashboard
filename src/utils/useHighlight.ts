@@ -3,7 +3,7 @@
  * le nom de la propriété et la valeur de l'entité à surbriller
  */
 
-import { useCallback, useContext } from "react"
+import { useCallback, useContext, useRef } from "react"
 import { ControlContext } from "../components/Control/Control"
 import EChartsReact from "echarts-for-react";
 
@@ -27,11 +27,23 @@ export const useHighlight = ():feature_filter => {
 /** Définir une entité à surbriller */
 export const useSetHighlight = () => {
 
+    const lastHighlight = useRef<feature_filter>();
+
   // On utilise le mécanisme des contrôles. Il s'agit d'un contrôle
   // caché nommé 'highlight'
   const controlesRegistry = useContext(ControlContext); 
 
   return useCallback((f: feature_filter) => {
+
+    //Avoid unnecessary rerender
+    if (
+      lastHighlight.current?.property === f.property &&
+      lastHighlight.current?.value === f.value
+    ) {
+      return;
+    }
+
+    lastHighlight.current = f;
     controlesRegistry?.register({ highlight : f });
   }, [controlesRegistry]);
 };
