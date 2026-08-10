@@ -20,6 +20,7 @@ import { generateGradient } from './utils';
 import { theme } from 'antd';
 
 import {  jenks, quantileSorted } from 'simple-statistics';
+import { useHighlight } from '../../utils/useHighlight';
 
 
 
@@ -94,7 +95,6 @@ export interface MapProps extends MapLayerProps {
 */
 export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, interpolationMethod, nClasses, valueKey:valueKeyInput, labelKey,
         popup = false, popupFormatter:popupFormatterUser, 
-        highlightFeature,
         title, xKey, yKey, unit,
         latitude=0, longitude=0, zoom=0, fitToData}) => {
 
@@ -163,7 +163,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
 
             <MapLayer 
                 dataset={dataset} fitToData={fitToData}
-                color={color} paint={paint} interpolationMethod={interpolationMethod} nClasses={nClasses} highlightFeature={highlightFeature}
+                color={color} paint={paint} interpolationMethod={interpolationMethod} nClasses={nClasses}
                 valueKey={valueKey} labelKey={labelKey} xKey={xKey} yKey={yKey} unit={unit} />
             
             { clickedFeature?.properties && popup &&
@@ -224,9 +224,6 @@ interface MapLayerProps {
     /** Centrer automatiquement la carte sur les données (true) */
     fitToData?: boolean;
 
-    /** Feature à mettre en surbrillance */
-    highlightFeature?: { property: string; value: string | number; };
-
     /** Couleur de subrillance */
     highlightColor?: string
 }
@@ -243,10 +240,12 @@ export const MapLayer:React.FC<MapLayerProps> = ({
         dataset, valueKey:valueKeyInput, categoryKey, labelKey,
         interpolationMethod='quantile', nClasses = 5, color, paint, 
         xKey, yKey, geomKey:geomKey_input, unit,
-        highlightFeature, highlightColor,
+        highlightColor,
         fitToData=true }) => {
 
     const {current: map} = useMap();
+
+    const hilightedFeature = useHighlight()
 
     const valueKey = valueKeyInput || categoryKey ;
     const data = useDataset(dataset)
@@ -381,11 +380,11 @@ export const MapLayer:React.FC<MapLayerProps> = ({
         layers.push(
             <Layer key={'dataset' + '_hightline'} id={'dataset' + '_hightline'} 
                 type='line' 
-                filter={ highlightFeature?.value ? 
+                filter={ hilightedFeature?.value ? 
                             [
                                 "==",
-                                ["get", highlightFeature.property ],
-                                highlightFeature.value,
+                                ["get", hilightedFeature.property ],
+                                hilightedFeature.value,
                             ]
                             : ["literal", false] //No hilight : filter all entities
                 }
