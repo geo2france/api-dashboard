@@ -11,14 +11,13 @@ interface feature_filter {
     value: any | null
 }
 
+
+/** Récupérer l'entité à surbriller */
 export const useHighlight = ():feature_filter => {
-   // const f = useControl('highlight') as feature_filter
 
     const controlesRegistry = useContext(ControlContext);
 
-    const f = controlesRegistry?.values.highlight
-    console.log('geted feature', controlesRegistry?.values)
-    return f
+    return controlesRegistry?.values.highlight
 }
 
 
@@ -26,10 +25,12 @@ export const useHighlight = ():feature_filter => {
 
 /** Définir une entité à surbriller */
 export const useSetHighlight = () => {
-  const controlesRegistry = useContext(ControlContext);
+
+  // On utilise le mécanisme des contrôles. Il s'agit d'un contrôle
+  // caché nommé 'highlight'
+  const controlesRegistry = useContext(ControlContext); 
 
   return useCallback((f: feature_filter) => {
-    console.log('registerd value', f)
     controlesRegistry?.register({ highlight : f });
   }, [controlesRegistry]);
 };
