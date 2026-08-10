@@ -15,7 +15,7 @@ export interface ChartEchartsProps extends EChartsReactProps {
 
 /**
 * Ce composant peut servir de base aux développements d'autres composants ou être utilisé directement dans une page (non conseillé).
-* - Applique la palette utilisateur
+* - Applique la palette utilisateur et le mode graphique (light/dark)
 * - Utilise le style de texte de l'application
 */
 export const ChartEcharts = forwardRef<EChartsReact, ChartEchartsProps>(({ option = {}, ...restProps }, ref) =>  { // devnote : A partir de React 19, ne plus utiliser forwardRef https://react.dev/reference/react/forwardRef
