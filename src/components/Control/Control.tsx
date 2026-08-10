@@ -38,7 +38,7 @@ export default Control;
 /*
  * Hook  pour accéder à un control spécifique de la page
  */
-export const useControl = (name: string): string | undefined => { 
+export const useControl = (name: string): any => { 
   const context_controls = useContext(ControlContext);
   if (!context_controls) {
     throw new Error("useControl must be used within a ControlProvider");
