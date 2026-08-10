@@ -75,13 +75,14 @@ export const useApplyEchartsHighlight = ({chartRef, name}: useApplyEchartsHighli
     const echartsInstance = chartRef.current?.getEchartsInstance()
     try { // Non critique, ca ne doit pas faire crasher l'application
 
+        //Release existing highlight
+        echartsInstance?.dispatchAction({type:"downplay"})
+
         highlighted?.value && echartsInstance?.dispatchAction({
             type: 'highlight',
             name: highlighted.value,
         })
 
-        //Release highlight
-        highlighted?.value == null && echartsInstance?.dispatchAction({type:"downplay"})
     }
     catch(error) {
         console.warn('Impossible d’appliquer le highlight ECharts', error);
