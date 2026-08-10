@@ -15,11 +15,16 @@ export interface LegendItem {
 }
 
 interface MapLegendProps {
+    /** Elements de légende */
     items:LegendItem[]
-    style?:CSSProperties
+
+  /** Unité à afficher */
+  unit?: string
+
+  style?:CSSProperties
 }
 
-const MapLegend: React.FC<MapLegendProps> = ({ items, style }) => {
+const MapLegend: React.FC<MapLegendProps> = ({ items, unit, style }) => {
     const { token } = theme.useToken();
 
     const default_style:CSSProperties = {
@@ -34,7 +39,7 @@ const MapLegend: React.FC<MapLegendProps> = ({ items, style }) => {
     return (
         <div style={divStyle}>
             {items.map((item, index) => (
-                <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+                <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '4px', width: 'max-content', }}>
                     <div style={{
                         width: '16px',
                         height: '16px',
@@ -42,7 +47,7 @@ const MapLegend: React.FC<MapLegendProps> = ({ items, style }) => {
                         borderRadius: '2px',
                         marginRight: '8px'
                     }}></div>
-                    <Text>{item.label}</Text>
+                    <Text>{item.label}{unit ? ` ${unit}` : ''}</Text>
                 </div>
             ))}
     </div>
@@ -51,12 +56,11 @@ const MapLegend: React.FC<MapLegendProps> = ({ items, style }) => {
 
 export default MapLegend;
 
-interface LegendControlProps {
-  /** Elements de légende */
-  items: LegendItem[];
+interface LegendControlProps extends Omit<MapLegendProps, 'style'>{
+
 }
 /** Un control pour Maplibre qui permet d'afficher une légende */
-export const LegendControl: React.FC<LegendControlProps> = ({ items }) => {
+export const LegendControl: React.FC<LegendControlProps> = ({ items, unit }) => {
   const rootRef = useRef<Root | null>(null);
 
   const { resolvedMode } = useThemeContext();
@@ -73,7 +77,7 @@ export const LegendControl: React.FC<LegendControlProps> = ({ items }) => {
         onAdd: (_map: MaplibreMap) => {
           root.render(
             <ConfigProvider theme={{ algorithm: resolvedMode === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm }}>
-              <MapLegend items={items} />
+              <MapLegend items={items} unit={unit} />
             </ConfigProvider>
           );
           return container;
@@ -85,14 +89,14 @@ export const LegendControl: React.FC<LegendControlProps> = ({ items }) => {
 
       return control;
     },
-    { position: "top-right" } 
+    { position: "top-left" } 
   );
 
     useEffect(() => {
     if (rootRef.current) {
       rootRef.current.render(
             <ConfigProvider theme={{ algorithm: resolvedMode === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm }}>
-              <MapLegend items={items} />
+              <MapLegend items={items} unit={unit} />
             </ConfigProvider>
       );
     }
