@@ -5,6 +5,7 @@
 
 import { useCallback, useContext } from "react"
 import { ControlContext } from "../components/Control/Control"
+import EChartsReact from "echarts-for-react";
 
 interface feature_filter {
     property: string,
@@ -34,3 +35,43 @@ export const useSetHighlight = () => {
     controlesRegistry?.register({ highlight : f });
   }, [controlesRegistry]);
 };
+
+
+
+interface useApplyEchartsHighlightProps {
+    /** Référence du graphique */
+    chartRef: React.RefObject<EChartsReact>,
+
+    /** Définir manuellement un dataname à mettre en surbrillance (défaut : auto) */
+    name?: string
+}
+
+/** Hook helper permettant d'appliquer une surbrillance sur un élement d'un graphique Echarts
+ * La surbrillance se base sur le nom des itemps Echarts. Le nom peut être définie soit :
+ * - Avec encode (https://echarts.apache.org/en/option.html#series-line.encode)
+ * - En définissant les données comme {name:'a', values:[5, 'b']}
+ * @experimental
+*/
+export const useApplyEchartsHighlight = ({chartRef, name}: useApplyEchartsHighlightProps) => {
+
+    //devnote : traiter ici aussi les remontées de surbrillance ? (a partir des event du charts)
+
+    const auto_highlighted = useHighlight();
+
+    const highlighted = name ? {value:name} : auto_highlighted;
+
+    const echartsInstance = chartRef.current?.getEchartsInstance()
+    try { // Non critique, ca ne doit pas faire crasher l'application
+
+        highlighted?.value && echartsInstance?.dispatchAction({
+            type: 'highlight',
+            name: highlighted.value,
+        })
+
+        //Release highlight
+        highlighted?.value == null && echartsInstance?.dispatchAction({type:"downplay"})
+    }
+    catch(error) {
+        console.warn('Impossible d’appliquer le highlight ECharts', error);
+    }
+}
