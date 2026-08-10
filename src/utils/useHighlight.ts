@@ -3,16 +3,21 @@
  * le nom de la propriété et la valeur de l'entité à surbriller
  */
 
-import { useContext } from "react"
-import { ControlContext, useControl } from "../components/Control/Control"
+import { useCallback, useContext } from "react"
+import { ControlContext } from "../components/Control/Control"
 
 interface feature_filter {
     property: string,
-    value?: any
+    value: any | null
 }
 
 export const useHighlight = ():feature_filter => {
-    const f = useControl('highligt') as feature_filter
+   // const f = useControl('highlight') as feature_filter
+
+    const controlesRegistry = useContext(ControlContext);
+
+    const f = controlesRegistry?.values.highlight
+    console.log('geted feature', controlesRegistry?.values)
     return f
 }
 
@@ -20,9 +25,11 @@ export const useHighlight = ():feature_filter => {
 
 
 /** Définir une entité à surbriller */
-export const useSetHighlight = (f:feature_filter) => {
+export const useSetHighlight = () => {
+  const controlesRegistry = useContext(ControlContext);
 
-    const controlesRegistry = useContext(ControlContext)
-    controlesRegistry?.register( {name: 'highligt', value: f } )
-
-}
+  return useCallback((f: feature_filter) => {
+    console.log('registerd value', f)
+    controlesRegistry?.register({ highlight : f });
+  }, [controlesRegistry]);
+};
