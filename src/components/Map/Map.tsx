@@ -147,7 +147,13 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
         }else {
             mapRef.current.getCanvasContainer().style.cursor = 'grab'
         }
-  }
+    }
+
+    const onMouseLeave = () => {
+        if(highlightProperty) {
+            sethilighted({property:highlightProperty, value:null})
+        }
+    }
     
     const mapStyle = useMemo(() => ({
         version: 8 as const,
@@ -164,6 +170,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
           interactiveLayerIds={['dataset']} 
           onClick={onClickMap}  
           onMouseMove={onMouseMoveMap}
+          onMouseLeave={onMouseLeave}
           initialViewState={{latitude:latitude, longitude:longitude, zoom:zoom}}
           mapStyle={mapStyle}
           style={{ width: '100%', height:'500px' }} 
