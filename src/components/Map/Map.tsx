@@ -132,11 +132,16 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
             </>
         ));
 
+    const hoverTimeout = useRef<ReturnType<typeof setTimeout>>();
 
     const onMouseMoveMap = (evt:any) => { // Attention, déclenché plusieurs dizaines de fois par seconde
 
         if(highlightProperty) {
-            sethilighted({property:highlightProperty, value:evt.features[0]?.properties?.[highlightProperty]})
+            const value = evt.features?.[0]?.properties?.[highlightProperty];
+            clearTimeout(hoverTimeout.current);
+            hoverTimeout.current = setTimeout(() => {
+                sethilighted({property:highlightProperty, value:value})
+            },15)
         }
 
         if (!mapRef.current) {
@@ -151,6 +156,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
 
     const onMouseLeave = () => {
         if(highlightProperty) {
+            clearTimeout(hoverTimeout.current);
             sethilighted({property:highlightProperty, value:null})
         }
     }
