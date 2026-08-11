@@ -418,6 +418,27 @@ export const MapLayer:React.FC<MapLayerProps> = ({
             />
         )
 
+        layers.push(
+            <Layer
+                key="dataset_highlight_mask"
+                id="dataset_highlight_mask"
+                type="fill"
+                filter={
+                    hilightedFeature?.value
+                        ? [
+                            "!=",
+                            ["get", hilightedFeature.property],
+                            hilightedFeature.value,
+                        ]
+                        : ["literal", false]
+                }
+                paint={{
+                    "fill-color": token.colorBgMask,
+                    "fill-opacity": 0.4,
+                }}
+            />
+        );
+
     } 
     /** LINESTRING */ 
     else if (geom_type === 'LineString' || geom_type === 'MultiLineString') {
