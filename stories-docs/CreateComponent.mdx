@@ -13,7 +13,55 @@ import { Meta } from '@storybook/addon-docs/blocks';
 - `useThemeContext().resolvedMode` : mode appliqué (`dark` ou `light`).
 - `useDataset` 
 - `useBlockConfig` : configurer le contenant du graphique (titre et données disponibles dans le menu contextuel)
+- `useHighlight` et `useSetHighlight`  : utiliser et définir les entités à surbriller
 
+
+## Surbrillance (Highlight)
+
+Votre graphique ou carte peut mettre en avant certaines entités.
+Le cas d'usage général est le suivant : au survol d'un élément sur une dataviz, on souhaite mettre 
+en avant le même élément sur une autre dataviz de la page.
+
+Votre graphique a donc la possibilité : 
+- d'indiquer aux autres composants qu'il souhaite surbriller un élement (par exemple si l'utilisateur le clique ou survol)
+- inversement, de savoir si un autre composant souhaite surbriller un objet
+
+Pour définir un objet (série, entité cartographique, point...) on utilise un filtre de type `{property: '<nomDeLaColonne>', value:'<valeur>'}`.
+
+
+
+```tsx 
+
+/* 
+Dans cet exemple, lorsque l'utilisateur survol un élément de graphique, 
+on utilise une valeur pour (ici la dimension Y, cf https://echarts.apache.org/en/option.html#series-bar.data ) 
+pour surbriller d'autres composant de la page
+*/
+
+export const MyDataviz:React.FC<MyDatavizProps> = () => {
+
+    // ....
+
+    const onHover = (e:any) => {
+        if(e.componentType == "series"){
+            // A adapter en fonction du jeu de données et du graphique, il s'agit de l'attribut qu'on souhaite utilier pour la surbrillance
+            setHighlight({property:'geocode_epci', value:e.data[1]}) 
+        }
+    }
+
+    // Ne pas oublier de retirer la surbrillance quand la souris quitte l'objet !
+    const onOut = () => {
+        setHighlight({property:'geocode_epci', value:null})
+    };
+
+
+    return <ChartEcharts option={option} onEvents={{mouseover:onHover, mouseOut:onOut}} />
+
+}
+
+
+// TODO : a compléter avec un "recepteur" de surbrillance
+```
 
 ## À partir d'un graphique api-dashboard
 

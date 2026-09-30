@@ -20,6 +20,7 @@ import { generateGradient } from './utils';
 import { theme } from 'antd';
 
 import {  jenks, quantileSorted } from 'simple-statistics';
+import { useHighlight, useSetHighlight } from '../../utils/useHighlight';
 
 import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -84,6 +85,9 @@ export interface MapProps extends MapLayerProps {
   /** Zoom initial */
   zoom?: number;
 
+  /** Propriété à faire remonter lors du survol */
+  highlightProperty?: string
+
 }
 
 /** _Beta_ : Un composant permettant un affichage cartographique d'un jeu de données 
@@ -95,14 +99,14 @@ export interface MapProps extends MapLayerProps {
 */
 export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, interpolationMethod, nClasses, valueKey:valueKeyInput, labelKey,
         popup = false, popupFormatter:popupFormatterUser, 
-        highlightFeature,
-        title, xKey, yKey, unit,
+        title, xKey, yKey, unit, highlightProperty,
         latitude=0, longitude=0, zoom=0, fitToData}) => {
 
     const valueKey = valueKeyInput || categoryKey;
 
     const mapRef = useRef<MapRef>(null);
 
+    const sethilighted = useSetHighlight()
 
     const [clickedFeature, setClickedFeature] = useState<any>(undefined);
 
@@ -129,7 +133,18 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
             </>
         ));
 
-    const onMouseMoveMap = (evt:any) => {
+    const hoverTimeout = useRef<ReturnType<typeof setTimeout>>();
+
+    const onMouseMoveMap = (evt:any) => { // Attention, déclenché plusieurs dizaines de fois par seconde
+
+        if(highlightProperty) {
+            const value = evt.features?.[0]?.properties?.[highlightProperty];
+            clearTimeout(hoverTimeout.current);
+            hoverTimeout.current = setTimeout(() => {
+                sethilighted({property:highlightProperty, value:value})
+            },15)
+        }
+
         if (!mapRef.current) {
             return
         }
@@ -138,7 +153,14 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
         }else {
             mapRef.current.getCanvasContainer().style.cursor = 'grab'
         }
-  }
+    }
+
+    const onMouseLeave = () => {
+        if(highlightProperty) {
+            clearTimeout(hoverTimeout.current);
+            sethilighted({property:highlightProperty, value:null})
+        }
+    }
     
     const mapStyle = useMemo(() => ({
         version: 8 as const,
@@ -155,6 +177,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
           interactiveLayerIds={['dataset']} 
           onClick={onClickMap}  
           onMouseMove={onMouseMoveMap}
+          onMouseLeave={onMouseLeave}
           initialViewState={{latitude:latitude, longitude:longitude, zoom:zoom}}
           mapStyle={mapStyle}
           style={{ width: '100%', height:'500px' }} 
@@ -164,7 +187,7 @@ export const Map:React.FC<MapProps> = ({dataset, color, paint, categoryKey, inte
 
             <MapLayer 
                 dataset={dataset} fitToData={fitToData}
-                color={color} paint={paint} interpolationMethod={interpolationMethod} nClasses={nClasses} highlightFeature={highlightFeature}
+                color={color} paint={paint} interpolationMethod={interpolationMethod} nClasses={nClasses}
                 valueKey={valueKey} labelKey={labelKey} xKey={xKey} yKey={yKey} unit={unit} />
             
             { clickedFeature?.properties && popup &&
@@ -225,9 +248,6 @@ interface MapLayerProps {
     /** Centrer automatiquement la carte sur les données (true) */
     fitToData?: boolean;
 
-    /** Feature à mettre en surbrillance */
-    highlightFeature?: { property: string; value: string | number; };
-
     /** Couleur de subrillance */
     highlightColor?: string
 }
@@ -244,10 +264,12 @@ export const MapLayer:React.FC<MapLayerProps> = ({
         dataset, valueKey:valueKeyInput, categoryKey, labelKey,
         interpolationMethod='quantile', nClasses = 5, color, paint, 
         xKey, yKey, geomKey:geomKey_input, unit,
-        highlightFeature, highlightColor,
+        highlightColor,
         fitToData=true }) => {
 
     const {current: map} = useMap();
+
+    const hilightedFeature = useHighlight()
 
     const valueKey = valueKeyInput || categoryKey ;
     const data = useDataset(dataset)
@@ -382,11 +404,11 @@ export const MapLayer:React.FC<MapLayerProps> = ({
         layers.push(
             <Layer key={'dataset' + '_hightline'} id={'dataset' + '_hightline'} 
                 type='line' 
-                filter={ highlightFeature?.value ? 
+                filter={ hilightedFeature?.value ? 
                             [
                                 "==",
-                                ["get", highlightFeature.property ],
-                                highlightFeature.value,
+                                ["get", hilightedFeature.property ],
+                                hilightedFeature.value,
                             ]
                             : ["literal", false] //No hilight : filter all entities
                 }
@@ -396,6 +418,27 @@ export const MapLayer:React.FC<MapLayerProps> = ({
                     }}
             />
         )
+
+        layers.push(
+            <Layer
+                key="dataset_highlight_mask"
+                id="dataset_highlight_mask"
+                type="fill"
+                filter={
+                    hilightedFeature?.value
+                        ? [
+                            "!=",
+                            ["get", hilightedFeature.property],
+                            hilightedFeature.value,
+                        ]
+                        : ["literal", false]
+                }
+                paint={{
+                    "fill-color": token.colorBgMask,
+                    "fill-opacity": 0.4,
+                }}
+            />
+        );
 
     } 
     /** LINESTRING */ 
