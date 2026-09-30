@@ -21,6 +21,7 @@ import { theme } from 'antd';
 
 import {  jenks, quantileSorted } from 'simple-statistics';
 
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 
 /** Méthode d'interpolation utilisé pour les valeurs numériques */
@@ -357,14 +358,14 @@ export const MapLayer:React.FC<MapLayerProps> = ({
     const layers = [];
     /** POINT */
     if (geom_type === 'Point' || geom_type === 'MultiPoint') {
-        const default_paint:CirclePaint = {"circle-color": expression ?? color ?? colors![0] }
+        const default_paint:CirclePaint = {"circle-color": expression ?? color ?? colors?.[0] }
         layers.push(
             <Layer key={'dataset'} id={'dataset'} type="circle" paint={(paint ?? default_paint) as any}  />
         )
     }
     /** POLYGON */ 
     else if (geom_type === 'Polygon' || geom_type === 'MultiPolygon') {     
-        const default_paint:FillPaint = { "fill-color" : expression ?? color ?? colors![0] }
+        const default_paint:FillPaint = { "fill-color" : expression ?? color ?? colors?.[0] }
         layers.push(
             <Layer key={'dataset'} id={'dataset'} type="fill" paint={(paint ?? default_paint) as any}/>
         )
@@ -399,7 +400,7 @@ export const MapLayer:React.FC<MapLayerProps> = ({
     } 
     /** LINESTRING */ 
     else if (geom_type === 'LineString' || geom_type === 'MultiLineString') {
-        const default_paint:LinePaint = { "line-color": expression ?? color ?? colors![0]  }
+        const default_paint:LinePaint = { "line-color": expression ?? color ?? colors?.[0]  }
         layers.push(
             <Layer key={'dataset'} id={'dataset'} type="line" paint={(paint ?? default_paint) as any} />
         )
