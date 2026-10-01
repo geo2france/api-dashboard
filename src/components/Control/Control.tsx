@@ -38,7 +38,7 @@ export default Control;
 /*
  * Hook  pour accéder à un control spécifique de la page
  */
-export const useControl = (name: string): string | undefined => { 
+export const useControl = (name: string): any => { 
   const context_controls = useContext(ControlContext);
   if (!context_controls) {
     throw new Error("useControl must be used within a ControlProvider");
@@ -135,7 +135,7 @@ export const ControlPreview:React.FC = ({}) => {
   const items:DescriptionsProps['items'] = Object.entries(controlValues).map(([key, value]) => ({
     key: key,
     label: key,
-    children: <p>{value}</p>,
+    children: <p>{JSON.stringify(value ?? '')}</p>,
   }));
 
   return (
@@ -147,7 +147,7 @@ export const ControlPreview:React.FC = ({}) => {
 
 type ControlContextType = {
     values : Record<string, any>;
-    register: (control: { name: string; value: any }) => void;
+    register: (control: Record<string, any>) => void;
     clear: () => void,
     getAll : () =>  Record<string, any>
 }
@@ -163,7 +163,7 @@ export const CreateControlesRegistry = () => {
       /* CONTROLS */
       const [controls, setControles] = useState<Record<string, any>>({});
       
-      const pushControl = useCallback( (c: Record<string, any>) => { 
+      const pushControl: ControlContextType['register'] = useCallback( (c) => { 
         setControles(prev => ({
             ...prev, 
             ...c

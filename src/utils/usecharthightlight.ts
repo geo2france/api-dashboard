@@ -55,7 +55,9 @@ export interface useChartActionProps{ //TODO : remplacer highlight_key et item p
   }
 
 /** Hook permettant de highlight un élément d'un graphique ECharts 
+ * Deprécier, voir useApplyEchartsHighlight
  * @category Hook
+ * @deprecated
 */
 export const useChartActionHightlight = ({chartRef, target}:useChartActionProps) => {
  
