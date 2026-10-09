@@ -25,6 +25,7 @@ import { Intro } from "../components/DashboardPage/Intro";
 import { ChartComparison } from "../components/Charts/ChartComparison";
 import { DataTable } from "../components/Charts/Datatable";
 import { ChartEvolution } from "../components/Charts/ChartEvolution";
+import { MapIndicator } from "../components/Map/MapIndicator";
 
 export {
     Dashboard,
@@ -62,6 +63,7 @@ export {
     Debug,
     Map,
     MapLayer,
+    MapIndicator,
     LegendControl
 }
 
