@@ -34,7 +34,7 @@ export const Default: Story = {
         subtitle:"Sous-titre",
         children:[<PagesGroup title='Groupe de dashboards' icon="clarity:blocks-group-line">
                     <DemoPage title="Dashboard 1" icon="icon-park-solid:web-page" />
-                    <DemoPage title="Dashboard 2" icon="icon-park-solid:web-page" />
+                    <DemoPage title="Dashboard 2" icon="icon-park-solid:web-page" path='autre-path/demo' />
                  </PagesGroup>,
                 <DemoPage title="Dashboard 3" icon="icon-park-solid:web-page" />
         ],
