@@ -30,6 +30,10 @@ interface AppContextProps {
 export interface PageProps {
   title?: string
 
+  /** Chemin de la page, utilisé dans l'url.
+   * Optionnel, si non renseigné, construit à partir du title (slug).*/
+  path?: string
+
   /** Icône de la page. 
    * Composant ou nom (iconify) de l'icone */
   icon?: ReactElement | string
@@ -122,14 +126,14 @@ const DashboardApp: React.FC<DashboardConfig> = ({children, theme, visualIdentit
       if (typeof(page.type) != 'string' && page.type.name == PagesGroup.name ){ // Groupe
         return ({
             label: page.props.title ?? String(idx), 
-            path:slug(page.props.title ?? String(idx)),
+            path: page.props.path ?? slug(page.props.title ?? String(idx)),
             element:undefined, // Pas de route pour les groupes
             hidden:page.props.hidden ?? false,
             icon: renderIcon(page.props.icon),
             children: Children.toArray(page.props.children)?.map( (c:any, idx) => (
               { 
                 label: c.props.title, // A factoriser avec les pages hors groupes
-                path: slug(c.props.title ?? idx),
+                path: c.props.path ?? slug(c.props.title ?? idx),
                 element:c,
                 hidden:c.props.hidden ?? false,
                 icon:renderIcon(c.props.icon)
@@ -140,7 +144,7 @@ const DashboardApp: React.FC<DashboardConfig> = ({children, theme, visualIdentit
       }else { //Pages directes (sans groupe)
               return ({ 
                     label: page.props.title ?? String(idx),
-                    path:slug(page.props.title ?? String(idx)),
+                    path: page.props.path ?? slug(page.props.title ?? String(idx)),
                     element:page,
                     hidden:page.props.hidden ?? false,
                     icon:renderIcon(page.props.icon)
