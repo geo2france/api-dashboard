@@ -40,6 +40,9 @@ interface IDatasetProps {
 
     /** Paramètres additionnels à passer au fournisseur */
     meta?:any
+
+    /** Activer le jeu de données */
+    enabled?: boolean
 }
 
 export type dataset = {
@@ -64,7 +67,8 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
   resource, 
   pageSize, 
   sortBy,
-  meta}) => {
+  meta,
+  enabled = true}) => {
 
 
     const getTransformerFn = (component:ReactElement) => {
@@ -147,7 +151,8 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
       filters: filters, 
       pagination:{pageSize:pageSize},
       sorters: sortBy ? [{field:sortBy, order:'asc' }] : undefined, // only one sort field is supported
-      meta:meta})
+      meta:meta,
+      enabled:enabled})
 
     const dep_dataset_id:string[] = [] // Dependencies
 
