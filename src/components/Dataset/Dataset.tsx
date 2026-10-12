@@ -51,6 +51,7 @@ export type dataset = {
     data?: SimpleRecord[];
     isFetching: boolean;
     isError: boolean;
+    isEnabled: boolean;
     producers?:any[];
     geojson?:any
     dataHash?:number;
@@ -182,10 +183,11 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
     const someDepsAreFetching = depDataset?.some(d => d?.isFetching);
 
     useEffect(() => { //Appliquer le(s) transformer(s) et enregistrer le dataset dans le context de la page
-        const finalData = data?.data && transformers.reduce(
+        const finalData = enabled && data?.data && transformers.reduce(
             (datat, fn ) => fn(datat),
             data.data
-          );
+          ) || undefined;
+          
         if (datasetRegistryContext) {
            datasetRegistryContext.register({
              id: id,
@@ -193,13 +195,14 @@ export const DSL_Dataset:React.FC<IDatasetProps> = ({
              data: finalData,
              isFetching: !!isFetching || !!someDepsAreFetching,
              isError: isError,
+             isEnabled: enabled,
              producers: producers,
              geojson: data?.geojson,
              dataHash: hashCode(finalData)
            });
             //Ajouter une info pour distinguer les erreurs du fourniseurs et celles des transformers ?
         }
-      }, [resource, data, (!!isFetching || !!someDepsAreFetching), hashCode(depDataHash), children]);
+      }, [resource, data, (!!isFetching || !!someDepsAreFetching), hashCode(depDataHash), children, enabled]);
 
 
     return (
