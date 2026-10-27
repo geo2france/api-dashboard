@@ -33,8 +33,13 @@ Demo :
 Ensuite, depuis un terminal ([Powershell](https://learn.microsoft.com/fr-fr/powershell/scripting/install/install-powershell-on-windows?view=powershell-7.5) ou autre) : 
 ```bash
 # Installer la version compatible de Node.js
+<<<<<<< HEAD
 nvm install
 nvm use
+=======
+nvm install 22.23.4
+nvm use 22.23.4
+>>>>>>> main
 ```
 
 ## Créer un tableau de bord
