@@ -33,7 +33,7 @@ const meta = {
                         id="quartiers"
                         type="wfs"
                         url="https://data.lillemetropole.fr/geoserver/ows"
-                        resource="ville_roubaix:les_quartiers_de_roubaix_et_leur_elue_referente"
+                        resource="ville_roubaix:secteur_elus"
                         meta={{srsname:'EPSG:4326'}}
                         />
                     <Story />
@@ -56,9 +56,9 @@ export const Default: Story = {
     args:{
         dataset:"quartiers",
         popup:true,
-        popupFormatter : (row) => `Elu de quartier : ${row.elu_de_quartier}`,
+        popupFormatter : (row) => `Elu de quartier : ${row.Elu_de_MDQ}`,
         color:"#84a380",
-        title: "Roubaix :Les élus de quartier"
+        title: "Roubaix : Les élus de quartier"
     },
     argTypes:{
         categoryKey: {
@@ -72,8 +72,8 @@ export const Quantitatif: Story = {
     args:{
         dataset:"quartiers",
         popup:true,
-        popupFormatter : (row) => `Surface du quartier : ${(row.st_area_shape).toLocaleString(undefined, {maximumFractionDigits:0})} m2`,
-        valueKey:"st_area_shape",
+        popupFormatter : (row) => `Surface du quartier : ${row.st_area_shape_?.toLocaleString(undefined, {maximumFractionDigits:0})} m2`,
+        valueKey:"st_area_shape_",
         title: "Les quartiers de roubaix"
     },
     argTypes: {
