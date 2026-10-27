@@ -2,11 +2,17 @@
 
 Collection de composants React pour faciliter la création de **tableaux de bords territoriaux**.
 
-Demo : 
+![capture d'écran](screenshot.png)
+
+Utilisations : 
 - [Odema](https://www.geo2france.fr/public/odema/dashboard/) ([code source](https://github.com/geo2france/odema-dashboard))
 - [Clicnat](https://dashboard.clicnat.fr/)
 
-![capture d'écran](screenshot.png)
+
+Demo :
+- [Gestion de l'eau](https://www.geo2france.fr/public/api-dashboard/demo/dashboard_eau/). Tableau de bord fictif, généré par IA 🤖 et utilisant api-dashboard.
+
+
 
 ## Points forts
 
