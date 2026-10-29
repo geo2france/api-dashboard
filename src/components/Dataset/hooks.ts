@@ -10,7 +10,7 @@ export type datasetInput = string | SimpleRecord[]
 export const useDataset = (dataset_id? : datasetInput):dataset | undefined => {
 
     if (Array.isArray(dataset_id)) { //inline dataset
-      return { data: dataset_id, isFetching: false, isError: false, resource: '', id:'' }
+      return { data: dataset_id, isFetching: false, isError: false, resource: '', id:'', isEnabled: true }
     }
 
     const datasetRegistry = useContext(DatasetRegistryContext)
@@ -47,7 +47,7 @@ export const createDatasetRegistry = () => {
     const pushDataset = useCallback((d: dataset) => {
       setdatasets(prev => {
         const existing = prev[d.id];
-        if (existing && existing.dataHash === d.dataHash && existing.isFetching === d.isFetching) { // Eviter les rerender si les données n'ont pas changé
+        if (existing && existing.dataHash === d.dataHash && existing.isFetching === d.isFetching && existing.isEnabled === d.isEnabled) { // Eviter les rerender si les données n'ont pas changé
           return prev; 
         }
         return { ...prev, [d.id]: d };
