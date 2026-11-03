@@ -5,9 +5,10 @@ import { useDataset } from "./hooks";
 interface DatasetBadgeStatusProps {
     isError?: boolean
     isFetching?: boolean
+    isEnabled?: boolean
 }
-export const DatasetBadgeStatus:React.FC<DatasetBadgeStatusProps> = ({isError, isFetching}) => {
-    return <Badge status={isError ? "error" : isFetching ? 'processing' : 'success' } />
+export const DatasetBadgeStatus:React.FC<DatasetBadgeStatusProps> = ({isError, isFetching, isEnabled}) => {
+    return <Badge status={isError ? "error" : isFetching ? 'processing' : !isEnabled ? 'default': 'success' } />
 }
 
 interface DSL_DataPreviewProps {
@@ -31,10 +32,9 @@ export const DSL_DataPreview:React.FC<DSL_DataPreviewProps> = ({dataset: dataset
         key,
         ellipsis: true,
       }));
-      
     return (
         <>
-            <h3><DatasetBadgeStatus isError={dataset?.isError} isFetching={dataset?.isFetching} /> {dataset?.resource}</h3>
+            <h3><DatasetBadgeStatus isError={dataset?.isError} isFetching={dataset?.isFetching} isEnabled={dataset?.isEnabled} /> {dataset?.resource}</h3>
             <Table pagination={{pageSize:pageSize}} dataSource={data} columns={columns} rowKey={(row) => rowKey ? row[rowKey]:JSON.stringify(row)} />
         </>
     )

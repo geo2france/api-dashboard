@@ -21,9 +21,10 @@ export const Debug:React.FC = () => {
     const items: CollapseProps['items'] = datasets?.map((dataset) => ({
         key: dataset.id,
         label: <span>
-                  <DatasetBadgeStatus isError={dataset?.isError} isFetching={dataset?.isFetching} /> {dataset.id} 
+                  <DatasetBadgeStatus isError={dataset?.isError} isFetching={dataset?.isFetching} isEnabled={dataset?.isEnabled} /> {dataset.id} 
                   {" "} <Text type="secondary"> {dataset?.resource} </Text>
-                  {" "}<Badge color={token.colorInfo} overflowCount={9999} count={ dataset?.data?.length }/>
+                  {" "}{dataset?.data !== undefined && <Badge color={token.colorInfo} overflowCount={9999} count={ dataset?.data?.length } 
+                            /> }
                  
                 </span>,
         children: <DataPreview dataset={dataset.id} pageSize={3}/>
