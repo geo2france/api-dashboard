@@ -8,7 +8,7 @@ import { useSearchParamsState } from "../../utils/useSearchParamsState";
 import Control, { ControlContext, DSL_Control } from "../Control/Control";
 import { Dataset, Debug, Provider } from "../../dsl";
 import { DEFAULT_PALETTE, Palette, PaletteContext, PaletteType } from "../Palette/Palette";
-import { Section, SectionProps } from "./Section";
+import { LayoutType, Section, SectionProps } from "./Section";
 import { Icon } from "@iconify/react";
 import { DatasetRegistryContext } from "../Dataset/context";
 import { Intro } from "./Intro";
@@ -37,6 +37,9 @@ const getSection = (child: React.ReactElement): string | undefined =>
     React.isValidElement<IDashboardElementProps>(child) ? child.props.section : undefined ;
   
 
+/**
+ * @deprecated Utiliser DSLDashboardPageProps à la place.
+ */
 const DashboardPage:React.FC<IDashboardPageProps> = ({children:children_input, control, row_gutter=[8,8], sections}) => {
     let sections_std:Section[] = []
     const screens = Grid.useBreakpoint();
@@ -119,6 +122,9 @@ interface IDSLDashboardPageProps {
     /** Nombre de colonnes. */
     columns?: number
 
+    /** Mise en page. Grid par défaut */
+    layout?: LayoutType
+
     /** Mode debug. Affiche un bouton permettant d'accéder aux informations développeur. */
     debug?: boolean
 }
@@ -128,7 +134,12 @@ interface IDSLDashboardPageProps {
 /** Une page de tableau de bord.
  * Cette page peut contenir plusieurs `Section` ou directement le contenu.
  */
-export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tableau de bord', columns=2, children, debug=false}) => {
+export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({
+    name = 'Tableau de bord', 
+    columns=2,
+    layout= 'grid', 
+    children, 
+    debug=false }) => {
 
     const { token } = useToken();
 
@@ -192,7 +203,7 @@ export const DSL_DashboardPage:React.FC<IDSLDashboardPageProps> = ({name = 'Tabl
     if (visible_components.length > 0) {items.push({
         key:"99 - Autres", 
         label: '-',
-        children:<Section title='Autres' columns={columns}>{visible_components}</Section>
+        children:<Section title='Autres' layout={layout} columns={columns}>{visible_components}</Section>
     })}
 
 
